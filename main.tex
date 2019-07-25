@@ -1,0 +1,89 @@
+\documentclass[11pt]{article}
+\usepackage{times,latexsym,amsmath,amssymb,amsfonts,bm,mathtools}
+\usepackage{array, marginnote, paralist, booktabs, multirow, url, natbib}
+\usepackage{graphicx, epstopdf, rotating, color, subfig, adjustbox}
+\usepackage[linesnumbered,lined,boxed,commentsnumbered]{algorithm2e}
+\usepackage[margin=1in]{geometry}
+\usepackage[margin=1in]{caption}
+\usepackage{relsize}
+\usepackage{amsthm}
+
+\SetKwInOut{Parameter}{parameter}
+\renewcommand{\familydefault}{ptm}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{1em}%
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\newcommand{\mean}{\text{mean}}
+\newcommand{\sd}{\text{sd}}
+\newcommand{\median}{\text{median}}
+\newcommand{\IQR}{\text{IQR}}
+\newcommand{\MAD}{\text{MAD}}
+\newcommand{\dist}{\text{dist}}
+\newcommand{\diag}{\text{diag}}
+\newcommand{\nn}{\text{nn}}
+\newcommand{\nnd}{\text{nnd}}
+%\DeclareMathOperator*{\argmax}{arg\,max}
+%\DeclareMathOperator*{\argmin}{arg\,min}
+\newcommand{\argmin}{\mathop{\text{argmin}}}
+\newcommand{\argmax}{\mathop{\text{argmax}}}
+\newcolumntype{d}[1]{D{.}{.}{#1}}  % define "d" column type
+
+\newcommand{\density}{\text{density}}
+\newcommand{\AUC}{\text{AUC}}
+\newcommand{\margincomment}[1]{\marginpar{\footnotesize{#1}}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\graphicspath{{./Graphics/}}
+
+\newcommand{\chk}{$\checkmark$}
+\newcolumntype{R}[2]{%
+    >{\adjustbox{angle=#1,lap=\width-(#2)}\bgroup}%
+    l%
+    <{\egroup}%
+}
+\newcommand*\rot{\multicolumn{1}{R{90}{1em}}}% no optional argument here, please!
+
+% =======================================================================
+\begin{document}
+% =======================================================================
+\title{Basis vectors suitable for outlier detection}
+\author{Sevvandi Kandanaarachchi, Rob J. Hyndman}
+\maketitle
+\abstract{FOR LATER}
+
+% =======================================================================
+\section{Introduction}
+% =======================================================================
+FOR LATER!
+
+% =======================================================================
+\section{Related work}
+% =======================================================================
+FOR LATER!
+
+% =======================================================================
+\section{Mathematical Framework}
+% =======================================================================
+Let $X_{N \times p}$ be a matrix denoting a dataset of $N$ observations and $p$ attributes. Let $\bm{x}_i$ be the $i^{\text{th}}$ observation in $X$. Then the distance between two points   
+% =======================================================================
+\section{Experiments}
+% =======================================================================
+FOR LATER!
+
+% =======================================================================
+\section{Results with visualization}
+% =======================================================================
+FOR LATER!
+
+% =======================================================================
+\section{Results on a data repository}
+% =======================================================================
+FOR LATER!
+
+% =======================================================================
+\section{Conclusion}
+% =======================================================================
+FOR LATER!
+\end{document}
