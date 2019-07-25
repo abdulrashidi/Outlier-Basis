@@ -64,9 +64,27 @@ FOR LATER!
 FOR LATER!
 
 % =======================================================================
-\section{Mathematical Framework}
+\section{Mathematical Framework}\label{sec:MathFrame}
 % =======================================================================
-Let $X_{N \times p}$ be a matrix denoting a dataset of $N$ observations and $p$ attributes. Let $\bm{x}_i$ be the $i^{\text{th}}$ observation in $X$. Then the distance between two points   
+Let $X_{N \times p}$ be a matrix denoting a dataset of $N$ observations and $p$ attributes. Let us denote the  $i^{\text{th}}$ observation in $X$ by $\bm{x}_i$. The  distance between points $\bm{x}_i$ and $\bm{x}_j$  can be written as 
+\begin{equation}\label{eq:secMF1}
+\dist(\bm{x}_i, \bm{x}_j)^2 = \left( \bm{x}_i - \bm{x}_j \right)^T S \left( \bm{x}_i - \bm{x}_j \right) \, , 
+\end{equation}
+where $S$ is a symmetric positive definite matrix. In addition when $S$ is diagonal, i,e, $S = \diag(s_1, s_2, \ldots s_p)$ we get
+\begin{equation}\label{eq:secMF2}
+    \dist(\bm{x}_i, \bm{x}_j)^2 = \left\langle \eta\, ,  \left( \bm{x}_i - \bm{x}_j \right)^2 \right\rangle\, 
+\end{equation}
+where $\left\langle \cdot\, , \cdot \right\rangle$ denotes the standard inner product in $\mathbb{R}^p$,   $\eta = \left(s_1, s_2, \ldots s_p\right)^T$, and with some abuse of notation $\left( \bm{x}_i - \bm{x}_j \right)^2$ denotes the element wise difference of $\left( \bm{x}_i - \bm{x}_j \right)$ squared.
+% Noting that normalization is a standard pre-processing step in data analysis, we denote the associated the normalized observation by $\tilde{\bm{x}}_i$. Thus, we can write
+% \begin{equation}\label{eq:secMF1}
+%     \tilde{\bm{x}}_i = S^{-1}\left(\bm{x} - \mu\right) \, ,
+% \end{equation}
+% where $\mu$ is generally the column-wise mean or minimum of $X$ and $S$ is the matrix containing column-wise standard deviations or ranges in its diagonal.
+
+% The distance between two points $\tilde{\bm{x}}_i$ and $\tilde{\bm{x}}_j$ is 
+
+
+
 % =======================================================================
 \section{Experiments}
 % =======================================================================
