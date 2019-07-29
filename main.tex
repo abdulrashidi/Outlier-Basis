@@ -48,7 +48,7 @@
 % =======================================================================
 \begin{document}
 % =======================================================================
-\title{Basis vectors suitable for outlier detection}
+\title{Outlier Components: A basis suitable for outlier detection}
 \author{Sevvandi Kandanaarachchi, Rob J. Hyndman}
 \maketitle
 \abstract{FOR LATER}
@@ -70,20 +70,50 @@ Let $X_{N \times p}$ be a matrix denoting a dataset of $N$ observations and $p$ 
 \begin{equation}\label{eq:secMF1}
 \dist(\bm{x}_i, \bm{x}_j)^2 = \left( \bm{x}_i - \bm{x}_j \right)^T S \left( \bm{x}_i - \bm{x}_j \right) \, , 
 \end{equation}
-where $S$ is a symmetric positive definite matrix. In addition when $S$ is diagonal, i,e, $S = \diag(s_1, s_2, \ldots s_p)$ we get
+where $S$ is a symmetric positive definite matrix.  In addition when $S$ is diagonal, i,e, $S = \diag(s_1, s_2, \ldots s_p)$ we obtain
 \begin{equation}\label{eq:secMF2}
     \dist(\bm{x}_i, \bm{x}_j)^2 = \left\langle \eta\, ,  \left( \bm{x}_i - \bm{x}_j \right)^2 \right\rangle\, 
 \end{equation}
-where $\left\langle \cdot\, , \cdot \right\rangle$ denotes the standard inner product in $\mathbb{R}^p$,   $\eta = \left(s_1, s_2, \ldots s_p\right)^T$, and with some abuse of notation $\left( \bm{x}_i - \bm{x}_j \right)^2$ denotes the element wise difference of $\left( \bm{x}_i - \bm{x}_j \right)$ squared.
-% Noting that normalization is a standard pre-processing step in data analysis, we denote the associated the normalized observation by $\tilde{\bm{x}}_i$. Thus, we can write
-% \begin{equation}\label{eq:secMF1}
-%     \tilde{\bm{x}}_i = S^{-1}\left(\bm{x} - \mu\right) \, ,
-% \end{equation}
-% where $\mu$ is generally the column-wise mean or minimum of $X$ and $S$ is the matrix containing column-wise standard deviations or ranges in its diagonal.
+where $\left\langle \cdot\, , \cdot \right\rangle$ denotes the standard inner product in $\mathbb{R}^p$,   $\eta = \left(s_1, s_2, \ldots s_p\right)^T$, and with some abuse of notation $\left( \bm{x}_i - \bm{x}_j \right)^2$ denotes the element wise difference of $\left( \bm{x}_i - \bm{x}_j \right)$ squared. As $S$ is symmetric and positive definite  it is diagonalizable, thus giving us motivation for considering a diagonal $S$. 
 
-% The distance between two points $\tilde{\bm{x}}_i$ and $\tilde{\bm{x}}_j$ is 
+\subsection{The $Y$ space}
+Let  $\bm{y}_{ij} = \left( \left( x_{i1} - x_{j1} \right)^2, \left( x_{i2} - x_{j2} \right)^2, \ldots,  \,  \left( x_{ip} - x_{jp} \right)^2  \right)\, . $ Substituting in equation~\eqref{eq:secMF2} gives
+\begin{equation}\label{eq:secMF3}
+    \dist(\bm{x}_i, \bm{x}_j)^2 = \left\langle \eta\, ,  \bm{y}_{ij} \right\rangle\, \, .
+\end{equation}
+As such, by finding the appropriate $\eta$ of unit length,  we can maximize the distance between $\bm{x}_i$ and $\bm{x}_j$.  This brings us to the question of which $\bm{x}_i$ and $\bm{x}_j$ needs to be chosen to maximize the distance between them. If we use knn distances as a guiding principle, we are interested in the $k$ nearest neighbours of a given point. Consequently, we can choose $\bm{x}_i$ and $\bm{x}_j$ that share a common neighbourhood. Also we note that if we were to calculate $\bm{y}_{ij}$ for all pairs, it would be computationally expensive as there are $N(N+1)/2$ pairs. In addition, this would give us pairwise distances between points that we are not interested in, such as points on the boundary of the point cloud, that are opposite each other. Finding  $\eta$ that maximizes the distances between such points is not conducive to outlier detection, because a large distance between such polar-opposite points does not mean that either of those points are outliers. As such, we select the  $\bm{x}_i$ and $\bm{x}_j$ pairs that we want to include in our $Y$ space. \\
 
+For each point $\bm{x}_i$ we compute $\bm{y}_{ij}$ arising from a set a nearest neighbours. From \cite{kandanaarachchi2018normalization} we know that nearest neighbours depend on the normalization technique. As a result, we choose two normalization techniques for pre-processing the data; Min-Max and Median-IQR. Min-Max normalization scales each column to values between $0$ and $1$, with the minimum mapped to $0$ and the maximum mapped to $1$.  Median-IQR scales each column to median $0$ and IQR $1$. Let $X_1$ denote the normalized data using  Min-Max and $X_2$ using Median-IQR. For each normalization technique we choose a set of nearest neighbours from $k_1$ to $k_2$, that is for any point we choose the $k_1^{\text{th}}$ nearest neighbour to  $k_2^{\text{th}}$ nearest neighbour. Here $k_1$ and $k_2$ are parameters and one can choose $k_1 =0$. \\
 
+Next for each point we find the union of nearest neighbours computed using the two normalization techniques. For example for a given point $\bm{x}_i$ if Min-Max gave rise to the nearest neighbours $\{\bm{x}_2, \bm{x}_5, \bm{x}_9 \}$ and Median-IQR   $\{\bm{x}_5, \bm{x}_4, \bm{x}_7 \}$, then we consider the union of these two sets as the set of nearest neighbours of $\bm{x}_i$. Using the nearest neighbours we construct a list of pairs denoted by $T$. Continuing the same example the pairs $(\bm{x}_i, \bm{x}_2), \,  (\bm{x}_i, \bm{x}_5), \, (\bm{x}_i, \bm{x}_4), \, \ldots $ and so on will be in $T$. \\
+
+For each pair in $T$, we compute $\bm{y}_{ij}$ as in equation~\eqref{eq:secMF2} on the normalized space $X_1$. We choose $X_1$ as Min-Max is the most popular normalization technique in outlier detection. Now we have the initial $Y$ space; a set of $M$ points in $\mathbb{R}^{p+}$. As the pairs of points giving rise to the initial $Y$ space are contained in $T$, we can refer to $Y = \{ \bm{y}_k \}_{k=1}^M$, where each $\bm{y}_k = \bm{y}_{i_{(k)}, j_{(k)} }$, i.e. $k$ is the row number in the matrix $Y$ and each $\bm{y}_k$ comes from the $k^{\text{th}}$ pair in $T$. \\
+
+We are interested in neighbouring distances that are relatively large. The Euclidean distance squared between two points in the $X_1$ space  can be written as $\sum_{l=1}^p y_{kl}$ for the appropriate $k$. In order to consider only points with relatively large distances, we remove points $\bm{y}_k$ that contribute to distances below a certain percentile, i.e. we remove points $\bm{y}_k$ such that  $\sum_{l=1}^p y_{kl} < Q$ where $Q$ is the $q^{\text{th}}$ percentile of $ \left \{\sum_{l=1}^p y_{kl} \right \}_{k=1}^M$. We remove the associated pairs from $T$ as well. This constitutes the $Y$ space. Algorithm~\ref{algo:YSpace} summarizes the construction of the $Y$ space. 
+
+%The user-defined parameters for the construction of the $Y$ space are $k_1, k_2$ and $q$, with default values of 
+
+\DontPrintSemicolon
+\begin{algorithm}\fontsize{9}{10}\selectfont
+	\SetKwInOut{Input}{input~~~}
+	\SetKwInOut{Output}{output}
+	\Input{~$X$, $k_1, k_2 \in \mathbb{Z}^+$ and $q \in (0, 1)$.}
+	\Output{~The space $Y$ consisting of all $y_{ij}$ pairs and the associated indices $i$ and $j$.}
+	Normalize $X$ using Min-Max normalization. Let us call this space $X_1$.  \\
+	Find $k_1$ to $k_2$ nearest neighbours for each point in  $X_1$. \\
+	Next normalize $X$ using Median-IQR normalization. Let us call this space $X_2$.  \\
+	Find $k_1$ to $k_2$ nearest neighbours for each point in  $X_2$. \\
+	Then for each point collate all unique neighbours using both Min-Max and Median-IQR normalization methods.   \\
+	Let $T = $ the set of $i$ and $j$ indices, corresponding to the pairs of points in $X$. \\
+	For all these pairs, compute $\bm{y}_{ij}$ as in equation~\eqref{eq:secMF3} using $X_1$ space. Let $Y =\left\{ \bm{y}_{1} =\bm{y}_{i_{(1)},j_{(1)}} , \bm{y}_{2} =\bm{y}_{i_{(2)},j_{(2)}}, \ldots, \bm{y}_{M} =\bm{y}_{i_{(M)},j_{(M)}} \right\}$, where $\left( i_{(1)},j_{(1)} \right)$ is the first $(i, j)$ pair. Consequently $Y$ is an $M\times p$ matrix, with the $k^{\text{th}}$ row denoted by $\bm{y}_k$.\\
+	Find the $q^{\text{th}}$ percentile of $ \left\{\sum_{l=1}^p \bm{y}_{kl}\right\}$. The quantity $\sum_{l=1}^p \bm{y}_{kl}$ is the distance between points $\bm{x}_{i_{(k)}}$ and $\bm{x}_{j_{(k)}}$ in  $X_1$  space. \\
+	Remove points $\bm{y}_k$ which are less than the  $q^{\text{th}}$ percentile of  $ \sum_{l=1}^p \bm{y}_{kl} $. \\
+	Remove the associated pairs of $(i, j)$ from $T$.
+	\caption{\itshape Construction of the $Y$ space}
+	\label{algo:YSpace}
+\end{algorithm}
+
+The resulting $Y$ space is 
 
 % =======================================================================
 \section{Experiments}
@@ -104,4 +134,10 @@ FOR LATER!
 \section{Conclusion}
 % =======================================================================
 FOR LATER!
+
+% =======================================================================
+\footnotesize
+\bibliographystyle{agsm} %Choose a bibliograhpic style
+\bibliography{Master}
+% =======================================================================
 \end{document}
