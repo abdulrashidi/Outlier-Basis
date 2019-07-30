@@ -76,7 +76,7 @@ where $S$ is a symmetric positive definite matrix.  In addition when $S$ is diag
 \end{equation}
 where $\left\langle \cdot\, , \cdot \right\rangle$ denotes the standard inner product in $\mathbb{R}^p$,   $\eta = \left(s_1, s_2, \ldots s_p\right)^T$, and with some abuse of notation $\left( \bm{x}_i - \bm{x}_j \right)^2$ denotes the element wise difference of $\left( \bm{x}_i - \bm{x}_j \right)$ squared. As $S$ is symmetric and positive definite  it is diagonalizable, thus giving us motivation for considering a diagonal $S$. 
 
-\subsection{The $Y$ space}
+\subsection{The $Y$ space}\label{sec:MathFrame1}
 Let  $\bm{y}_{ij} = \left( \left( x_{i1} - x_{j1} \right)^2, \left( x_{i2} - x_{j2} \right)^2, \ldots,  \,  \left( x_{ip} - x_{jp} \right)^2  \right)\, . $ Substituting in equation~\eqref{eq:secMF2} gives
 \begin{equation}\label{eq:secMF3}
     \dist(\bm{x}_i, \bm{x}_j)^2 = \left\langle \eta\, ,  \bm{y}_{ij} \right\rangle\, \, .
@@ -87,9 +87,12 @@ For each point $\bm{x}_i$ we compute $\bm{y}_{ij}$ arising from a set a nearest 
 
 Next for each point we find the union of nearest neighbours computed using the two normalization techniques. For example for a given point $\bm{x}_i$ if Min-Max gave rise to the nearest neighbours $\{\bm{x}_2, \bm{x}_5, \bm{x}_9 \}$ and Median-IQR   $\{\bm{x}_5, \bm{x}_4, \bm{x}_7 \}$, then we consider the union of these two sets as the set of nearest neighbours of $\bm{x}_i$. Using the nearest neighbours we construct a list of pairs denoted by $T$. Continuing the same example the pairs $(\bm{x}_i, \bm{x}_2), \,  (\bm{x}_i, \bm{x}_5), \, (\bm{x}_i, \bm{x}_4), \, \ldots $ and so on will be in $T$. \\
 
-For each pair in $T$, we compute $\bm{y}_{ij}$ as in equation~\eqref{eq:secMF2} on the normalized space $X_1$. We choose $X_1$ as Min-Max is the most popular normalization technique in outlier detection. Now we have the initial $Y$ space; a set of $M$ points in $\mathbb{R}^{p+}$. As the pairs of points giving rise to the initial $Y$ space are contained in $T$, we can refer to $Y = \{ \bm{y}_k \}_{k=1}^M$, where each $\bm{y}_k = \bm{y}_{i_{(k)}, j_{(k)} }$, i.e. $k$ is the row number in the matrix $Y$ and each $\bm{y}_k$ comes from the $k^{\text{th}}$ pair in $T$. \\
+For each pair in $T$, we compute $\bm{y}_{ij}$ as in equation~\eqref{eq:secMF2} on the normalized space $X_1$ or $X_2$, depending on user preference. Now we have the initial $Y$ space; a set of $M$ points in $\mathbb{R}^{p+}$. As the pairs of points that give rise to the initial $Y$ space are contained in $T$, we can refer to $Y = \{ \bm{y}_l \}_{l=1}^M$, where each $\bm{y}_l = \bm{y}_{i_{(l)}, j_{(l)} }$, i.e. $l$ is the row number in the matrix $Y$ and each $\bm{y}_l$ comes from the $l^{\text{th}}$ pair in $T$. \\
 
-We are interested in neighbouring distances that are relatively large. The Euclidean distance squared between two points in the $X_1$ space  can be written as $\sum_{l=1}^p y_{kl}$ for the appropriate $k$. In order to consider only points with relatively large distances, we remove points $\bm{y}_k$ that contribute to distances below a certain percentile, i.e. we remove points $\bm{y}_k$ such that  $\sum_{l=1}^p y_{kl} < Q$ where $Q$ is the $q^{\text{th}}$ percentile of $ \left \{\sum_{l=1}^p y_{kl} \right \}_{k=1}^M$. We remove the associated pairs from $T$ as well. This constitutes the $Y$ space. Algorithm~\ref{algo:YSpace} summarizes the construction of the $Y$ space. 
+We are interested in neighbouring distances that are relatively large. The Euclidean distance squared between two points in the $X_1$ or $X_2$ space  can be written as $\sum_{m=1}^p y_{lm}$ for the appropriate $l$. In order to consider only points with relatively large distances, we remove points $\bm{y}_l$ that contribute to distances below a certain percentile, i.e. we remove points $\bm{y}_l$ such that  $\sum_{m=1}^p y_{lm} < Q$ where $Q$ is the $q^{\text{th}}$ percentile of $ \left \{\sum_{m=1}^p y_{lm} \right \}_{l=1}^M$. We remove the associated pairs from $T$ as well. This constitutes the $Y$ space. \\
+
+The main advantage of the $Y$ space is that it makes distance computation  between two points in the $X$ space a linear function. This makes maximizing distances between points a much easier task. 
+Algorithm~\ref{algo:YSpace} summarizes the construction of the $Y$ space. 
 
 %The user-defined parameters for the construction of the $Y$ space are $k_1, k_2$ and $q$, with default values of 
 
@@ -105,15 +108,82 @@ We are interested in neighbouring distances that are relatively large. The Eucli
 	Find $k_1$ to $k_2$ nearest neighbours for each point in  $X_2$. \\
 	Then for each point collate all unique neighbours using both Min-Max and Median-IQR normalization methods.   \\
 	Let $T = $ the set of $i$ and $j$ indices, corresponding to the pairs of points in $X$. \\
-	For all these pairs, compute $\bm{y}_{ij}$ as in equation~\eqref{eq:secMF3} using $X_1$ space. Let $Y =\left\{ \bm{y}_{1} =\bm{y}_{i_{(1)},j_{(1)}} , \bm{y}_{2} =\bm{y}_{i_{(2)},j_{(2)}}, \ldots, \bm{y}_{M} =\bm{y}_{i_{(M)},j_{(M)}} \right\}$, where $\left( i_{(1)},j_{(1)} \right)$ is the first $(i, j)$ pair. Consequently $Y$ is an $M\times p$ matrix, with the $k^{\text{th}}$ row denoted by $\bm{y}_k$.\\
-	Find the $q^{\text{th}}$ percentile of $ \left\{\sum_{l=1}^p \bm{y}_{kl}\right\}$. The quantity $\sum_{l=1}^p \bm{y}_{kl}$ is the distance between points $\bm{x}_{i_{(k)}}$ and $\bm{x}_{j_{(k)}}$ in  $X_1$  space. \\
-	Remove points $\bm{y}_k$ which are less than the  $q^{\text{th}}$ percentile of  $ \sum_{l=1}^p \bm{y}_{kl} $. \\
+	For all these pairs, compute $\bm{y}_{ij}$ as in equation~\eqref{eq:secMF3} using $X_1$ space. Let $Y =\left\{ \bm{y}_{1} =\bm{y}_{i_{(1)},j_{(1)}} , \bm{y}_{2} =\bm{y}_{i_{(2)},j_{(2)}}, \ldots, \bm{y}_{M} =\bm{y}_{i_{(M)},j_{(M)}} \right\}$, where $\left( i_{(1)},j_{(1)} \right)$ is the first $(i, j)$ pair. Consequently $Y$ is an $M\times p$ matrix, with the $l^{\text{th}}$ row denoted by $\bm{y}_l$.\\
+	Find the $q^{\text{th}}$ percentile of $ \left\{\sum_{m=1}^p \bm{y}_{lm}\right\}$. The quantity $\sum_{m=1}^p \bm{y}_{lm}$ is the distance between points $\bm{x}_{i_{(l)}}$ and $\bm{x}_{j_{(l)}}$ in  $X_1$  space. \\
+	Remove points $\bm{y}_l$ which are less than the  $q^{\text{th}}$ percentile of  $ \sum_{m=1}^p \bm{y}_{lm} $. \\
 	Remove the associated pairs of $(i, j)$ from $T$.
 	\caption{\itshape Construction of the $Y$ space}
 	\label{algo:YSpace}
 \end{algorithm}
 
-The resulting $Y$ space is 
+\begin{figure}[!t]
+	\centering
+	\subfloat[][]{\includegraphics[scale=0.5]{X_space.pdf}\label{fig:XandY1}}
+	\subfloat[][]{\includegraphics[scale=0.5]{Y_space.pdf}\label{fig:XandY2}}
+	\caption{The $X$ and $Y$ spaces. The $X$ space in (a) and the associated $Y$ space in (b) with $q = 0.95$. The red coloured point in the $X$ space gives rise to 6   points, which are coloured in red in the $Y$ space.}
+	\label{fig:XandY}
+\end{figure} 
+
+%% Explanation of fig:XandY
+Figure~\ref{fig:XandY} illustrates  the $X$ and $Y$ spaces for which the $X$ space is a 2 dimensional normal distribution of 100 points with a single outlier depicted in red. We see that the $Y$ space consists of a lesser number of points, of which 6 points are contributed by the outlier. This is because $k_1$ to $k_2$ neighbours are considered in the construction of the $Y$ space and the  points $\bm{y}_k$ with relatively small distances $\left(\sum_i y_{ki} \leq Q\right)$ are removed. Thus, the effect of outliers are magnified in the $Y$ space. \\
+
+Before turning to maximising distances, we summarise  key features of the $Y$ space below:
+\begin{enumerate}
+    \item $Y = \{\bm{y}_l \}_{l=1}^M$, where $\bm{y}_l \in \mathbb{R}^{p+}$.
+    \item Each $\bm{y}_l \in Y$ is constructed from two points $\bm{x}_i$ and $\bm{x}_j$ in $X$ with $T(l) = (i,j)$, where $T$ is a matrix consisting of the list of pairs in $X$ that are used to construct $Y$. In addition $\bm{x}_i$ and $\bm{x}_j$ are $k$-nearest neighbours for some $k \in \{k_1, \ldots, k_2\}$.
+    \item For $i,j,l$ as in above,  $\bm{y}_l = \left(\bm{x}_i - \bm{x}_j \right)^2$, where with some abuse of notation $\left(\bm{x}_i - \bm{x}_j \right)^2$ denotes the element-wise difference squares. 
+    \item The $Y$ space contains points $\bm{y}_l$ with relatively high $\sum_{m=1}^p y_{lm}$.  
+\end{enumerate}
+
+\subsection{Maximising the distance between points}\label{sec:MathFrame2}
+The $Y$ space has points $\bm{y}_l$ that correspond to neighbouring points $\bm{x}_i$ and $\bm{x}_j$ in $X$, which have relatively high $k$ nearest neighbour distances. From equation~\eqref{eq:secMF3} we obtain
+\begin{equation} \label{eq:secMF4}
+    \sum_{(i,j) \in T}\dist(\bm{x}_i, \bm{x}_j)^2 = \sum_{l}\left\langle \eta\, ,  \bm{y}_{l} \right\rangle\, \, .
+\end{equation}
+Thus  the total distance squared for relatively high nearest neighbour distances $ \sum_{(i,j) \in T}\dist(\bm{x}_i, \bm{x}_j)^2$  can be maximised by finding the appropriate $\eta$ which maximises $\sum_{l}\left\langle \eta\, ,  \bm{y}_{l} \right\rangle$. However, by choosing $\eta_1 = c \eta_0 $, with $c >1$ will automatically increase the value of $\sum_{l}\left\langle \eta\, ,  \bm{y}_{l} \right\rangle$ by $c$. Thus, we restrict $\eta$ such that $\left \lVert \eta \right\rVert = 1$.  We now state our optimisation problem as
+\begin{align} \label{eq:secMF5}
+     \max_\eta & \sum_{l}\left\langle \eta\, ,  \bm{y}_{l} \right\rangle \, , \\ 
+    \left \lVert \eta \right\rVert^2  & = 1 \notag \, .
+\end{align}
+Solving this using Lagrange Multipliers we obtain $\nabla f  = \lambda \nabla g$, with 
+\begin{align}\label{eq:secMF6}
+    f(\eta) & = \sum_{l}\left\langle \eta\, ,  \bm{y}_{l} \right\rangle  \, , \text{and} \\
+    g(\eta)  & = \left \lVert \eta \right\rVert^2  - 1 = 0 \, . \notag
+\end{align}
+As $\nabla f = \left( \frac{\partial f}{\partial \eta_1},  \frac{\partial f}{\partial \eta_2},  \cdots, \frac{\partial f}{\partial \eta_p} \right)$ we compute
+\begin{align}\label{eq:secMF7}
+\frac{\partial f}{\partial \eta_j} & =  \frac{\partial }{\partial \eta_j}\sum_{l}\left\langle \eta\, ,  \bm{y}_{l} \right\rangle \, ,  \notag  \\
+& = \frac{\partial }{\partial \eta_j} \sum_{l=1}^M \sum_{i=1}^p \eta_i y_{li} \, ,\notag \\
+& = \sum_{l=1}^M \sum_{i=1}^p  \delta_{ij} y_{li} \, , \notag \\
+& = \sum_{l=1}^M y_{lj} \, . 
+\end{align}
+where $\delta_{ij}$ is the Kronecker delta function which equals 1 when $i=j$ and zero otherwise. Thus
+\begin{equation}\label{eq:secMF8}
+    \nabla f = \left(\sum_{l=1}^M y_{l1}, \sum_{l=1}^M y_{l2}, \ldots, \sum_{l=1}^M y_{lp}   \right) = \sum_{l=1}^M \bm{y}_l \, .
+\end{equation}
+Similarly as $g(\eta) = \left( \sum_{j=1}^p \eta_j^2\right) - 1$  we get $\nabla g = \eta$. By substituting  $\nabla f = \lambda \nabla g$ and using $\left\lVert \eta \right\rVert = 1 $ we obtain
+\begin{equation}\label{eq:secMF9}
+    \eta = \frac{\sum_{l=1}^M \bm{y}_l }{  \left\lVert\sum_{l=1}^M \bm{y}_l  \right\rVert  }
+\end{equation}
+Thus, we have computed $\eta$ that maximises distance squared in $Y$.  
+
+\subsection{Constructing a basis}\label{sec:MathFrame3}
+We have computed the vector $\eta$ that maximises $\sum_{l}\left\langle \eta\, ,  \bm{y}_{l} \right\rangle$. To find a basis,  we need to find the second, third and $i^{\text{th}}$ vectors which are independent and in some way maximise the quantity $\sum_{l}\left\langle \eta\, ,  \bm{y}_{l} \right\rangle$. Let us first rename $\eta$ as $\eta_1$. Taking $\eta_1$ as the first basis vector, we take the projection of vector $\bm{y}_l$ on to $\eta_1$  and remove these components from $\bm{y}_l$. 
+\begin{equation}\label{eq:secMF10}
+    \bm{y}_{l_1} = \bm{y}_l - \left\langle \eta_1 \, , \bm{y}_l \right \rangle \eta_1
+\end{equation}
+Thus $\bm{y}_{l_1} \perp \eta_1$. Let $Y_1 = \{\bm{y}_{l_1} \}_{l=1}^M $ be the set of remaining components of $\{ \bm{y}_l \}_{l=1}^M$ after removing the projection on to $\eta_1$. Now we can compute $\eta_2$ which maximises $\sum_{l}\left\langle \eta\, ,  \bm{y}_{l_1} \right\rangle$ as
+\begin{equation}\label{eq:secMF11}
+    \eta_2 = \frac{\sum_{l=1}^M \bm{y}_{l_1} }{  \left\lVert\sum_{l=1}^M \bm{y}_{l_1}  \right\rVert  } 
+\end{equation}
+Proceeding in this way we obtain 
+\begin{align}
+    \bm{y}_{l_{b}} & = \bm{y}_{l_{b-1}} - \left\langle \eta_b \, , \bm{y}_{l_{b-1}} \right \rangle \eta_b \, , \label{eq:secMF10} \\
+     \eta_{b+1} & = \frac{\sum_{l=1}^M \bm{y}_{l_b} }{  \left\lVert\sum_{l=1}^M \bm{y}_{l_b}  \right\rVert  } \label{eq:secMF11}
+\end{align}
+with $\bm{y}_{l_0} = \bm{y}_{l}$. The set $\left\{ \eta_1, \eta_2, \ldots , \eta_p  \right\}$ gives a basis for $Y$ which aims to maximise the quantity $\sum_{l}\left\langle \eta\, ,  \bm{y}_{l} \right\rangle$.  \\
+
+Next we draw attention to a technical point. Equation~\ref{eq:secMF4} is only true for  $\bm{y}_l \in \mathbb{R}^{p+}$. The other $Y$ spaces $Y_1, Y_2, \ldots $ are not  subsets of $\mathbb{R}^{p+}$. To adjust for this, after computing  $\bm{y}_{l_{b}}$ in equation~\eqref{eq:secMF10} we temporarily change the basis such that  $\{ \bm{y}_{l_{b}}\}_{l=1}^M$ are in a positive orthant.  Then after computing  $\eta_{b+1}$ in equation~\eqref{eq:secMF11} we transform it back again to the original basis. 
 
 % =======================================================================
 \section{Experiments}
