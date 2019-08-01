@@ -178,18 +178,41 @@ Thus $\bm{y}_{l_1} \perp \eta_1$. Let $Y_1 = \{\bm{y}_{l_1} \}_{l=1}^M $ be the 
 \end{equation}
 Proceeding in this way we obtain 
 \begin{align}
-    \bm{y}_{l_{b}} & = \bm{y}_{l_{b-1}} - \left\langle \eta_b \, , \bm{y}_{l_{b-1}} \right \rangle \eta_b \, , \label{eq:secMF10} \\
-     \eta_{b+1} & = \frac{\sum_{l=1}^M \bm{y}_{l_b} }{  \left\lVert\sum_{l=1}^M \bm{y}_{l_b}  \right\rVert  } \label{eq:secMF11}
+    \bm{y}_{l_{b}} & = \bm{y}_{l_{b-1}} - \left\langle \eta_b \, , \bm{y}_{l_{b-1}} \right \rangle \eta_b \, , \label{eq:secMF12} \\
+     \eta_{b+1} & = \frac{\sum_{l=1}^M \bm{y}_{l_b} }{  \left\lVert\sum_{l=1}^M \bm{y}_{l_b}  \right\rVert  } \label{eq:secMF13}
 \end{align}
 with $\bm{y}_{l_0} = \bm{y}_{l}$. The set $\left\{ \eta_1, \eta_2, \ldots , \eta_p  \right\}$ gives a basis for $Y$ which aims to maximise the quantity $\sum_{l}\left\langle \eta\, ,  \bm{y}_{l} \right\rangle$.  \\
 
-Next we draw attention to a technical point. Equation~\ref{eq:secMF4} is only true for  $\bm{y}_l \in \mathbb{R}^{p+}$. The other $Y$ spaces $Y_1, Y_2, \ldots $ are not  subsets of $\mathbb{R}^{p+}$. To adjust for this, after computing  $\bm{y}_{l_{b}}$ in equation~\eqref{eq:secMF10} we temporarily change the basis such that  $\{ \bm{y}_{l_{b}}\}_{l=1}^M$ are in a positive orthant.  Then after computing  $\eta_{b+1}$ in equation~\eqref{eq:secMF11} we transform it back again to the original basis. 
+Next we draw attention to a technical point. Equation~\ref{eq:secMF4} is only true for  $\bm{y}_l \in \mathbb{R}^{p+}$. The other $Y$ spaces $Y_1, Y_2, \ldots $ are not  subsets of $\mathbb{R}^{p+}$. To adjust for this, after computing  $\bm{y}_{l_{b}}$ in equation~\eqref{eq:secMF10} we temporarily change the basis such that  $\{ \bm{y}_{l_{b}}\}_{l=1}^M$ are in a positive orthant.  Then after computing  $\eta_{b+1}$ in equation~\eqref{eq:secMF11} using positive $\{ \bm{y}_{l_{b}}\}_{l=1}^M$,  we transform it back again to the original basis. 
 
+\subsection{Transforming the data}\label{sec:MathFrame4}
+% GIVE NAMES TO THE BASIS VECTORS, AND COORDINATES
 % =======================================================================
-\section{Experiments}
+\section{Experiments with synthetic data}
 % =======================================================================
-FOR LATER!
+Next we do three experiments with synthetic data. For each experiment we compare results for $3$ outlier detection methods, namely LOF \citep{breunig2000lof}, KNN \citep{ramaswamy2000efficient} and isolation forest \citep{liu2008isolation}. We choose these methods as they are fundamentally different: LOF uses a local density based approach; KNN uses a global distance based approach; and iForest uses a  tree based approach.  For each outlier detection method we consider the following $3$ coordinate systems:  
+\begin{enumerate}  
+\item All variables in the dataset
+\item Perform Principal Component Analysis (PCA) on the dataset, and use approximately the first half of the principle components (PCs).
+\item Find the Outlier Basis for the dataset, and use approximately first half of the outlier components. 
+\end{enumerate}
+For each outlier detection method, we compare the results using these $3$ sets of coordinates. We use area under the Receiver Operator Characteristic curve (AUC) as our performance measure. 
 
+
+\subsection{Experiment 1}
+The first experiment considers two normal distributions: an  inlier normal distribution and an outlier normal distribution, which moves out from the inlier distribution as its mean changes. We consider a dataset of $405$ observations and $6$ variables, of which $400$ observations in each variable are normally distributed with mean $0$ and standard deviation $1$. The remaining $5$ observations signify outliers and are normally distributed with mean $\mu$ and standard deviation $0.2$ in one variable, and mean $0$ and standard deviation $1$ in other variables. The value of $\mu$ is changed from $0$ to $4.5$ by increments of $0.5$. For each value of $\mu$ we consider the three sets of coordinates described above and their performance using the outlier methods LOF, KNN and iForest.  We conduct this experiment for $10$ iterations. Figure~\ref{fig:Exp1} shows the results for all $3$  outlier methods using the average values of the 10 iterations.
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[scale=0.8]{Exp1.pdf}
+	\caption{Results of Experiment 1}
+	\label{fig:Exp1}
+\end{figure} 
+
+Using $2$ outlier components as the coordinates gives the highest performance for all $3$ outlier detection methods for $\mu > 1$.  Indeed, we are interested in a set of coordinates can accentuate the the outliers as they move out from the inlier distribution.  For values of $\mu \in \{0, 0.5, 1\}$,  the outlier distribution lies in the interior of the inlier distribution, making a comparison between the coordinates not meaningful.   
+
+\subsection{Experiment 2}
+The second experiment is ***********
 % =======================================================================
 \section{Results with visualization}
 % =======================================================================
