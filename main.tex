@@ -48,7 +48,7 @@
 % =======================================================================
 \begin{document}
 % =======================================================================
-\title{Outlier Components: A basis suitable for outlier detection}
+\title{DOBIN: A basis suitable for outlier detection}
 \author{Sevvandi Kandanaarachchi, Rob J. Hyndman}
 \maketitle
 \abstract{FOR LATER}
@@ -181,9 +181,15 @@ Proceeding in this way we obtain
     \bm{y}_{l_{b}} & = \bm{y}_{l_{b-1}} - \left\langle \eta_b \, , \bm{y}_{l_{b-1}} \right \rangle \eta_b \, , \label{eq:secMF12} \\
      \eta_{b+1} & = \frac{\sum_{l=1}^M \bm{y}_{l_b} }{  \left\lVert\sum_{l=1}^M \bm{y}_{l_b}  \right\rVert  } \label{eq:secMF13}
 \end{align}
-with $\bm{y}_{l_0} = \bm{y}_{l}$. The set $\left\{ \eta_1, \eta_2, \ldots , \eta_p  \right\}$ gives a basis for $Y$ which aims to maximise the quantity $\sum_{l}\left\langle \eta\, ,  \bm{y}_{l} \right\rangle$.  \\
+with $\bm{y}_{l_0} = \bm{y}_{l}$. The set $\Theta = \left\{ \eta_1, \eta_2, \ldots , \eta_p  \right\}$ gives a basis for $Y$ which aims to maximise the quantity $\sum_{l}\left\langle \eta\, ,  \bm{y}_{l} \right\rangle$.  \\
 
-Next we draw attention to a technical point. Equation~\ref{eq:secMF4} is only true for  $\bm{y}_l \in \mathbb{R}^{p+}$. The other $Y$ spaces $Y_1, Y_2, \ldots $ are not  subsets of $\mathbb{R}^{p+}$. To adjust for this, after computing  $\bm{y}_{l_{b}}$ in equation~\eqref{eq:secMF10} we temporarily change the basis such that  $\{ \bm{y}_{l_{b}}\}_{l=1}^M$ are in a positive orthant.  Then after computing  $\eta_{b+1}$ in equation~\eqref{eq:secMF11} using positive $\{ \bm{y}_{l_{b}}\}_{l=1}^M$,  we transform it back again to the original basis. 
+Next we draw attention to a technical point. Equation~\ref{eq:secMF4} is only true for  $\bm{y}_l \in \mathbb{R}^{p+}$. The other $Y$ spaces $Y_1, Y_2, \ldots $ are not  subsets of $\mathbb{R}^{p+}$. To adjust for this, after computing  $\bm{y}_{l_{b}}$ in equation~\eqref{eq:secMF10} we temporarily change the basis such that  $\{ \bm{y}_{l_{b}}\}_{l=1}^M$ are in a positive orthant.  Then after computing  $\eta_{b+1}$ in equation~\eqref{eq:secMF11} using positive $\{ \bm{y}_{l_{b}}\}_{l=1}^M$,  we transform it back again to the original basis.  \\
+
+Once the basis $\Theta$  is computed, we  change the basis of the original data as follows:
+\begin{equation}\label{eq:secMF14}
+    \tilde{X} = X_1 \Theta \, .
+\end{equation}
+We note that the basis $\Theta$ is not invariant to rotations, i.e. if one were to start with a different basis, the resulting $\Theta$ would be different. This is because when constructing the $Y$ space we compute element-wise squares of vector differences. While vector differences are basis invariant, squared element-wise components depend on the basis vectors. Notwithstanding this limitation, we achieve good results in our experiments with our extensive collection of real world datasets. 
 
 \subsection{Transforming the data}\label{sec:MathFrame4}
 % GIVE NAMES TO THE BASIS VECTORS, AND COORDINATES
@@ -200,7 +206,7 @@ For each outlier detection method, we compare the results using these $3$ sets o
 
 
 \subsection{Experiment 1}
-The first experiment considers two normal distributions: an  inlier normal distribution and an outlier normal distribution, which moves out from the inlier distribution as its mean changes. We consider a dataset of $405$ observations and $6$ variables, of which $400$ observations in each variable are normally distributed with mean $0$ and standard deviation $1$. The remaining $5$ observations signify outliers and are normally distributed with mean $\mu$ and standard deviation $0.2$ in one variable, and mean $0$ and standard deviation $1$ in other variables. The value of $\mu$ is changed from $0$ to $4.5$ by increments of $0.5$. For each value of $\mu$ we consider the three sets of coordinates described above and their performance using the outlier methods LOF, KNN and iForest.  We conduct this experiment for $10$ iterations. Figure~\ref{fig:Exp1} shows the results for all $3$  outlier methods using the average values of the 10 iterations.
+The first experiment considers two normal distributions: an  inlier normal distribution and an outlier normal distribution, which moves out from the inlier distribution as its mean increases. We consider a dataset of $405$ observations in $6$ dimensions, of which $400$ observations in each dimension are normally distributed with mean $0$ and standard deviation $1$. The remaining $5$ observations signify outliers and are normally distributed with mean $\mu$ and standard deviation $0.2$ in one dimension, and mean $0$ and standard deviation $1$ in other dimensions. The value of $\mu$ is changed from $0$ to $4.5$ by increments of $0.5$. The reason for a smaller standard deviation in the first dimension is to ensure that the outliers move out of the normal distribution. For each value of $\mu$ we consider the three sets of coordinates described above and their performance using the outlier methods LOF, KNN and iForest.  We conduct this experiment for $10$ iterations. Figure~\ref{fig:Exp1} shows the results for all $3$  outlier methods using the average values of  10 iterations.
 
 \begin{figure}[!t]
 	\centering
@@ -209,10 +215,31 @@ The first experiment considers two normal distributions: an  inlier normal distr
 	\label{fig:Exp1}
 \end{figure} 
 
-Using $2$ outlier components as the coordinates gives the highest performance for all $3$ outlier detection methods for $\mu > 1$.  Indeed, we are interested in a set of coordinates can accentuate the the outliers as they move out from the inlier distribution.  For values of $\mu \in \{0, 0.5, 1\}$,  the outlier distribution lies in the interior of the inlier distribution, making a comparison between the coordinates not meaningful.   
+Using $2$ DOBIN components gives the highest performance for all $3$ outlier detection methods for $\mu > 1$.  Indeed, we are interested in a set of coordinates can accentuate the the outliers as they move out from the inlier distribution.  For values of $\mu \in \{0, 0.5, 1\}$,  the outlier distribution lies in the interior of the inlier distribution, making a performance comparison between the coordinates not meaningful.   
 
 \subsection{Experiment 2}
-The second experiment is ***********
+The second experiment considers a bi-modal setting with two inlier normal distributions and one outlier normal  distribution which moves into the valley as its mean changes. Somewhat similar to the previous example we consider $805$ observations in $6$ dimensions; $800$ inlier observations of which $400$  centred at $(5,0,0,0,0,0)$ and the other $400$ centred at $(-5,0,0,0,0,0)$. All inlier observations come from normal distributions with standard deviation $1$ in each dimension. The outlier distribution consists of $5$ points with mean $(5-\mu,0,0,0,0,0)$ and standard deviations $0.2$ in the first dimension and $1$ in other dimensions. Again, a smaller standard deviation is to ensure that the outliers move into the valley. Figure~\ref{fig:Exp2} shows the results for all $3$  outlier methods on all $3$ coordinate systems using the average values of 10 iterations. \\
+
+Again we see that using 2 DOBIN components gives the highest performance for all 3 outlier methods. In particular, 
+\begin{figure}[!t]
+	\centering
+	\includegraphics[scale=0.8]{Exp2.pdf}
+	\caption{Results of Experiment 2}
+	\label{fig:Exp2}
+\end{figure} 
+
+\subsection{Experiment 3}
+The third experiment is motivated from \cite{zimek2012survey}. We consider a uniform distribution in $20$ dimensions and place a manual outlier at $0.9$ in $i$ dimensions where $i$ is changed from $1$ to $20$. While this is not an outlier in any single dimension, as $i$ increases this point stands out from the rest of the distribution. Indeed, for large $i$ this  point lies furthest from the rest. An equivalent outlier is $0.1$ in $i$ dimensions. The reason these points are outliers is because they are at the corners of the hyper-cube and as such far away from other points. On the contrary $0.5$ in $i$ dimensions would be closest to other points. This is because $(0.5, 0.5, \ldots)$ has neighbours from all sides and has on average $2^{20}$ more neighbours compared to $(0.9, 0.9, \ldots)$, which is at a corner on the unit hyper-cube.  
+
+Figure~\ref{fig:Exp3} shows the results of all three outlier methods on all $3$ coordinate systems. \\
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[scale=0.8]{Exp3.pdf}
+	\caption{Results of Experiment 3}
+	\label{fig:Exp3}
+\end{figure} 
+
 % =======================================================================
 \section{Results with visualization}
 % =======================================================================
