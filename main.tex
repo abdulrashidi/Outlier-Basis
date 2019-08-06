@@ -189,9 +189,9 @@ Once the basis $\Theta$  is computed, we  change the basis of the original data 
 \begin{equation}\label{eq:secMF14}
     \tilde{X} = X_1 \Theta \, .
 \end{equation}
-We note that the basis $\Theta$ is not invariant to rotations, i.e. if one were to start with a different basis, the resulting $\Theta$ would be different. This is because when constructing the $Y$ space we compute element-wise squares of vector differences. While vector differences are basis invariant, squared element-wise components depend on the basis vectors. Notwithstanding this limitation, we achieve good results in our experiments with our extensive collection of real world datasets. 
+We note that the basis $\Theta$ is not invariant to rotations, i.e. if one were to start with a different basis, the resulting $\Theta$ would be different. This is because when constructing the $Y$ space we compute element-wise squares of vector differences. While vector addition is basis invariant, squared element-wise components depend on the basis vectors. Notwithstanding this limitation, we achieve good results on experiments conducted with our extensive collection of more than $12,000$ real world datasets. We performed DOBIN using the original basis on almost all our experiments. We only used a different basis if the number of variables  are much higher than the number of observations.  DOBIN generally performs better with the original basis than with a transformed basis, and finds it  is easier to compute the true direction of outliers when the axes are independent, compared to when each axis is a linear combination of the original variables. 
 
-\subsection{Transforming the data}\label{sec:MathFrame4}
+
 % GIVE NAMES TO THE BASIS VECTORS, AND COORDINATES
 % =======================================================================
 \section{Experiments with synthetic data}
@@ -199,51 +199,113 @@ We note that the basis $\Theta$ is not invariant to rotations, i.e. if one were 
 Next we do three experiments with synthetic data. For each experiment we compare results for $3$ outlier detection methods, namely LOF \citep{breunig2000lof}, KNN \citep{ramaswamy2000efficient} and isolation forest \citep{liu2008isolation}. We choose these methods as they are fundamentally different: LOF uses a local density based approach; KNN uses a global distance based approach; and iForest uses a  tree based approach.  For each outlier detection method we consider the following $3$ coordinate systems:  
 \begin{enumerate}  
 \item All variables in the dataset
-\item Perform Principal Component Analysis (PCA) on the dataset, and use approximately the first half of the principle components (PCs).
-\item Find the Outlier Basis for the dataset, and use approximately first half of the outlier components. 
+\item Perform Principal Component Analysis (PCA) on the dataset, and use the first half of the principle components (PCs).
+\item Perform DOBIN on the dataset, and use the first half of the DOBIN components. 
 \end{enumerate}
 For each outlier detection method, we compare the results using these $3$ sets of coordinates. We use area under the Receiver Operator Characteristic curve (AUC) as our performance measure. 
 
 
 \subsection{Experiment 1}
-The first experiment considers two normal distributions: an  inlier normal distribution and an outlier normal distribution, which moves out from the inlier distribution as its mean increases. We consider a dataset of $405$ observations in $6$ dimensions, of which $400$ observations in each dimension are normally distributed with mean $0$ and standard deviation $1$. The remaining $5$ observations signify outliers and are normally distributed with mean $\mu$ and standard deviation $0.2$ in one dimension, and mean $0$ and standard deviation $1$ in other dimensions. The value of $\mu$ is changed from $0$ to $4.5$ by increments of $0.5$. The reason for a smaller standard deviation in the first dimension is to ensure that the outliers move out of the normal distribution. For each value of $\mu$ we consider the three sets of coordinates described above and their performance using the outlier methods LOF, KNN and iForest.  We conduct this experiment for $10$ iterations. Figure~\ref{fig:Exp1} shows the results for all $3$  outlier methods using the average values of  10 iterations.
+The first experiment considers two normal distributions: an  inlier normal distribution and an outlier normal distribution, which moves out from the inlier distribution as its mean increases. We consider a dataset of $405$ observations in $\mathbb{R}^6$, of which $400$ observations in each dimension are normally distributed with mean $0$ and standard deviation $1$. The remaining $5$ observations signify outliers and are normally distributed with mean $\mu$ and standard deviation $0.2$ in one dimension, and mean $0$ and standard deviation $1$ in other dimensions. The value of $\mu$ is changed from $0$ to $4.5$ by increments of $0.5$. The reason for a smaller standard deviation in the first dimension is to ensure that the outliers move out of the normal distribution. For each value of $\mu$ we consider the three sets of coordinates described above and their performance using the outlier methods LOF, KNN and iForest.  We conduct this experiment for $10$ iterations. Figure~\ref{fig:Exp1} shows the results for all $3$  outlier methods using the average values of  10 iterations. 
 
 \begin{figure}[!t]
 	\centering
 	\includegraphics[scale=0.8]{Exp1.pdf}
-	\caption{Results of Experiment 1}
+	\caption{Results of Experiment 1, in $\mathbb{R}^6$.}
 	\label{fig:Exp1}
 \end{figure} 
 
-Using $2$ DOBIN components gives the highest performance for all $3$ outlier detection methods for $\mu > 1$.  Indeed, we are interested in a set of coordinates can accentuate the the outliers as they move out from the inlier distribution.  For values of $\mu \in \{0, 0.5, 1\}$,  the outlier distribution lies in the interior of the inlier distribution, making a performance comparison between the coordinates not meaningful.   
+Using $3$ DOBIN components gives the highest performance for all $3$ outlier detection methods for $\mu > 1$.  Indeed, we are interested in a set of coordinates can accentuate the the outliers as they move out from the inlier distribution.  For values of $\mu \in \{0, 0.5, 1\}$,  the outlier distribution lies in the interior of the inlier distribution, making a performance comparison between the coordinates not meaningful.   
 
 \subsection{Experiment 2}
-The second experiment considers a bi-modal setting with two inlier normal distributions and one outlier normal  distribution which moves into the valley as its mean changes. Somewhat similar to the previous example we consider $805$ observations in $6$ dimensions; $800$ inlier observations of which $400$  centred at $(5,0,0,0,0,0)$ and the other $400$ centred at $(-5,0,0,0,0,0)$. All inlier observations come from normal distributions with standard deviation $1$ in each dimension. The outlier distribution consists of $5$ points with mean $(5-\mu,0,0,0,0,0)$ and standard deviations $0.2$ in the first dimension and $1$ in other dimensions. Again, a smaller standard deviation is to ensure that the outliers move into the valley. Figure~\ref{fig:Exp2} shows the results for all $3$  outlier methods on all $3$ coordinate systems using the average values of 10 iterations. \\
+The second experiment considers a bi-modal setting with two inlier normal distributions and one outlier normal  distribution which moves into the valley as its mean changes. Somewhat similar to the previous example we consider $805$ observations in $\mathbb{R}^6$; $800$ inlier observations of which $400$  centred at $(5,0,0,0,0,0)$ and the other $400$ centred at $(-5,0,0,0,0,0)$. All inlier observations come from normal distributions with standard deviation $1$ in each dimension. The outlier distribution consists of $5$ points with mean $(5-\mu,0,0,0,0,0)$ and standard deviations $0.2$ in the first dimension and $1$ in other dimensions. Again, a smaller standard deviation is to ensure that the outliers move into the valley. Figure~\ref{fig:Exp2} shows the results for all $3$  outlier methods on all $3$ coordinate systems using the average values of 10 iterations. \\
 
-Again we see that using 2 DOBIN components gives the highest performance for all 3 outlier methods. In particular, 
+Again we see that using 3 DOBIN components gives the highest performance for all 3 outlier methods. In particular, 
 \begin{figure}[!t]
 	\centering
 	\includegraphics[scale=0.8]{Exp2.pdf}
-	\caption{Results of Experiment 2}
+	\caption{Results of Experiment 2, in $\mathbb{R}^6$.}
 	\label{fig:Exp2}
 \end{figure} 
 
 \subsection{Experiment 3}
-The third experiment is motivated from \cite{zimek2012survey}. We consider a uniform distribution in $20$ dimensions and place a manual outlier at $0.9$ in $i$ dimensions where $i$ is changed from $1$ to $20$. While this is not an outlier in any single dimension, as $i$ increases this point stands out from the rest of the distribution. Indeed, for large $i$ this  point lies furthest from the rest. An equivalent outlier is $0.1$ in $i$ dimensions. The reason these points are outliers is because they are at the corners of the hyper-cube and as such far away from other points. On the contrary $0.5$ in $i$ dimensions would be closest to other points. This is because $(0.5, 0.5, \ldots)$ has neighbours from all sides and has on average $2^{20}$ more neighbours compared to $(0.9, 0.9, \ldots)$, which is at a corner on the unit hyper-cube.  
+The third experiment is motivated from \cite{zimek2012survey}. We consider a uniform distribution in $\mathbb{R}^{20}$ and place a manual outlier at $0.9$ in $i$ dimensions where $i$ is changed from $1$ to $20$. While this is not an outlier in any single dimension, as $i$ increases this point stands out from the rest of the distribution. Indeed, for large $i$ this  point lies furthest from the rest. An equivalent outlier is $0.1$ in $i$ dimensions. The reason these points are outliers is because they are at the corners of the hyper-cube and as such are far away from other points. On the contrary, $0.5$ in $i$ dimensions would be closest to other points. This is because $(0.5, 0.5, \ldots)$ has neighbours from all sides and has on average $2^{20}$ more neighbours compared to $(0.9, 0.9, \ldots)$, which is at a corner on the unit hyper-cube.  
 
-Figure~\ref{fig:Exp3} shows the results of all three outlier methods on all $3$ coordinate systems. \\
+Figure~\ref{fig:Exp3} shows the results of all three outlier methods on all $3$ coordinate systems. Again we see that using half of the DOBIN components gives the best performance for all three outlier methods.    \\
+
+In all three experiments we see that DOBIN coordinates give the best performance followed by the full set of coordinates. Principal Components are generally less effective than the full set of coordinates for these $3$ outlier methods. We note that this is not a failure of PCA, as the purpose of PCA is not outlier detection. Rather, PCA maximizes the variance in each component such that a low dimensional representation of the dataset is a good approximation to the original. However, PCA is used in outlier detection when dimension reduction is preferred before applying outlier detection methods \citep{talagala2019anomaly, hyndman2015large}. For this reason we compare DOBIN with PC components, and propose DOBIN as an alternative to PCA as a dimension reduction technique for outlier detection.
+
+
 
 \begin{figure}[!t]
 	\centering
 	\includegraphics[scale=0.8]{Exp3.pdf}
-	\caption{Results of Experiment 3}
+	\caption{Results of Experiment 3, in $\mathbb{R}^{20}$.}
 	\label{fig:Exp3}
 \end{figure} 
 
+% REDO EXPERIMENT 1 AND 2 WITH REFLE = FALSE 
 % =======================================================================
-\section{Results with visualization}
+\section{Results with visualization}\label{sec:ResWithVis}
 % =======================================================================
-FOR LATER!
+In this section we investigate specific examples motivated from \cite{unwin2019multivariate} and \cite{wilkinson2017visualizing} using the O3 plot. O3 plots \citep{unwin2019multivariate} can be used to compare the results of $6$ different outlier detection methods, namely \textit{HDoutliers} \citep{wilkinson2017visualizing}, \textit{mvBACON} \citep{billor2000bacon},  \textit{adjOutlyingness} \citep{brys2005robustification}, \textit{covMcd} \citep{rousseeuw1999fast} , \textit{FastPCs} \citep{vakili2014finding} and \textit{DetectDeviatingCells} \citep{rousseeuw2018detecting}. As such, O3 plots act as an ensemble method. In addition, O3 plots also highlight outliers in axis parallel subspaces. 
+
+\subsection{\textit{Election2005} dataset}\label{sec:ResWithVis1}
+We start with the \textit{Election2005} dataset \citep{mbgraphic}, which is used by \cite{unwin2019multivariate}  to illustrate the O3 plot. This dataset includes election results of two German elections and certain attributes of the electorates. Here we repeat one of the examples conducted by  \cite{unwin2019multivariate} and examine the associated  first two DOBIN components (DC1-DC2). \\
+
+Figure~\ref{fig:Election20051} shows the O3 plot of this dataset using all $6$ outlier methods. The columns in the left indicate the variables, the columns in the right indicate the observations, the rows show the axis parallel subspaces and the colours depict the number of methods that identify each observation in each subspace as an outlier. From this plot we see that observation $X84$ is identified as an outlier by $5$ methods in $4$ subspaces, $4$ methods in $2$ subspaces, $3$ methods in $1$ subspace and $2$ methods in $1$ subspace. $X84$ is arguably the most outlying observation in this dataset. The observations $X83$, $X76$, $X82$ are also identified as outliers by $5$ methods in the dimension of population density. They are also identified as outliers by multiple methods in different subspaces. The layout of the O3 plot is such that the outlyingness of the observations increase to the right. \\
+
+Figure~\ref{fig:Election20052} shows the first $2$ DOBIN components of the \textit{Election2005} dataset. This is a projection of the dataset onto a two dimensional subspace spanned by the first $2$ DOBIN vectors. Here we see the observation $X84$ far away from the rest of the data with $X76$, $X83$ and $X82$ somewhat detached from the rest. The observations $X87$ an $X81$ are almost at the same position in this $2$-dimensional space. The observations $X221$ and $X21$ also appear a bit outside the boundary of  other points. Thus, the DC1-DC2 space accentuates the eight most outlying observations according to the O3 plot, while showing clearly $X84$ is the most outlying observation. 
+
+\begin{figure*}[!t]
+	\centering
+	\subfloat[][]{
+		\includegraphics[scale=0.5]{Ex1_1.pdf}
+		\label{fig:Election20051}
+	}%
+	\subfloat[][]{
+		\includegraphics[scale=0.5]{Ex1_2.pdf}
+		\label{fig:Election20052}
+	}%
+	\caption{O3plot of the \textit{Election2005} dataset in Figure~\ref{fig:Election20051} and the first 2 DOBIN components in Figure~\ref{fig:Election20052} }
+	\label{fig:Election2005}
+\end{figure*}
+
+\subsection{\textit{Diamonds} dataset}\label{sec:ResWithVis2}
+The next example is taken from the \textit{Diamonds} dataset \citep{ggplot2} and is included in the \textit{O3Outliers} R package \citep{O3Rpack}. This dataset contains attributes of diamonds. We perform this example and compare the O3 plot with the associated DC1-DC2 space.  \\ 
+
+\begin{figure*}[!t]
+	\centering
+	\subfloat[][]{
+		\includegraphics[scale=0.48]{Ex2_1.pdf}
+		\label{fig:Diamonds1}
+	}%
+	\subfloat[][]{
+		\includegraphics[scale=0.48]{Ex2_2.pdf}
+		\label{fig:Diamonds2}
+	}%
+	\caption{O3plot of the \textit{Election2005} dataset in Figure~\ref{fig:Election20051} and the first 2 DOBIN components in Figure~\ref{fig:Election20052} }
+	\label{fig:Diamonds}
+\end{figure*}
+
+Figure~\ref{fig:Diamonds1} shows the O3 plot of this dataset using $3$ outlier methods, namely \textit{HDoutliers}, \textit{FastPCs} and \textit{adjOutlyingness}. We could not use all $6$ methods on this dataset as other outlier methods included in the \textit{OutliersO3} R package gave computational errors. Of the $3$ methods used, all methods identified $X4792$, $X2315$ and $X2208$ as outliers in 6 subspaces including the full space. These $3$ points appear in the DC1-DC2 space in the bottom right corner. In addition, the point $4519$ appear in the top right corner in the DC1-DC2 space, away from other points. Comparing with the O3 plot, we see that $X4519$ is identified as an outlier by $2$ methods in $6$ subspaces.  Thus the DOBIN basis can be used to project data for easy visualization of outliers. 
+
+
+\subsection{\textit{USArrests} dataset}\label{sec:ResWithVis3}
+The popular \textit{USArrests} dataset  is studied by \cite{bailey1995interactive, sarkar2008labels, yaminiviolent} to name a few. % \citep{datasetsRpack}
+\begin{figure*}[!t]
+	\centering
+	\subfloat[][]{
+		\includegraphics[scale=0.48]{Ex3_1.pdf}
+		\label{fig:USArrests1}
+	}%
+	\subfloat[][]{
+		\includegraphics[scale=0.48]{Ex3_2.pdf}
+		\label{fig:USArrests2}
+	}%
+	\caption{O3plot of the \textit{Election2005} dataset in Figure~\ref{fig:USArrests1} and the first 2 DOBIN components in Figure~\ref{fig:USArrests2} }
+	\label{fig:USArrests}
+\end{figure*}
 
 % =======================================================================
 \section{Results on a data repository}
