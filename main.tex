@@ -253,10 +253,6 @@ In this section we investigate specific examples motivated from \cite{unwin2019m
 \subsection{\textit{Election2005} dataset}\label{sec:ResWithVis1}
 We start with the \textit{Election2005} dataset \citep{mbgraphic}, which is used by \cite{unwin2019multivariate}  to illustrate the O3 plot. This dataset includes election results of two German elections and certain attributes of the electorates. Here we repeat one of the examples conducted by  \cite{unwin2019multivariate} and examine the associated  first two DOBIN components (DC1-DC2). \\
 
-Figure~\ref{fig:Election20051} shows the O3 plot of this dataset using all $6$ outlier methods. The columns in the left indicate the variables, the columns in the right indicate the observations, the rows show the axis parallel subspaces and the colours depict the number of methods that identify each observation in each subspace as an outlier. From this plot we see that observation $X84$ is identified as an outlier by $5$ methods in $4$ subspaces, $4$ methods in $2$ subspaces, $3$ methods in $1$ subspace and $2$ methods in $1$ subspace. $X84$ is arguably the most outlying observation in this dataset. The observations $X83$, $X76$, $X82$ are also identified as outliers by $5$ methods in the dimension of population density. They are also identified as outliers by multiple methods in different subspaces. The layout of the O3 plot is such that the outlyingness of the observations increase to the right. \\
-
-Figure~\ref{fig:Election20052} shows the first $2$ DOBIN components of the \textit{Election2005} dataset. This is a projection of the dataset onto a two dimensional subspace spanned by the first $2$ DOBIN vectors. Here we see the observation $X84$ far away from the rest of the data with $X76$, $X83$ and $X82$ somewhat detached from the rest. The observations $X87$ an $X81$ are almost at the same position in this $2$-dimensional space. The observations $X221$ and $X21$ also appear a bit outside the boundary of  other points. Thus, the DC1-DC2 space accentuates the eight most outlying observations according to the O3 plot, while showing clearly $X84$ is the most outlying observation. 
-
 \begin{figure*}[!t]
 	\centering
 	\subfloat[][]{
@@ -271,8 +267,27 @@ Figure~\ref{fig:Election20052} shows the first $2$ DOBIN components of the \text
 	\label{fig:Election2005}
 \end{figure*}
 
+Figure~\ref{fig:Election20051} shows the O3 plot of this dataset using all $6$ outlier methods. The columns in the left indicate the variables, the columns in the right indicate the observations, the rows show the axis parallel subspaces and the colours depict the number of methods that identify each observation in each subspace as an outlier. From this plot we see that observation $X84$ is identified as an outlier by $5$ methods in $4$ subspaces, $4$ methods in $2$ subspaces, $3$ methods in $1$ subspace and $2$ methods in $1$ subspace. $X84$ is arguably the most outlying observation in this dataset. The observations $X83$, $X76$, $X82$ are also identified as outliers by $5$ methods in the dimension of population density. They are also identified as outliers by multiple methods in different subspaces. The layout of the O3 plot is such that the outlyingness of the observations increase to the right. \\
+
+Figure~\ref{fig:Election20052} shows the first $2$ DOBIN components of the \textit{Election2005} dataset. This is a projection of the dataset onto a two dimensional subspace spanned by the first $2$ DOBIN vectors. Here we see the observation $X84$ far away from the rest of the data with $X76$, $X83$ and $X82$ somewhat detached from the rest. The observations $X87$ an $X81$ are almost at the same position in this $2$-dimensional space. The observations $X221$ and $X21$ also appear a bit outside the boundary of  other points. A simple KNN algorithm in the DC1-DC2 space gives the top $8$ candidates as $84$, $76$,  $83$, $82$, $221$, $81$, $87$, and  $21$. Thus, the DC1-DC2 space accentuates the eight most outlying observations according to the O3 plot, while showing clearly $X84$ is the most outlying observation. \\
+
+The first DOBIN vector is of interest to us as the outliers deviate in this direction. Equation~\eqref{eq:ResWithVis1} gives DC1 as a linear combination of the input variables. 
+
+\begin{equation}\label{eq:ResWithVis1}
+    \text{DC1} = \begin{bmatrix}
+    0.008 & 0.998 & 0.040 & -0.050  
+    \end{bmatrix}
+    \begin{bmatrix}
+    \text{Area} \\
+    \text{Population Density} \\
+    \text{Birthrate} \\
+    \text{Car Ownership}
+    \end{bmatrix}
+\end{equation}
+From equation~\eqref{eq:ResWithVis1} we see that \textit{Population Density} is the main variable contributing to the strong outliers identified in the O3 plot as well as in the DC1-DC2 space. This insight gives us a better understanding of the dataset. 
+
 \subsection{\textit{Diamonds} dataset}\label{sec:ResWithVis2}
-The next example is taken from the \textit{Diamonds} dataset \citep{ggplot2} and is included in the \textit{O3Outliers} R package \citep{O3Rpack}. This dataset contains attributes of diamonds. We perform this example and compare the O3 plot with the associated DC1-DC2 space.  \\ 
+The next example is taken from the \textit{Diamonds} dataset \citep{ggplot2} which is included in the \textit{O3Outliers} R package \citep{O3Rpack}. This dataset contains attributes of diamonds. For this example we compare the O3 plot with the associated DC1-DC2 space.  \\ 
 
 \begin{figure*}[!t]
 	\centering
@@ -284,15 +299,33 @@ The next example is taken from the \textit{Diamonds} dataset \citep{ggplot2} and
 		\includegraphics[scale=0.48]{Ex2_2.pdf}
 		\label{fig:Diamonds2}
 	}%
-	\caption{O3plot of the \textit{Election2005} dataset in Figure~\ref{fig:Election20051} and the first 2 DOBIN components in Figure~\ref{fig:Election20052} }
+	\caption{O3plot of the \textit{Diamonds} dataset in Figure~\ref{fig:Election20051} and the first 2 DOBIN components in Figure~\ref{fig:Election20052} }
 	\label{fig:Diamonds}
 \end{figure*}
 
-Figure~\ref{fig:Diamonds1} shows the O3 plot of this dataset using $3$ outlier methods, namely \textit{HDoutliers}, \textit{FastPCs} and \textit{adjOutlyingness}. We could not use all $6$ methods on this dataset as other outlier methods included in the \textit{OutliersO3} R package gave computational errors. Of the $3$ methods used, all methods identified $X4792$, $X2315$ and $X2208$ as outliers in 6 subspaces including the full space. These $3$ points appear in the DC1-DC2 space in the bottom right corner. In addition, the point $4519$ appear in the top right corner in the DC1-DC2 space, away from other points. Comparing with the O3 plot, we see that $X4519$ is identified as an outlier by $2$ methods in $6$ subspaces.  Thus the DOBIN basis can be used to project data for easy visualization of outliers. 
+Figure~\ref{fig:Diamonds1} shows the O3 plot of this dataset using $3$ outlier methods, namely \textit{HDoutliers}, \textit{FastPCs} and \textit{adjOutlyingness}. We could not use all $6$ methods on this dataset as other outlier methods included in the \textit{OutliersO3} R package gave computational errors. Of the $3$ methods used, all methods identified $X4792$, $X2315$ and $X2208$ as outliers in 6 subspaces including the full space. These $3$ points appear in the DC1-DC2 space in the bottom right corner. In addition, the point $4519$ appear in the top right corner in the DC1-DC2 space, away from other points. Comparing with the O3 plot, we see that $X4519$ is identified as an outlier by $2$ methods in $6$ subspaces. In keeping with the guidelines of the previous section, we use half of the DC components to evaluate a KNN algorithm. The top $4$ candidates in this $3$-dimensional DC space are $4792$, $2315$, $2208$ and $4519$ in that order. \\
+
+To understand the first DOBIN vector, we look at its coefficients:
+\begin{equation}\label{eq:ResWithVis2}
+    \text{DC1} = \begin{bmatrix}
+    0.098 & -0.659 &  0.185 & 0.097  & 0.126 & -0.704  
+    \end{bmatrix}
+    \begin{bmatrix}
+    \text{Carat} \\
+    \text{Depth} \\
+    \text{Table} \\
+    \text{x} \\
+    \text{y} \\
+    \text{z}
+    \end{bmatrix}
+\end{equation}
+We see that the variables \textit{z} and \textit{Depth} contribute more  to  outliers in the DC1-DC2 space as well as in the O3 plot. 
+%Thus the DOBIN basis can be used to project data for easy visualization of outliers. 
 
 
 \subsection{\textit{USArrests} dataset}\label{sec:ResWithVis3}
-The popular \textit{USArrests} dataset  is studied by \cite{bailey1995interactive, sarkar2008labels, yaminiviolent} to name a few. % \citep{datasetsRpack}
+The popular \textit{USArrests} dataset  is studied by \cite{bailey1995interactive, sarkar2008labels, yaminiviolent} to name a few. This dataset contains violent crime rates for the 50 US states in 1973. The O3 plot using all $6$ outlier detection methods and the DC1-DC2 space of this dataset is illustrated in Figure~\ref{fig:USArrests}. 
+
 \begin{figure*}[!t]
 	\centering
 	\subfloat[][]{
@@ -303,9 +336,101 @@ The popular \textit{USArrests} dataset  is studied by \cite{bailey1995interactiv
 		\includegraphics[scale=0.48]{Ex3_2.pdf}
 		\label{fig:USArrests2}
 	}%
-	\caption{O3plot of the \textit{Election2005} dataset in Figure~\ref{fig:USArrests1} and the first 2 DOBIN components in Figure~\ref{fig:USArrests2} }
+	\caption{O3plot of the \textit{USArrests} dataset in Figure~\ref{fig:USArrests1} and the first 2 DOBIN components in Figure~\ref{fig:USArrests2} }
 	\label{fig:USArrests}
 \end{figure*}
+
+From Figure\ref{fig:USArrests1} we see that $X2$ is flagged as an outlier in $8$ subspaces including the full space, by one or two outlier detection methods. The adjoining outlier $X33$  is only flagged in $4$ subspaces and the others in even smaller subspaces.  The observation $X2$ corresponds to Alaska. Of the $6$ outlier methods, only $2$ identify Alaska as an outlier in certain subspaces. This also suggests that even though there is consensus between two methods, as only a third of the methods agree on this outlier, it may not be quite so outlying as the outliers in the previous examples. Indeed, this notion is validated by the DC1-DC2 plot. We see the observation $2$ standing out from the rest, but not by a massive margin. A KNN algorithm identifies this observation as having the highest KNN distance in DC1-DC2 space.   \\   
+
+We look at the coefficients of the first DOBIN vector as observation $2$ deviates in DC1:
+\begin{equation}\label{eq:ResWithVis3}
+    \text{DC1} = \begin{bmatrix}
+    0.173 & 0.077 &  -0.675 & 0.713   
+    \end{bmatrix}
+    \begin{bmatrix}
+    \text{Murder} \\
+    \text{Assault} \\
+    \text{UrbanPop} \\
+    \text{Rape} 
+    \end{bmatrix} \, 
+\end{equation}
+We see that the variables \textit{UrbanPop} and \textit{Rape} contribute more to the first DOBIN vector than the other variables. From equation~\eqref{eq:ResWithVis3},  high values of DC1 indicate  low percentages of urban population and high rape arrests per $100,000$ residents. As such, we might expect Alaska to have higher rape arrests per urban population percentage. Indeed from Figure~\ref{fig:USArrests3} we see that Alaska has the highest ratio of  \textit{Rape/UrbanPop} of all $50$ states confirming the insight gleaned from the first DOBIN vector. 
+
+\begin{figure*}[!t]
+	\centering
+	\includegraphics[scale=0.48]{Ex3_3.pdf}
+	\caption{USArrests dataset -- Rape to Urban population ratio values}
+	\label{fig:USArrests3}
+\end{figure*}
+
+
+\subsection{\textit{Airquality} dataset}\label{sec:ResWithVis4}
+The \textit{Airquality} dataset discussed in \cite{john1983graphical} has measurements on air quality in New York city from May to September 1973.  The O3 plot using all $6$ outlier methods and the DC1-DC2 space of this dataset is shown in Figure~\ref{fig:Airquality}.
+
+\begin{figure*}[!t]
+	\centering
+	\subfloat[][]{
+		\includegraphics[scale=0.48]{Ex4_1.pdf}
+		\label{fig:Airquality1}
+	}%
+	\subfloat[][]{
+		\includegraphics[scale=0.48]{Ex4_2.pdf}
+		\label{fig:Airquality2}
+	}%
+	\caption{O3plot of the \textit{Airquality} dataset in Figure~\ref{fig:Airquality1} and the first 2 DOBIN components in Figure~\ref{fig:Airquality2} }
+	\label{fig:Airquality}
+\end{figure*}
+The O3 plot in Figure~\ref{fig:Airquality1} shows $X117$ as the only outlier identified in $6$ subspaces by $2$ methods. The associated DC1-DC2 space shows the observation $117$ away from the rest at the bottom right. Again, we see agreement between the O3 plot and DC1-DC2 space. The observation $X117$ was identified as an outlier only by a third of the outlier methods. This is corroborated in the DC1-DC2 plot by comparatively less outlyingness of observation $117$ compared to  outliers in the \textit{Diamonds} dataset. Performing a KNN algorithm revealed the observation with the highest KNN distance as $117$ in the DC1-DC2 space. \\
+
+The first DOBIN vector has the following coefficients:
+\begin{equation}\label{eq:ResWithVis4}
+    \text{DC1} = \begin{bmatrix}
+    0.842 & -0.078 &  0.512 & -0.151   
+    \end{bmatrix}
+    \begin{bmatrix}
+    \text{Ozone} \\
+    \text{Solar.R} \\
+    \text{Wind} \\
+    \text{Temp} 
+    \end{bmatrix} \, 
+\end{equation}
+From equation~\eqref{eq:ResWithVis4} we see that the observation $117$ is an outlier due to high values of \textit{Ozone} and \textit{Wind}. 
+
+\subsection{\textit{Lesmis} dataset}\label{sec:ResWithVis5}
+The \textit{Lesmis} dataset \citep{sombrero} contains the character coappearance network of characters in the novel \textit{Les Miserables} by Victor Hugo. This dataset is stored as a graph, with vertices corresponding to characters and is shown in Figure~\ref{fig:lesmisgraph}. The character network in \textit{Les Miserables} is also studied in \cite{wilkinson2017visualizing} with the focus of finding outliers. Here we conduct a similar study using the O3 plot and the DC1-DC2 space. \\
+
+\begin{figure*}[!t]
+	\centering
+	\includegraphics{lesmis.pdf}
+	\caption{The \textit{lesmis} dataset }
+	\label{fig:lesmisgraph}
+\end{figure*}
+
+As in \cite{wilkinson2017visualizing} we compute the graph-based features centrality, transitivity, closeness, betweenness, degree, average nearest neighbour degree and page rank for each character in the dataset. This transforms the original graph to a rectangular dataset of $77$ observations and $7$ variables, with each observation corresponding to a character in the novel.  Figure~\ref{fig:lesmis1} shows the O3 plot for the transformed \textit{lesmis} dataset using the $3$ methods \textit{HDoutliers}, \textit{mvBACON} and \textit{covMCD}. The other $3$ outlier methods used in O3 plots gave computational errors and as such could not be used.  Figure~\ref{fig:lesmis2} shows the DC1-DC2 space of the transformed \textit{lesmis} dataset.  
+
+\begin{figure*}[!t]
+	\centering
+	\subfloat[][]{
+		\includegraphics[scale=0.48]{Ex5_1.pdf}
+		\label{fig:lesmis1}
+	}%
+	\subfloat[][]{
+		\includegraphics[scale=0.48]{Ex5_2.pdf}
+		\label{fig:lesmis2}
+	}%
+	\caption{O3plot of the transformed \textit{lesmis} dataset in Figure~\ref{fig:lesmis1} and the first 2 DOBIN components in Figure~\ref{fig:lesmis2} }
+	\label{fig:lesmis}
+\end{figure*}
+
+
+
+
+
+
+
+
+
+
 
 % =======================================================================
 \section{Results on a data repository}
