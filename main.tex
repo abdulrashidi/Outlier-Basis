@@ -48,7 +48,7 @@
 % =======================================================================
 \begin{document}
 % =======================================================================
-\title{DOBIN: A basis suitable for outlier detection}
+\title{DOBIN: A basis for outlier detection}
 \author{Sevvandi Kandanaarachchi, Rob J. Hyndman}
 \maketitle
 \abstract{FOR LATER}
@@ -189,12 +189,12 @@ Once the basis $\Theta$  is computed, we  change the basis of the original data 
 \begin{equation}\label{eq:secMF14}
     \tilde{X} = X_1 \Theta \, .
 \end{equation}
-We note that the basis $\Theta$ is not invariant to rotations, i.e. if one were to start with a different basis, the resulting $\Theta$ would be different. This is because when constructing the $Y$ space we compute element-wise squares of vector differences. While vector addition is basis invariant, squared element-wise components depend on the basis vectors. Notwithstanding this limitation, we achieve good results on experiments conducted with our extensive collection of more than $12,000$ real world datasets. We performed DOBIN using the original basis on almost all our experiments. We only used a different basis if the number of variables  are much higher than the number of observations.  DOBIN generally performs better with the original basis than with a transformed basis, and finds it  is easier to compute the true direction of outliers when the axes are independent, compared to when each axis is a linear combination of the original variables. 
+We note that the basis $\Theta$ is not invariant to rotations, i.e. if one were to start with a different basis, the resulting $\Theta$ would be different. This is because when constructing the $Y$ space we compute element-wise squares of vector differences. While vector addition is basis invariant, squared element-wise components depend on the basis vectors. Notwithstanding this limitation, we achieve good results on experiments conducted with our extensive collection of more than $12,000$ real world datasets. We performed DOBIN using the original basis on almost all our experiments. We only used a different basis if the number of variables  were much higher than the number of observations.  DOBIN generally performs better with the original basis than with a transformed basis, and finds it  is easier to compute the true direction of outliers when the axes are independent, compared to when each axis is a linear combination of the original variables. 
 
 
 % GIVE NAMES TO THE BASIS VECTORS, AND COORDINATES
 % =======================================================================
-\section{Experiments with synthetic data}
+\section{Experiments with synthetic data}\label{sec:synthetic}
 % =======================================================================
 Next we do three experiments with synthetic data. For each experiment we compare results for $3$ outlier detection methods, namely LOF \citep{breunig2000lof}, KNN \citep{ramaswamy2000efficient} and isolation forest \citep{liu2008isolation}. We choose these methods as they are fundamentally different: LOF uses a local density based approach; KNN uses a global distance based approach; and iForest uses a  tree based approach.  For each outlier detection method we consider the following $3$ coordinate systems:  
 \begin{enumerate}  
@@ -284,7 +284,7 @@ The first DOBIN vector is of interest to us as the outliers deviate in this dire
     \text{Car Ownership}
     \end{bmatrix}
 \end{equation}
-From equation~\eqref{eq:ResWithVis1} we see that \textit{Population Density} is the main variable contributing to the strong outliers identified in the O3 plot as well as in the DC1-DC2 space. This insight gives us a better understanding of the dataset. 
+From equation~\eqref{eq:ResWithVis1} we see that \textit{Population Density} is the main variable contributing to outliers in the DC1-DC2 space. The O3 plot supports this observation. If we look carefully at the O3 plot we see that $X21$ to $X84$ gets identified as outliers in  all subspaces that contain \textit{Population Density}.  This insight gives us a better understanding of the dataset. 
 
 \subsection{\textit{Diamonds} dataset}\label{sec:ResWithVis2}
 The next example is taken from the \textit{Diamonds} dataset \citep{ggplot2} which is included in the \textit{O3Outliers} R package \citep{O3Rpack}. This dataset contains attributes of diamonds. For this example we compare the O3 plot with the associated DC1-DC2 space.  \\ 
@@ -406,7 +406,7 @@ The \textit{Lesmis} dataset \citep{sombrero} contains the character coappearance
 	\label{fig:lesmisgraph}
 \end{figure*}
 
-As in \cite{wilkinson2017visualizing} we compute the graph-based features centrality, transitivity, closeness, betweenness, degree, average nearest neighbour degree and page rank for each character in the dataset. This transforms the original graph to a rectangular dataset of $77$ observations and $7$ variables, with each observation corresponding to a character in the novel.  Figure~\ref{fig:lesmis1} shows the O3 plot for the transformed \textit{lesmis} dataset using the $3$ methods \textit{HDoutliers}, \textit{mvBACON} and \textit{covMCD}. The other $3$ outlier methods used in O3 plots gave computational errors and as such could not be used.  Figure~\ref{fig:lesmis2} shows the DC1-DC2 space of the transformed \textit{lesmis} dataset.  
+As in \cite{wilkinson2017visualizing} we compute the graph-based features centrality, transitivity, closeness, betweenness, degree, average nearest neighbour degree and page rank for each character in the dataset. This transforms the original graph to a rectangular dataset of $77$ observations and $7$ variables, with each observation corresponding to a character in the novel.  Figure~\ref{fig:lesmis1} shows the O3 plot for the transformed \textit{lesmis} dataset using the $3$ methods \textit{HDoutliers}, \textit{mvBACON} and \textit{covMCD}. The other $3$ outlier methods used in O3 plots gave computational errors and as such could not be used.  Figure~\ref{fig:lesmis2} shows the DC1-DC2 space of the transformed \textit{lesmis} dataset.  \\
 
 \begin{figure*}[!t]
 	\centering
@@ -422,20 +422,83 @@ As in \cite{wilkinson2017visualizing} we compute the graph-based features centra
 	\label{fig:lesmis}
 \end{figure*}
 
+From the O3 plot it is evident that Valjean is the main outlier consistently identified by the $3$ outlier methods in a vast majority of the subspaces.  This is confirmed by the DC1-DC2 plot as Valjean appears far away from the rest of the characters in the top right corner.  The next most outlying characters in the O3 plot are Myriel, Gavroche, Marius and Fantine. These characters also appear in the DC1-DC2 space somewhat detached from the rest of the characters, although none so remarkably far away as Valjean. A KNN algorithm performed on the first half of the DC components identified Valjean, Myriel, Gavroche, Marius and Fantine as having the highest KNN distances. 
 
+As the first DOBIN vector is discriminatory, we look at its coefficients:
+The first DOBIN vector has the following coefficients:
+\begin{equation}\label{eq:ResWithVis5}
+    \text{DC1} = \begin{bmatrix}
+    0.0022 & -0.0001 &  0.0032 & 0.9999 & 0.0029 & 0.0025 & 0.0057  
+    \end{bmatrix}
+    \begin{bmatrix}
+    \text{Centrality} \\
+    \text{Transitivity} \\
+    \text{Closeness} \\
+    \text{Betweenness} \\
+    \text{Degree} \\
+    \text{Avg. Neighbour Degree}\\
+    \text{Page Rank}
+    \end{bmatrix} \, .
+\end{equation}
+From equation~\eqref{eq:ResWithVis5} we see that \textit{Betweenness} is the main feature that makes Valjean an outlier in the DC1-DC2 space. The property \textit{Betweenness} is defined as the number of shortest paths going through a vertex \citep{igraph}. Thus Valjean becomes a node in many shortest paths in the character network making him the main outlier.  
 
+\subsection{Classics from Gutenberg}\label{sec:ResWithVis6}
+This example is on text analysis of $22$ classics downloaded from the Gutenberg project \citep{gutenberg} and  is similar to the example in \cite{wilkinson2017visualizing}. We consider the novels \textit{Alice in Wonderland}, \textit{Anna Karenina}, \textit{Bleak House}, \textit{Emma}, \textit{Frankenstein}, \textit{Gullivers Travels}, \textit{Jude the Obscure}, \textit{Lord Jim}, \textit{Mansfield Park}, \textit{Middlemarch}, \textit{Moby Dick}, \textit{Northanger Abbey}, \textit{Persuasion}, \textit{Pride and Prejudice}, \textit{Sense and Sensibility}, \textit{Silas Marner}, \textit{Sons and Lovers}, \textit{The Life and Opinions of Tristram Shandy}, \textit{Wizard of Oz}, \textit{Ulysses}, \textit{Vanity Fair} and  \textit{War and Peace} in our analysis. \\
 
+For each novel we obtain the collection of words used. This set of words need to be cleaned before computing any useful features. We use the R package \textit{tidytext} \citep{tidytext} for this task. As the first `cleaning' step, we eliminate the stop words such as \textit{the}, \textit{a}, \textit{an} and \textit{in} from our collection. We also remove numbers from our word collection.  Next we use a stemming procedure to reduce words to their word stem. For example the words \textit{run} and \textit{running} have the same word stems. This process gives us a cleaned set of words for each novel. We compute the tf-idf (term frequency-inverse document frequency) measure on this collection. The tf-idf statistic measures how important a word is to a document when considering a collection of documents.  Consequently we end up with a rectangular dataset of $22$ observations and $39,624$ variables, where each observation is a novel and each variable is the tf-idf statistic of a word. \\
 
+However, $22$ vectors in $\mathbb{R}^{39,624}$ can only span a subspace of $22$ dimensions or less. As such, we compute this subspace and the respective coordinates of the observations using Principal Component Analysis. We use all the principal components so that we're  performing a change of basis and not a projection. As a result we obtain a $22\times 22$ matrix, where each row is an observation corresponding to a novel and each column is a linear combination of $39,624$ tf-idf statistics. The resulting O3 plot using \textit{HDoutliers} and the corresponding DC1-DC2 space is illustrated in Figure~\ref{fig:gutenberg}. Again we see the O3 plot and the DC1-DC2 space agreeing on the most outlying novel \textit{Ulysses} confirming the findings of \cite{wilkinson2017visualizing}. Performing a KNN algorithm yielded \textit{Ulysses} as the observation with the highest KNN distance.  \\
 
+The novel \textit{Ulysses} stands out in the DC1-DC2 space mainly because of its second DC component. However, we do not explore the coefficients of this vector as each coefficient is a linear combination of  $39,624$ variables, making it difficult to gain insights. \\
 
+\begin{figure*}[!t]
+	\centering
+	\subfloat[][]{
+		\includegraphics[scale=0.48]{Ex6_1.pdf}
+		\label{fig:gutenberg1}
+	}%
+	\subfloat[][]{
+		\includegraphics[scale=0.48]{Ex6_2.pdf}
+		\label{fig:gutenberg2}
+	}%
+	\caption{O3plot of 22 Gutenberg classics in Figure~\ref{fig:gutenberg1} and the first 2 DOBIN components in Figure~\ref{fig:gutenberg2} }
+	\label{fig:gutenberg}
+\end{figure*}
 
-
-
+This completes the visual analysis of datasets. Next we  explore the effect of DOBIN on an extensive data repository. 
 
 % =======================================================================
-\section{Results on a data repository}
+\section{Results on a data repository}\label{sec:DatRepo}
 % =======================================================================
-FOR LATER!
+In this section we work with a data repository of more than $12,000$ datasets \citep{datasets}, which was used in our earlier work. Each dataset has labeled outliers and  originally was used for classification purposes. The present datasets are modified from its original form by downsampling minority class observations, converting categorical attributes to numerical values, removing missing data and creating several variants from each classification dataset. More details on dataset preparation can be found in \cite{kandanaarachchi2018normalization}. This collection also includes datasets from \cite{campos2016evaluation}. \\ 
+
+Similar to Section~\ref{sec:synthetic}, for each dataset we compare the results of three outlier methods LOF, KNN and iForest using the area under the ROC curve (AUC), on three different coordinate systems, namely the full set of coordinates, the first half of DOBIN components and the first half of Principal Components. For a dataset with $p$ variables and $N$ observations, if $p > N$, we consider $N/2$ number of DOBIN and PC components. This is because when $p >N$, \,  $N$  vectors can only span an $N$ dimensional space.  \\
+
+We conduct two experiments on this data repository. For the synthetic data experiments conducted in Section~\ref{sec:synthetic}, DOBIN was quite effective in revealing hidden outliers in subspaces. In order to test this intuition rigorously, for each dataset we add $20$ noise variables distributed normally, i.e. $\sim \mathcal{N}(0,1)$.  We compare the results of the three outlier detection methods on the three sets of coordinates on each of these `fattened' datasets. This is our first experiment. As the second experiment, we perform the same computation on the original datasets without any changes. \\
+
+We need to select appropriate tools to present results of $12,000$ datasets across three methods and three coordinate systems. The ability to delve into each dataset and obtain  insights is no longer feasible with a large repository. Furthermore, the datasets are generated from approximately $200$ source datasets. Thus, dataset variants need to be accounted for. \\
+
+In addition, we would like to ascertain whether DOBIN coordinates improve the performance of the three outlier detection methods compared to the other two coordinate systems. Therefore we investigate each outlier detection method separately. For each outlier method, we compare the performance of the three coordinate systems using a Friedman test adjusting for the dataset variants. If the Friedman test is significant, then we perform a Nemenyi test, so that we know the rankings of the coordinate systems.  
+
+\subsection{Fattened datasets}\label{sec:DatRepo1}
+$12,647$ datasets
+
+
+\begin{figure*}[!t]
+	\centering
+	\subfloat[][]{
+		\includegraphics[scale=0.48]{LOF_Nemenyi.pdf}
+		\label{fig:LOF_FAT1}
+	}%
+	\subfloat[][]{
+		\includegraphics[scale=0.48]{LOF_Density.pdf}
+		\label{fig:LOF_FAT2}
+	}%
+	\caption{Nemenyi plot of LOF results of fattened datasets in Figure~\ref{fig:LOF_FAT1} and the density plot of the three coordinate systems in Figure~\ref{fig:LOF_FAT2}. }
+	\label{fig:LOF_FAT}
+\end{figure*}
+
+
 
 % =======================================================================
 \section{Conclusion}
