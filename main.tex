@@ -90,7 +90,7 @@ where $S$ is a symmetric positive definite matrix.  In addition when $S$ is diag
 where $\left\langle \cdot\, , \cdot \right\rangle$ denotes the standard inner product in $\mathbb{R}^p$,   $\eta = \left(s_1, s_2, \ldots s_p\right)^T$, and $\circ$ denotes the element-wise  vector product. As $S$ is symmetric and positive definite  it is diagonalizable, thus giving us motivation for considering a diagonal $S$.  \\
 
 \noindent
-Next we establish the $Y$ space, which is instrumental is the construction of DOBIN.
+Next we establish the $Y$ space, which is instrumental in the construction of DOBIN.
 
 \subsection{The $Y$ space}\label{sec:MathFrame1}
 Let  $\bm{y}_{ij} = \left( \bm{x}_i - \bm{x}_j \right)\circ \left( \bm{x}_i - \bm{x}_j \right) = \left( \left( x_{i1} - x_{j1} \right)^2, \left( x_{i2} - x_{j2} \right)^2, \ldots,  \,  \left( x_{ip} - x_{jp} \right)^2  \right)\, . $ Substituting in equation~\eqref{eq:secMF2} gives
@@ -588,7 +588,7 @@ Similar performances are obtained for iForest, which is illustrated in Figure~\r
 % =======================================================================
 \section{Conclusion}
 % =======================================================================
-Dimension reduction for outlier detection is a topic that has not received much attention in the literature. One way to achieve this is to construct a basis that empowers outlier detection. In this paper, we present DOBIN: a Distance based Outlier Basis usIng Neighbours, which strives to accomplish this goal. We used DOBIN on an extensive data repository of real world datasets and showed that DOBIN basis improves performance of the outlier detection methods LOF, KNN and iForest. Using half of the DOBIN components we outperformed PCA and the standard basis as coordinate systems for these three outlier detection methods. We attribute this success of DOBIN to its firm mathematical foundations. \\
+Dimension reduction for outlier detection is a topic that has not received much attention in the literature. One way to achieve this is to construct a basis that empowers outlier detection. In this paper, we present DOBIN: a Distance based Outlier Basis usIng Neighbours, which strives to accomplish this goal. We used DOBIN on an extensive data repository of real world datasets and showed that DOBIN basis improves performance of the outlier detection methods LOF, KNN and iForest. Using half of the DOBIN components we outperformed PCA and the standard basis as coordinate systems for these three outlier detection methods. We attribute DOBIN's success to its firm mathematical foundations. \\
 
 In addition, we conducted a visual analysis of outliers using DOBIN on six datasets from diverse sources, which included a character graph from the novel  \textit{Les Mis\'erables} and $22$ classics from Gutenberg website. We projected the data onto a 2D space spanned by the first two DOBIN vectors, and saw that outliers identified by many methods in O3 plots were indeed far away from the rest of the data.  We gained insights about the outliers in these datasets, and identified the variables that contributed to make them outliers.  \\
 
