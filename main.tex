@@ -1,11 +1,25 @@
 \documentclass[a4paper,11pt]{article}
-
-\usepackage{newtxtext,newtxmath,amsmath,bm}
-\usepackage{url,natbib,graphicx,parskip}
+\usepackage{newtxtext,newtxmath, amsmath, amsfonts, bm}
+\usepackage{paralist, url, natbib, parskip}
+\usepackage{graphicx, subfig, adjustbox}
+\usepackage[section]{placeins}
+\usepackage[linesnumbered,lined,boxed,commentsnumbered]{algorithm2e}
 \usepackage[margin=1.5cm, bottom=2cm]{geometry}
 \usepackage[margin=2cm]{caption}
+\DeclareCaptionStyle{italic}[justification=centering]
+ {labelfont={bf},textfont={it},labelsep=colon}
+\captionsetup[figure]{style=italic,format=hang,singlelinecheck=true}
+
+\SetKwInOut{Parameter}{parameter}
+\setlength{\algomargin}{2em}
+\renewcommand{\familydefault}{ptm}
+\newcommand{\dist}{\text{dist}}
+\newcommand{\diag}{\text{diag}}
+\DeclareMathOperator{\sign}{sign}
 
 \graphicspath{{./Graphics/}}
+
+\allowdisplaybreaks
 
 % =======================================================================
 \begin{document}
