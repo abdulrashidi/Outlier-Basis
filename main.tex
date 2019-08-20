@@ -37,21 +37,19 @@
 \section{Introduction}
 % =======================================================================
 
-Outlier detection is used in diverse applications such as the identification of extreme weather events, stock market crashes and fraudulent transactions.
-
-A common challenge in many domains is that a data point may be an outlier in the original high dimensional space, but not an outlier in the low dimensional subspace created by a dimension reduction method. A growing body of literature on subspace outlier detection focuses on meeting this challenge \citep[e.g.,][]{aggarwal2001outlier, keller2012hics}.
+Outlier detection is used in diverse applications such as the identification of extreme weather events, stock market crashes and fraudulent transactions. A common challenge in many domains is that a data point may be an outlier in the original high dimensional space, but not an outlier in the low dimensional subspace created by a dimension reduction method.
 
 We address this challenge by proposing a set of basis vectors tailored for unsupervised outlier detection which we call DOBIN: a Distance based Outlier BasIs using Neighbours. The acronym DOBIN is inspired from the informal verb `dob in', which the Collins English dictionary defines as `to inform against or report, specially to the police'. We emphasize that DOBIN is not an outlier detection method; rather it is a pre-processing step that can be used by any outlier detection method.
 
-To the best of our knowledge no formal dimension reduction techniques exist for outlier detection. It is common to use Principal Component Analysis (PCA) in instances where dimension reduction is used when detecting outliers \citep[e.g.,][]{talagala2019anomaly, hyndman2015large}. However, the goal of PCA is to find a set of basis vectors that explains the variance of the data, such that the highest variance is in the direction of the first vector, and so on. Therefore, the PC basis may not be suited for detecting outliers. By introducing DOBIN, we aim to bridge this gap in the literature.
+To the best of our knowledge no formal dimension reduction techniques exist for outlier detection. It is common to use Principal Component Analysis (PCA) where dimension reduction is used when detecting outliers \citep[e.g.,][]{talagala2019anomaly, hyndman2015large}. However, the goal of PCA is to find a set of basis vectors that explains the variance of the data, such that the highest variance is in the direction of the first vector, and so on. Therefore, the PC basis may not be suited for detecting outliers. By introducing DOBIN, we aim to bridge this gap in the literature.
 
-We envisage two uses of DOBIN. First, as a basis more conducive to outlier detection, it brings outliers to the forefront using a smaller number of components. In this sense, it is somewhat similar to subspace outlier detection, even though DOBIN does not detect outliers directly. If outliers arise in the full input space, DOBIN enables the outlier detection algorithm to detect outliers using fewer components. The second use of DOBIN is to assist with visualisation of outliers as we will see in Section~\ref{sec:ResWithVis}.
+We envisage two uses of DOBIN. First, as a basis more conducive to outlier detection, it brings outliers to the forefront using a smaller number of components. In this sense, it is somewhat similar to subspace outlier detection \citep[e.g.,][]{aggarwal2001outlier, keller2012hics}, although DOBIN does not detect outliers directly. If outliers arise in the full input space, DOBIN enables the outlier detection algorithm to detect outliers using fewer components. The second use of DOBIN is to assist with visualisation of outliers as we will see in Section~\ref{sec:ResWithVis}.
 
 The literature on outlier detection has evolved in two fields, with contributions from statisticians and computer scientists. Although the methodologies used by the two groups are somewhat different, both groups have contributed to a rich and diverse literature, benefiting the broader community. Useful summaries of the computer science literature are provided by \citet{goldstein2016comparative} and \citet{zimek2012survey}; while similar surveys of the statistics outlier literature are given in \citet{rousseeuw2005} and \citet{unwin2019multivariate}. We have included methods from both disciplines in this paper.
 
 Some methods treat outlier identification as a binary rule, with observations classified as outliers or otherwise \citep[e.g.,][]{billor2000bacon, wilkinson2017visualizing, rousseeuw2018detecting}, while other methods rank all observations in terms of ``outlyingness'' \citep[e.g.,][]{breunig2000lof, liu2008isolation}, or provide a probability of an observation being an outlier \citep[e.g.,][]{kriegel2009loop}. This difference impacts the performance evaluation metrics. Metrics such as false negatives and false positives or positive predictive value and negative predictive value are used to evaluate the binary results \citep{wilkinson2017visualizing}. By contrast, having a ranking of the observations leads to use tools such as area under the Receiver Operator Characteristic (ROC) curve, area under the Precision-Recall (PR) curve or precision at $n$ to evaluate performance \citep{campos2016evaluation}.
 
-In Sections~\ref{sec:synthetic} and~\ref{sec:DatRepo} we investigate the effect of DOBIN on three outlier detection methods which first appeared in the computer science literature: LOF \citep{breunig2000lof}, KNN \citep{ramaswamy2000efficient} and iForest \citep{\elliu2008isolation}. To evaluate their performance, we use area under the ROC curve. We examine the effectiveness of DOBIN by comparing it against two other bases: PCA and the original basis. In Section~\ref{sec:synthetic} we use synthetic data to conduct experiments and in Section~\ref{sec:DatRepo} we use real data from our repository of more than $12,000$ datasets \citep{datasets}.
+In Sections~\ref{sec:synthetic} and~\ref{sec:DatRepo} we investigate the effect of DOBIN on three outlier detection methods which first appeared in the computer science literature: LOF \citep{breunig2000lof}, KNN \citep{ramaswamy2000efficient} and iForest \citep{liu2008isolation}. To evaluate their performance, we use area under the ROC curve. We examine the effectiveness of DOBIN by comparing it against two other bases: PCA and the original basis. In Section~\ref{sec:synthetic} we use synthetic data to conduct experiments and in Section~\ref{sec:DatRepo} we use real data from our repository of more than $12,000$ datasets \citep{datasets}.
 
 Section~\ref{sec:ResWithVis} examines outlier detection methods developed by the statistical community on some associated datasets. We use O3 plots by \cite{unwin2019multivariate}, which can be used to compare the results of six different outlier detection methods: \textit{HDoutliers} \citep{wilkinson2017visualizing}, \textit{mvBACON} \citep{billor2000bacon}, \textit{adjOutlyingness} \citep{brys2005robustification}, \textit{covMcd} \citep{rousseeuw1999fast} , \textit{FastPCs} \citep{vakili2014finding} and \textit{DetectDeviatingCells} \citep{rousseeuw2018detecting}. We use O3 plots in conjunction with the first two DOBIN components of each dataset and visually inspect if the outliers identified by the O3 plots are further away from the other points in the DOBIN space. This section highlights the usage of DOBIN as an outlier visualization tool.
 
@@ -61,33 +59,34 @@ We have produced an R package \textit{dobin} \citep{dobin}, which computes the D
 \section{Mathematical Framework}\label{sec:MathFrame}
 % =======================================================================
 
-Let $X_{N \times p}$ be a matrix denoting a dataset of $N$ observations and $p$ attributes. Let us denote the $i^{\text{th}}$ row of $X$ by $\bm{x}_i$. The distance between the points $\bm{x}_i$ and $\bm{x}_j$ can be written as
+Let $X_{N \times p}$ be a matrix denoting a dataset of $N$ observations and $p$ attributes. Let us denote the $i^{\text{th}}$ row of $X$ by $\bm{x}_i$. The distance between the observations $\bm{x}_i$ and $\bm{x}_j$ can be written as
 \begin{equation}\label{eq:secMF1}
-	\dist(\bm{x}_i, \bm{x}_j)^2 = \left( \bm{x}_i - \bm{x}_j \right)^\top S \left( \bm{x}_i - \bm{x}_j \right) \, ,
+	\dist(\bm{x}_i, \bm{x}_j)^2 = ( \bm{x}_i - \bm{x}_j)^\top S ( \bm{x}_i - \bm{x}_j ) \, ,
 \end{equation}
-where $S$ is a symmetric positive definite matrix. In addition when $S$ is diagonal, i,e, $S = \diag(s_1, s_2, \ldots, s_p)$ we obtain
+where $S$ is a symmetric positive definite matrix. In addition when $S$ is diagonal, i.e.\ $S = \diag(s_1, s_2, \dots, s_p)$, we obtain
 \begin{equation}\label{eq:secMF2}
-	\dist(\bm{x}_i, \bm{x}_j)^2 = \left\langle \eta\, , \left( \bm{x}_i - \bm{x}_j \right)\circ \left( \bm{x}_i - \bm{x}_j \right) \right\rangle \,,
+	\dist(\bm{x}_i, \bm{x}_j)^2 = \left\langle \eta\, , ( \bm{x}_i - \bm{x}_j )\circ ( \bm{x}_i - \bm{x}_j ) \right\rangle \,,
 \end{equation}
-where $\left\langle \cdot\, , \cdot \right\rangle$ denotes the standard inner product in $\mathbb{R}^p$, $\eta = \left(s_1, s_2, \ldots, s_p\right)^\top$, and $\circ$ denotes the element-wise vector product. As $S$ is symmetric and positive definite it is diagonalizable, thus giving us motivation for considering a diagonal $S$.
+where $\langle \cdot\, , \cdot \rangle$ denotes the standard inner product in $\mathbb{R}^p$, $\eta = (s_1, s_2, \dots, s_p)^\top$, and $\circ$ denotes the element-wise vector product. As $S$ is symmetric and positive definite it is diagonalizable, thus giving us motivation for considering a diagonal $S$.
 
-Next we establish the $Y$ space, which is instrumental in the construction of DOBIN.
 
 \subsection{The $Y$ space}\label{sec:MathFrame1}
 
-Let $\bm{y}_{ij} = \left( \bm{x}_i - \bm{x}_j \right)\circ \left( \bm{x}_i - \bm{x}_j \right) = \left( \left( x_{i1} - x_{j1} \right)^2, \left( x_{i2} - x_{j2} \right)^2, \ldots, \, \left( x_{ip} - x_{jp} \right)^2 \right)\, . $ Substituting in equation~\eqref{eq:secMF2} gives
+Next we establish the $Y$ space, which is instrumental in the construction of DOBIN\@. Let $\bm{y}_{ij} = ( \bm{x}_i - \bm{x}_j )\circ ( \bm{x}_i - \bm{x}_j ) = \left( ( x_{i1} - x_{j1} )^2, ( x_{i2} - x_{j2} )^2, \dots, \, ( x_{ip} - x_{jp} )^2 \right)$. Substituting in equation~\eqref{eq:secMF2} gives
 \begin{equation}\label{eq:secMF3}
-	\dist(\bm{x}_i, \bm{x}_j)^2 = \left\langle \eta\, , \bm{y}_{ij} \right\rangle\, .
+	\dist(\bm{x}_i, \bm{x}_j)^2 = \langle \eta\, , \bm{y}_{ij} \rangle\, .
 \end{equation}
-By finding the appropriate $\eta$ of unit length, we can maximize the distance between $\bm{x}_i$ and $\bm{x}_j$. This prompts the question as to which $\bm{x}_i$ and $\bm{x}_j$ need to be chosen to maximize the distance between them, if outlier detection is the goal. If we use knn distances as a guiding principle, we are interested in the $k$ nearest neighbours of a given point. Consequently, we can choose $\bm{x}_i$ and $\bm{x}_j$ that share a common neighbourhood. Also we note that if we were to calculate $\bm{y}_{ij}$ for all pairs, it would be computationally expensive as there are $N(N+1)/2$ pairs to consider. In addition, this would give us pairwise distances between points that we are not interested in, such as points on the boundary of the point cloud, that are opposite each other. Finding $\eta$ that maximizes the distances between such points is not beneficial for outlier detection, because a large distance between polar-opposite points does not mean that either of those points are outliers. Therefore we do not compute $\bm{y}_{ij}$ for all pairs of $\bm{x}_i$ and $\bm{x}_j$; rather we select the pairs that we want to include in our $Y$ space.
+By finding the appropriate $\eta$ of unit length, we can maximize the distance between $\bm{x}_i$ and $\bm{x}_j$. This prompts the question as to which $\bm{x}_i$ and $\bm{x}_j$ need to be chosen to maximize the distance between them, if outlier detection is the goal. If we use knn distances as a guiding principle, we are interested in the $k$ nearest neighbours of a given point. Consequently, we can choose $\bm{x}_i$ and $\bm{x}_j$ that share a common neighbourhood.
+
+If we were to calculate $\bm{y}_{ij}$ for all pairs, it would be computationally expensive as there are $N(N+1)/2$ pairs to consider. In addition, this would give us pairwise distances between points that we are not interested in, such as points on the boundary of the point cloud, that are opposite each other. Finding $\eta$ that maximizes the distances between such points is not beneficial for outlier detection, because a large distance between polar-opposite points does not mean that either of those points are outliers. Therefore we do not compute $\bm{y}_{ij}$ for all pairs of $\bm{x}_i$ and $\bm{x}_j$; rather we select the pairs that we want to include in our $Y$ space.
 
 For each point $\bm{x}_i$ we compute $\bm{y}_{ij}$ arising from a set a nearest neighbours. From \cite{kandanaarachchi2018normalization} we know that nearest neighbours depend on the normalization technique. As a result, we choose two normalization techniques to pre-process the data; Min-Max and Median-IQR. Min-Max normalization scales each column to values between $0$ and $1$, with the minimum mapped to $0$ and the maximum mapped to $1$. Median-IQR scales each column to median $0$ and IQR $1$. Let $X_1$ denote the normalized data using Min-Max and $X_2$ using Median-IQR. For each normalization technique we choose a set of nearest neighbours from $k_1$ to $k_2$, that is for any point $\bm{x}_i$ we choose the $k_1^{\text{th}}$ nearest neighbour to the $k_2^{\text{th}}$ nearest neighbour. Here $k_1$ and $k_2$ are parameters and one can choose $k_1 =1$.
 
-Next, for each point we find the union of nearest neighbours computed using the two normalization techniques. For example, for a given point $\bm{x}_i$, if the nearest neighbours according to Min-Max are $\{\bm{x}_2, \bm{x}_5, \bm{x}_9 \}$ and Median-IQR gives $\{\bm{x}_5, \bm{x}_4, \bm{x}_7 \}$, then we consider the union of these two sets as the set of nearest neighbours of $\bm{x}_i$. Using the nearest neighbours we construct a list of pairs denoted by $T$. Continuing the same example, the pairs $(\bm{x}_i, \bm{x}_2)$, $(\bm{x}_i, \bm{x}_5)$, $(\bm{x}_i, \bm{x}_4)$, $(\bm{x}_i, \bm{x}_7)$, $(\bm{x}_i, \bm{x}_9)$, and so on will be in $T$.
+Next, for each point we find the union of nearest neighbours computed using the two normalization techniques. For example, for a given point $\bm{x}_i$, if the nearest neighbours according to Min-Max are $\{\bm{x}_2, \bm{x}_5, \bm{x}_9 \}$ and Median-IQR gives $\{\bm{x}_4, \bm{x}_5, \bm{x}_7 \}$, then we consider the union of these two sets as the set of nearest neighbours of $\bm{x}_i$. Using the nearest neighbours we construct a list of pairs denoted by $T$. Continuing the same example, the pairs $(\bm{x}_i, \bm{x}_2)$, $(\bm{x}_i, \bm{x}_4)$, $(\bm{x}_i, \bm{x}_5)$, $(\bm{x}_i, \bm{x}_7)$, $(\bm{x}_i, \bm{x}_9)$, and so on will be in $T$.
 
-For each pair in $T$, we compute $\bm{y}_{ij}$ as in equation~\eqref{eq:secMF2} on the normalized space $X_1$ or $X_2$, depending on user preference. We now have the initial $Y$ space: a set of $\tilde{M}$ points in $\mathbb{R}^{p+}$. As the list of pairs that give rise to the initial $Y$ space are contained in $T$, we can denote $Y = \{ \bm{y}_\ell \}_{\ell=1}^{\tilde{M}}$, where each $\bm{y}_\ell = \bm{y}_{i_{(\ell)} j_{(\ell)} }$, i.e. $\ell$ is the row number in the matrix $Y$ and each $\bm{y}_\ell$ comes from the $\ell^{\text{th}}$ pair in $T$.
+For each pair in $T$, we compute $\bm{y}_{ij}$ as in equation~\eqref{eq:secMF2} on the normalized space $X_1$ or $X_2$, depending on user preference. We now have the initial $Y$ space: a set of $\tilde{M}$ points in $\mathbb{R}^{p+}$. As the list of pairs that give rise to the initial $Y$ space are contained in $T$, we can denote $Y = \{ \bm{y}_\ell \}_{\ell=1}^{\tilde{M}}$, where each $\bm{y}_\ell = \bm{y}_{i_{(\ell)} j_{(\ell)} }$, i.e.\ $\ell$ is the row number in the matrix $Y$ and each $\bm{y}_\ell$ comes from the $\ell^{\text{th}}$ pair in $T$.
 
-We are interested in neighbouring distances that are relatively large. The Euclidean distance squared between two points in the $X_1$ or $X_2$ space can be written as $\sum_{m=1}^p y_{\ell m}$ for the appropriate $\ell$. In order to consider only points with relatively large distances, we remove points $\bm{y}_\ell$ that contribute to distances below a certain threshold determined by a percentile, i.e. we remove points $\bm{y}_\ell$ such that $\sum_{m=1}^p y_{\ell m} < Q$ where $Q$ is the $q^{\text{th}}$ percentile of $ \left \{\sum_{m=1}^p y_{\ell m} \right \}_{\ell=1}^{\tilde{M}}$. We remove the associated pairs from $T$ as well. This constitutes the $Y$ space: $Y = \{\bm{y}_\ell \}_{\ell=1}^M$.
+We are interested in neighbouring distances that are relatively large. The Euclidean distance squared between two points in the $X_1$ or $X_2$ space can be written as $\sum_{m=1}^p y_{\ell m}$ for the appropriate $\ell$. In order to consider only points with relatively large distances, we remove points that contribute to distances below a certain threshold determined by a percentile, i.e.\ we remove points such that $\sum_{m=1}^p y_{\ell m} < Q$ where $Q$ is the $q^{\text{th}}$ percentile of $ \left \{\sum_{m=1}^p y_{\ell m} \right \}_{\ell=1}^{\tilde{M}}$. We remove the associated pairs from $T$ as well. This constitutes the $Y$ space: $Y = \{\bm{y}_\ell \}_{\ell=1}^M$.
 
 The main advantage of the $Y$ space is that it makes distance computation between two points in the $X$ space a linear function. This makes maximizing distances between points a much easier task.
 Algorithm~\ref{algo:YSpace} summarizes the construction of the $Y$ space.
@@ -104,11 +103,11 @@ Algorithm~\ref{algo:YSpace} summarizes the construction of the $Y$ space.
 	Find $k_1$ to $k_2$ nearest neighbours for each point in $X_2$. \\
 	Then for each point collate all unique neighbours from both Min-Max and Median-IQR normalization methods. \\
 	Let $T = $ the set of $i$ and $j$ indices, corresponding to the pairs of points in $X$. \\
-	For all these pairs, compute $\bm{y}_{ij}$ as in equation~\eqref{eq:secMF3} using $X_1$ or $X_2$ space according to the choice of normalization. Let $Y =\big\{ \bm{y}_{1} =\bm{y}_{i_{(1)}j_{(1)}} , \bm{y}_{2} =\bm{y}_{i_{(2)}j_{(2)}}, \ldots, \bm{y}_{\tilde{M}} =\bm{y}_{i_{(\tilde{M})}j_{(\tilde{M})}} \big\}$, where $\big( i_{(1)},j_{(1)} \big)$ is the first $(i, j)^{\text{th}}$ pair in $T$. Consequently $Y$ is an $\tilde{M}\times p$ matrix, with the $\ell^{\text{th}}$ row denoted by $\bm{y}_\ell$.\\
-	Let the $q^{\text{th}}$ percentile of $ \left\{\sum_{m=1}^p {y}_{\ell m}\right\}$ be $Q$. The quantity $\sum_{m=1}^p {y}_{\ell m}$ is the distance between points $\bm{x}_{i_{(\ell)}}$ and $\bm{x}_{j_{(\ell)}}$ in $X_1$ or $X_2$ space. \\
-	Remove points $\bm{y}_\ell$ for which $ \sum_{m=1}^p {y}_{\ell m} < Q $. \\
+	For all these pairs, compute $\bm{y}_{ij}$ as in equation~\eqref{eq:secMF3} using $X_1$ or $X_2$ space according to the choice of normalization. Let $Y =\big\{ \bm{y}_{1} =\bm{y}_{i_{(1)}j_{(1)}} , \bm{y}_{2} =\bm{y}_{i_{(2)}j_{(2)}}, \dots, \bm{y}_{\tilde{M}} =\bm{y}_{i_{(\tilde{M})}j_{(\tilde{M})}} \big\}$, where $\big( i_{(1)},j_{(1)} \big)$ is the first $(i, j)^{\text{th}}$ pair in $T$. Consequently $Y$ is an $\tilde{M}\times p$ matrix, with the $\ell^{\text{th}}$ row denoted by $\bm{y}_\ell$.\\
+	Let $Q$ be the $q^{\text{th}}$ percentile of $ \left\{\sum_{m=1}^p {y}_{\ell m}\right\}$. The quantity $\sum_{m=1}^p {y}_{\ell m}$ is the distance between points $\bm{x}_{i_{(\ell)}}$ and $\bm{x}_{j_{(\ell)}}$ in $X_1$ or $X_2$ space. \\
+	Remove points for which $ \sum_{m=1}^p {y}_{\ell m} < Q $. \\
 	Remove the associated pairs of $(i, j)$ from $T$. \\
-	The remaining points $\bm{y}_\ell$ constitute the $Y$ space: $Y = \{\bm{y}_\ell \}_{\ell=1}^M$.
+	The remaining points constitute the $Y$ space: $Y = \{\bm{y}_\ell \}_{\ell=1}^M$.
 	\caption{\itshape Construction of the $Y$ space.}
 	\label{algo:YSpace}
 \end{algorithm}
@@ -125,102 +124,103 @@ Algorithm~\ref{algo:YSpace} summarizes the construction of the $Y$ space.
 Figure~\ref{fig:XandY} illustrates the $X$ and $Y$ spaces where $X$ is a 2 dimensional normal distribution of 100 points with a single outlier depicted in red. We see that the $Y$ space consists of a lesser number of points compared to $X$, of which 6 points are contributed by the outlier. This is because $k_1$ to $k_2$ neighbours are considered in the construction of the $Y$ space and the points $\bm{y}_k$ with relatively small distances $\left(\sum_i y_{ki} \leq Q\right)$ are removed. Thus, the effect of outliers is magnified in the $Y$ space.\todo{What is $k_1$ and $k_2$ in this example?}
 
 We summarise the salient features of the $Y$ space below:
-\begin{enumerate}
+\begin{compactenum}
 	\item $Y = \{\bm{y}_\ell \}_{\ell=1}^M$, where $\bm{y}_\ell \in \mathbb{R}^{p+}$.
-	\item Each $\bm{y}_\ell \in Y$ is constructed from two points $\bm{x}_i$ and $\bm{x}_j$ in $X$ with $T(\ell) = (i,j)$, where $T$ is a list consisting of the pairs in $X$ that are used to construct $Y$. In addition, $\bm{x}_i$ and $\bm{x}_j$ are $k$-nearest neighbours for some $k \in \{k_1, \ldots, k_2\}$.
-	\item For $i,j,l$ as in above, $\bm{y}_\ell = \left(\bm{x}_i - \bm{x}_j \right) \circ \left(\bm{x}_i - \bm{x}_j \right) $, where $\circ$ denotes the element-wise vector product.
-	\item The $Y$ space contains points $\bm{y}_\ell$ with relatively high $\sum_{m=1}^p y_{\ell m}$, i.e. it contains vectors that contribute to high knn distances in the $X$ space.
-\end{enumerate}
+	\item Each $\bm{y}_\ell \in Y$ is constructed from two points $\bm{x}_i$ and $\bm{x}_j$ in $X$ with $T(\ell) = (i,j)$, where $T$ is a list consisting of the pairs in $X$ that are used to construct $Y$. In addition, $\bm{x}_i$ and $\bm{x}_j$ are $k$-nearest neighbours for some $k \in \{k_1, \dots, k_2\}$.
+	\item For $i,j,\ell$ as above, $\bm{y}_\ell = (\bm{x}_i - \bm{x}_j) \circ (\bm{x}_i - \bm{x}_j) $, where $\circ$ denotes the element-wise vector product.
+	\item The $Y$ space contains points $\bm{y}_\ell$ with relatively high $\sum_{m=1}^p y_{\ell m}$, i.e.\ it contains vectors that contribute to high knn distances in the $X$ space.
+\end{compactenum}
 
 \subsection{Maximising the distance between points}\label{sec:MathFrame2}
 
 %The $Y$ space has points $\bm{y}_\ell$ that correspond to neighbouring points $\bm{x}_i$ and $\bm{x}_j$ in $X$, which have relatively high $k$ nearest neighbour distances.
 Restating equation~\eqref{eq:secMF3} using $T(\ell) = (i,j)$ we obtain
 \begin{equation} \label{eq:secMF4}
-	\sum_{(i,j) \in T}\dist(\bm{x}_i, \bm{x}_j)^2 = \sum_{\ell}\left\langle \eta\, , \bm{y}_{\ell} \right\rangle\, .
+	\sum_{(i,j) \in T}\dist(\bm{x}_i, \bm{x}_j)^2 = \sum_{\ell}\langle \eta\, , \bm{y}_{\ell} \rangle\, .
 \end{equation}
-Thus the total distance squared for relatively high nearest neighbour distances $ \sum_{(i,j) \in T}\dist(\bm{x}_i, \bm{x}_j)^2$ can be maximised by finding the appropriate $\eta$ which maximises $\sum_{\ell}\left\langle \eta\, , \bm{y}_{\ell} \right\rangle$. However, by choosing $\eta_1 = c \eta_0 $, with $c >1$ will automatically increase the value of $\sum_{\ell}\left\langle \eta\, , \bm{y}_{\ell} \right\rangle$ by $c$. Thus, we restrict $\eta$ such that $\left \lVert \eta \right\rVert = 1$. We now state our optimisation problem as
-\begin{align} \label{eq:secMF5}
-	\max_\eta         & \sum_{\ell}\left\langle \eta\, , \bm{y}_{\ell} \right\rangle \, ,     \\
-	\text{subject to} & \hspace{0.2cm} \left \lVert \eta \right\rVert^2 = 1 \notag \, .
-\end{align}
+Thus the total distance squared for relatively high nearest neighbour distances $ \sum_{(i,j) \in T}\dist(\bm{x}_i, \bm{x}_j)^2$ can be maximised by finding the appropriate $\eta$ which maximises $\sum_{\ell}\langle \eta\, , \bm{y}_{\ell} \rangle$. However, \eqref{eq:secMF4} depends on the scale of $\eta$, so we normalize $\eta$ such that $ \lVert \eta \rVert = 1$. We now state our optimisation problem as
+\begin{equation} \label{eq:secMF5}
+	\max_\eta \sum_{\ell}\langle \eta\, , \bm{y}_{\ell} \rangle
+  \qquad
+	\text{subject to} \hspace{0.2cm} \lVert\eta\rVert^2 = 1 .
+\end{equation}
 Solving this using Lagrange Multipliers we obtain $\nabla f = \lambda \nabla g$, with
 \begin{align}\label{eq:secMF6}
-	f(\eta) & = \sum_{\ell}\left\langle \eta\, , \bm{y}_{\ell} \right\rangle \, , \text{and} \\
-	g(\eta) & = \left \lVert \eta \right\rVert^2 - 1 = 0 \, . \notag
+	f(\eta)  = \sum_{\ell}\langle \eta\, , \bm{y}_{\ell} \rangle \qquad \text{and} \qquad
+	g(\eta) =  \lVert\eta\rVert^2 - 1 = 0 \, .
 \end{align}
 As $\nabla f = \left( \frac{\partial f}{\partial \eta_1}, \frac{\partial f}{\partial \eta_2}, \cdots, \frac{\partial f}{\partial \eta_p} \right)$ we compute
 \begin{align}\label{eq:secMF7}
-	\frac{\partial f}{\partial \eta_j} & = \frac{\partial }{\partial \eta_j}\sum_{\ell}\left\langle \eta\, , \bm{y}_{\ell} \right\rangle \, , \notag \\
-	                                   & = \frac{\partial }{\partial \eta_j} \sum_{\ell=1}^M \sum_{i=1}^p \eta_i y_{\elli} \, ,\notag                \\
-	                                   & = \sum_{\ell=1}^M \sum_{i=1}^p \delta_{ij} y_{\elli} \, , \notag                                            \\
-	                                   & = \sum_{\ell=1}^M y_{\ellj} \, .
+	\frac{\partial f}{\partial \eta_j}
+     = \frac{\partial }{\partial \eta_j}\sum_{\ell}\langle \eta\, , \bm{y}_{\ell}\rangle
+     = \frac{\partial }{\partial \eta_j} \sum_{\ell=1}^M \sum_{i=1}^p \eta_i y_{\ell i}
+     = \sum_{\ell=1}^M \sum_{i=1}^p \delta_{ij} y_{\ell i}
+     = \sum_{\ell=1}^M y_{\ell j} \, ,
 \end{align}
 where $\delta_{ij}$ is the Kronecker delta function which equals 1 when $i=j$ and zero otherwise. Hence
 \begin{equation}\label{eq:secMF8}
-	\nabla f = \left(\sum_{\ell=1}^M y_{\ell1}, \sum_{\ell=1}^M y_{\ell2}, \ldots, \sum_{\ell=1}^M y_{\ellp} \right) = \sum_{\ell=1}^M \bm{y}_\ell \, .
+	\nabla f = \left(\sum_{\ell=1}^M y_{\ell1}, \sum_{\ell=1}^M y_{\ell2}, \dots, \sum_{\ell=1}^M y_{\ell p} \right) = \sum_{\ell=1}^M \bm{y}_\ell \, .
 \end{equation}
-Similarly as $g(\eta) = \left( \sum_{j=1}^p \eta_j^2\right) - 1$ we get $\nabla g = \eta$. By substituting $\nabla f = \lambda \nabla g$ and using $\left\lVert \eta \right\rVert = 1 $ we obtain
+Similarly, as $g(\eta) = \left( \sum_{j=1}^p \eta_j^2\right) - 1$, we get $\nabla g = \eta$. By substituting $\nabla f = \lambda \nabla g$ and using $\lVert\eta\rVert = 1$, we obtain
 \begin{equation}\label{eq:secMF9}
 	\eta = \frac{\sum_{\ell=1}^M \bm{y}_\ell }{ \left\lVert\sum_{\ell=1}^M \bm{y}_\ell \right\rVert } \, .
 \end{equation}
-Thus, we have computed $\eta$ that maximises distance squared in $Y$.
 
 \subsection{Constructing a basis}\label{sec:MathFrame3}
 
-We have computed the vector $\eta$ that maximises $\sum_{\ell}\left\langle \eta\, , \bm{y}_{\ell} \right\rangle$. To find a basis, we need to find the second, third and subsequent vectors which are orthogonal and in some way maximise the quantity $\sum_{\ell}\left\langle \eta\, , \bm{y}_{\ell} \right\rangle$. Let us first rename $\eta$ as $\eta_1$. Taking $\eta_1$ as the first basis vector, we take the projection of vector $\bm{y}_\ell$ on to $\eta_1$ and remove these components from $\bm{y}_\ell$.
+We have computed the vector $\eta$ that maximises $\sum_{\ell}\langle \eta\, , \bm{y}_{\ell}\rangle$. To find a basis, we need to find the second, third and subsequent vectors which are orthogonal and in some way maximise the quantity $\sum_{\ell}\langle \eta\, , \bm{y}_{\ell}\rangle$. Let us first rename $\eta$ as $\eta_1$. Taking $\eta_1$ as the first basis vector, we take the projection of vector $\bm{y}_\ell$ on to $\eta_1$ and remove these components from $\bm{y}_\ell$:
 \begin{equation}\label{eq:secMF10}
-	\bm{y}_{\ell_1} = \bm{y}_\ell - \left\langle \eta_1 \, , \bm{y}_\ell \right \rangle \eta_1
+	\bm{y}_{\ell_1} = \bm{y}_\ell - \langle \eta_1 \, , \bm{y}_\ell \rangle \eta_1.
 \end{equation}
-Thus $\bm{y}_{\ell_1} \perp \eta_1$. Let $Y_1 = \{\bm{y}_{\ell_1} \}_{\ell=1}^M $ be the set of remaining components of $\{ \bm{y}_\ell \}_{\ell=1}^M$ after removing the projection on to $\eta_1$. Now we can compute $\eta_2$ which maximises $\sum_{\ell}\left\langle \eta\, , \bm{y}_{\ell_1} \right\rangle$ as
+Thus $\bm{y}_{\ell_1} \perp \eta_1$. Let $Y_1 = \{\bm{y}_{\ell_1} \}_{\ell=1}^M $ be the set of remaining components of $\{ \bm{y}_\ell \}_{\ell=1}^M$ after removing the projection on to $\eta_1$. Now we can compute $\eta_2$ which maximises $\sum_{\ell}\langle \eta\, , \bm{y}_{\ell_1}\rangle$ as
 \begin{equation}\label{eq:secMF11}
-	\eta_2 = \frac{\sum_{\ell=1}^M \bm{y}_{\ell_1} }{ \left\lVert\sum_{\ell=1}^M \bm{y}_{\ell_1} \right\rVert }
+	\eta_2 = \frac{\sum_{\ell=1}^M \bm{y}_{\ell_1} }{ \left\lVert\sum_{\ell=1}^M \bm{y}_{\ell_1} \right\rVert }\,.
 \end{equation}
 Proceeding in this way we obtain
 \begin{align}
-	\bm{y}_{\ell_{b}} & = \bm{y}_{\ell_{b-1}} - \left\langle \eta_b \, , \bm{y}_{\ell_{b-1}} \right \rangle \eta_b \, , \label{eq:secMF12} \\
+	\bm{y}_{\ell_{b}} & = \bm{y}_{\ell_{b-1}} - \langle \eta_b \, , \bm{y}_{\ell_{b-1}} \rangle \eta_b \, , \label{eq:secMF12} \\
 	\text{and}\qquad \eta_{b+1}     & = \frac{\sum_{\ell=1}^M \bm{y}_{\ell_b} }{ \left\lVert\sum_{\ell=1}^M \bm{y}_{\ell_b} \right\rVert } \, , \label{eq:secMF13}
 \end{align}
-with $\bm{y}_{\ell_0} = \bm{y}_{\ell}$. The set $\Theta = \{ \eta_1, \eta_2, \ldots , \eta_p \}$ gives a basis for $Y$ with each $\eta_{i+1}$ maximising $\sum_{\ell}\left\langle \eta\, , \bm{y}_{\ell_i} \right\rangle$. %which aims to maximise the quantity $\sum_{\ell}\left\langle \eta\, , \bm{y}_{\ell} \right\rangle$.
-We note that this process is somewhat similar to Gram Schmidt orthogonalisation.
+with $\bm{y}_{\ell_0} = \bm{y}_{\ell}$. The set $\Theta = \{ \eta_1, \eta_2, \dots , \eta_p \}$ gives a basis for $Y$ with each $\eta_{i+1}$ maximising $\sum_{\ell}\langle \eta\, , \bm{y}_{\ell_i} \rangle$. %which aims to maximise the quantity $\sum_{\ell}\left\langle \eta\, , \bm{y}_{\ell} \right\rangle$.
+This process is somewhat similar to Gram Schmidt orthogonalisation.
 
-Next we draw the reader's attention to a technical point. Equation~\eqref{eq:secMF4} is only true for $\bm{y}_\ell \in \mathbb{R}^{p+}$. The other $Y$ spaces $Y_1, Y_2, \ldots $ are not subsets of $\mathbb{R}^{p+}$. To adjust for this, after computing $\bm{y}_{\ell_{b}}$ as in equation~\eqref{eq:secMF12} we temporarily change the basis such that the points $\{ \bm{y}_{\ell_{b}}\}_{\ell=1}^M$ are in a positive orthant. Then after computing $\eta_{b+1}$ as in equation~\eqref{eq:secMF13} using positive $\{ \bm{y}_{\ell_{b}}\}_{\ell=1}^M$, we transform it back again to the original basis.
+Note that Equation~\eqref{eq:secMF4} is only true for $\bm{y}_\ell \in \mathbb{R}^{p+}$. The other $Y$ spaces $(Y_1, Y_2, \dots)$ are not subsets of $\mathbb{R}^{p+}$. To adjust for this, after computing $\bm{y}_{\ell_{b}}$ as in equation~\eqref{eq:secMF12}, we temporarily change the basis such that the points $\{\bm{y}_{\ell_{b}}\}_{\ell=1}^M$ are in a positive orthant. Then after computing $\eta_{b+1}$ as in equation~\eqref{eq:secMF13} using positive $\{\bm{y}_{\ell_{b}}\}_{\ell=1}^M$, we transform it back again to the original basis.
 
 Once the basis $\Theta$ is computed, we change the basis of the original data as follows:
 \begin{equation}\label{eq:secMF14}
 	\tilde{X} = X_1 \Theta \, \hspace{0.5cm} \text{or} \hspace{0.5cm} \tilde{X} = X_2 \Theta
 \end{equation}
-where $X_1$ or $X_2$ is the normalized $X$ space according to the choice of normalization. We note that the basis $\Theta$ is not invariant to rotations; i.e. if one were to start with a different basis, the resulting $\Theta$ would be different. This is because when constructing the $Y$ space we compute element-wise squares of vector differences. While vector addition is basis invariant, squared element-wise components depend on the basis vectors. Notwithstanding this limitation, we achieve good results for experiments conducted on our extensive collection of more than $12,000$ real world datasets. For almost all of our experiments, we constructed DOBIN using the original basis as input. We only used a different basis if the number of variables were much higher than the number of observations. %DOBIN generally performs better with the original basis than with a transformed basis, and finds it is easier to compute the true direction of outliers when the axes are original variables, compared to when each axis is a linear combination of them.
+where $X_1$ or $X_2$ is the normalized $X$ space according to the choice of normalization. We note that the basis $\Theta$ is not invariant to rotations; i.e.\ if one were to start with a different basis, the resulting $\Theta$ would be different. This is because when constructing the $Y$ space we compute element-wise squares of vector differences. While vector addition is basis invariant, squared element-wise components depend on the basis vectors. Notwithstanding this limitation, we achieve good results for experiments conducted on our extensive collection of more than $12,000$ real world datasets. For almost all of our experiments, we constructed DOBIN using the original basis as input. We only used a different basis if the number of variables were much higher than the number of observations. %DOBIN generally performs better with the original basis than with a transformed basis, and finds it is easier to compute the true direction of outliers when the axes are original variables, compared to when each axis is a linear combination of them.
 Furthermore, as we will see in Section~\ref{sec:ResWithVis} it is easier to gain insights about the outlying directions when the axes are original variables.
 
 We conclude this mathematical discussion by summarizing the key steps of DOBIN:
-\begin{enumerate}
+\begin{compactenum}
 	\item Find the $Y$ space for a given dataset $X$ as detailed in Algorithm~\ref{algo:YSpace}.
 	\item Construct the basis $\Theta$ as outlined in Section~\ref{sec:MathFrame3}.
 	\item Transform the original space $X$ using equation~\eqref{eq:secMF14}.
-\end{enumerate}
-Next we briefly consider the parameters involved in DOBIN.
+\end{compactenum}
 
 \subsection{Parameters of DOBIN}\label{sec:MathFrame4}
 
 We have three numerical parameters $k_1$, $k_2$ and $q$ for constructing the $Y$ space with the following default values:
 \begin{align} \label{eq:secMF15}
-	k_2 & = \min\left(20, \max \left( \lfloor N/20 \rfloor ,2 \right ) \right) \notag \, , \\
-	k_1 & = \max \left( k_2-10, 1 \right) \, ,                                             \\
+	k_2 & = \min\left(20, \max (\lfloor N/20 \rfloor ,2) \right) \notag \, , \\
+	k_1 & = \max (k_2-10, 1) \, ,                                             \\
 	q   & = 0.95 \notag \, ,
 \end{align}
-where $N$ is the number of observations in the dataset. The parameters $k_1$ and $k_2$ can increase the run time of the algorithm. Consequently we have a maximum value of $20$ for $k_2$. As $k_1 < k_2$, we consider a maximum of $10$ neighbours for each point. The parameter $q$ represents a cut-off quantile needed to obtain a subset of $\bm{y}$ with large distances. Therefore $q$ needs to be a relatively high value in the interval $(0,1)$. From equation~\eqref{eq:secMF5} we maximise the projection of $\bm{y}$ on to $\eta$. If $q$ is too low, many $\bm{y}$ with smaller projections may contribute heavily to the sum, making DOBIN vectors less effective.
+where $N$ is the number of observations in the dataset. The parameters $k_1$ and $k_2$ affect the run time of the algorithm, so we set a maximum value of $20$ for $k_2$. As $k_1 < k_2$, we consider a maximum of $10$ neighbours for each point. The parameter $q$ determines the cut-off quantile needed to obtain a subset of $\bm{y}$ with large distances. Therefore $q$ needs to be a relatively high value in the interval $(0,1)$. From equation~\eqref{eq:secMF5} we maximise the projection of $\bm{y}$ on to $\eta$. If $q$ is too low, many $\bm{y}$ with smaller projections may contribute heavily to the sum, making DOBIN vectors less effective.
 
 The other parameter for constructing the $Y$ space is the choice of normalization. While Min-Max normalization is commonly used by the computer science community \citep{campos2016evaluation}, other normalization techniques such as distance from univariate medians and Mahalanobis distance are commonly used by the statistical community \citep{billor2000bacon}. We give two options for normalization: Min-Max and Median-IQR.
 
-The purpose of the final parameter is to aid visualisation in two dimensions. As points $\{ \bm{y}_{\ell}\}_{i=1}^M$ lie in the positive orthant, the first vector $\eta_1$ which maximizes $\sum_\ell \left\langle \eta\, \bm{y}_\ell \right\rangle$ also lies in the positive orthant. However, this may not render the best possible 2D-visualization of the outliers in $X$ space, because points can have positive and negative coordinates in $X$ space. Hence we compute the signed $\bm{y}_{\ell}$, denoted by $\bm{\tilde{y}}_\ell$, by keeping track of the signs of the point differences $\left( \bm{x}_i - \bm{x}_j \right)$. Let $T(\ell) = \left( i, j \right)$, then
+The purpose of the final parameter is to aid visualisation in two dimensions. As points $\{\bm{y}_{\ell}\}_{i=1}^M$ lie in the positive orthant, the first vector $\eta_1$ which maximizes $\sum_\ell \langle \eta\, \bm{y}_\ell\rangle$ also lies in the positive orthant. However, this may not render the best possible 2D-visualization of the outliers in $X$ space, because points can have positive and negative coordinates in $X$ space. Hence we compute the signed $\bm{y}_{\ell}$, denoted by $\bm{\tilde{y}}_\ell$, by keeping track of the signs of the point differences $(\bm{x}_i - \bm{x}_j)$. Let $T(\ell) = (i, j)$, then
 \begin{equation}\label{eq:secMF16}
-	\bm{\tilde{y}}_\ell = \sign\left( \bm{x}_i - \bm{x}_j \right) \circ \bm{y}_{\ell} \, ,
+	\bm{\tilde{y}}_\ell = \sign(\bm{x}_i - \bm{x}_j) \circ \bm{y}_{\ell} \, ,
 \end{equation}
 where $\circ$ denotes element-wise multiplication. Then
 \begin{align}\label{eq:secMF17}
-	\sign \left(\eta_1 \right) & = \sign \left( \sum_{i=1}^M \bm{\tilde{y}}_\ell \right) \, , \notag \\
-	\tilde\eta_1               & = \sign \left(\eta_1 \right) \circ \eta_1,
+	\sign(\eta_1) & = \sign \left( \sum_{i=1}^M \bm{\tilde{y}}_\ell \right) \, , \notag \\
+	\text{and}\qquad
+  \tilde\eta_1  & = \sign (\eta_1) \circ \eta_1,
 \end{align}
 where $\eta_1 $ is computed using equation~\eqref{eq:secMF9}. However, this adds to the computation and is only recommended if 2D-visualization is an aim of the exercise.
 
@@ -228,7 +228,7 @@ where $\eta_1 $ is computed using equation~\eqref{eq:secMF9}. However, this adds
 \section{Experiments with synthetic data}\label{sec:synthetic}
 % =======================================================================
 
-In this section we do three experiments with synthetic data. For each experiment we compare results for three outlier detection methods, namely LOF \citep{breunig2000lof}, KNN \citep{ramaswamy2000efficient} and isolation forest \citep{\elliu2008isolation}. We choose these methods as they are well recognised and fundamentally different: LOF uses a local density based approach; KNN uses a global distance based approach; and iForest uses a randomised tree based approach. For each outlier detection method we consider the following three coordinate systems:
+In this section we do three experiments with synthetic data. For each experiment we compare results for three outlier detection methods, namely LOF \citep{breunig2000lof}, KNN \citep{ramaswamy2000efficient} and isolation forest \citep{liu2008isolation}. We choose these methods as they are well recognised and fundamentally different: LOF uses a local density based approach; KNN uses a global distance based approach; and iForest uses a randomised tree based approach. For each outlier detection method we consider the following three coordinate systems:
 \begin{enumerate}
 	\item All variables in the dataset
 	\item Perform Principal Component Analysis (PCA) on the dataset, and use the first half of the principle components (PCs).
@@ -268,7 +268,7 @@ Again we see that using 3 DOBIN components gives the highest performance for all
 
 \subsection{Experiment 3}
 
-The third experiment is motivated from \cite{zimek2012survey}. We consider a uniform distribution in $\mathbb{R}^{20}$ and place a manual outlier at $0.9$ in $i$ dimensions where $i$ is changed from $1$ to $20$. While this is not an outlier in any single dimension, as $i$ increases this point stands out from the rest of the distribution. Indeed, for large $i$ this point lies furthest from the rest. An equivalent outlier is $0.1$ in $i$ dimensions. The reason that these points are outliers is because they are at the corners of the hyper-cube and as such are far away from other points. On the contrary, $0.5$ in $i$ dimensions would be closest to other points. This is because $(0.5, 0.5, \ldots)$ has neighbours from all sides and has on average $2^{20}$ more neighbours compared to $(1, 1, \ldots)$ which is a corner on the unit hyper-cube. For practical purposes the point $(0.9, 0.9, \ldots)$ is similar to $(1, 1, \ldots)$ and has significantly less neighbours compared to $(0.5, 0.5, \ldots)$. Figure~\ref{fig:Exp3} shows the results of all three outlier methods on all three coordinate systems. Again we see that using half of the DOBIN components gives the best performance for all three outlier methods.
+The third experiment is motivated from \cite{zimek2012survey}. We consider a uniform distribution in $\mathbb{R}^{20}$ and place a manual outlier at $0.9$ in $i$ dimensions where $i$ is changed from $1$ to $20$. While this is not an outlier in any single dimension, as $i$ increases this point stands out from the rest of the distribution. Indeed, for large $i$ this point lies furthest from the rest. An equivalent outlier is $0.1$ in $i$ dimensions. The reason that these points are outliers is because they are at the corners of the hyper-cube and as such are far away from other points. On the contrary, $0.5$ in $i$ dimensions would be closest to other points. This is because $(0.5, 0.5, \dots)$ has neighbours from all sides and has on average $2^{20}$ more neighbours compared to $(1, 1, \dots)$ which is a corner on the unit hyper-cube. For practical purposes the point $(0.9, 0.9, \dots)$ is similar to $(1, 1, \dots)$ and has significantly less neighbours compared to $(0.5, 0.5, \dots)$. Figure~\ref{fig:Exp3} shows the results of all three outlier methods on all three coordinate systems. Again we see that using half of the DOBIN components gives the best performance for all three outlier methods.
 
 In all three experiments we see that DOBIN coordinates give the best performance followed by the full set of coordinates. Principal Components are generally less effective than the full set of coordinates for these three experiments and outlier methods. We note that this is not a failure of PCA, as outlier detection is not its intended goal. Rather, PCA maximizes the variance in each component such that a low dimensional representation of the dataset is a good approximation to the original. However as PCA is used in outlier detection when dimension reduction is preferred we compare DOBIN with PC components, and propose DOBIN as an alternative to PCA as a dimension reduction technique for outlier detection. % \citep{talagala2019anomaly, hyndman2015large}
 
@@ -428,18 +428,18 @@ The first DOBIN vector has the following coefficients:
 \end{equation}
 From equation~\eqref{eq:ResWithVis4} we see that the observation $X117$ is an outlier due to high values of \textit{Ozone} and \textit{Wind}.
 
-\subsection{\textit{\ellesmis} dataset}\label{sec:ResWithVis5}
+\subsection{\textit{lesmis} dataset}\label{sec:ResWithVis5}
 
-The \textit{\ellesmis} dataset \citep{sombrero} contains the character coappearance network of characters in the novel \textit{\elles Mis\'erables} by Victor Hugo. This dataset is stored as a graph, with vertices corresponding to characters and is shown in Figure~\ref{fig:lesmisgraph}. The character network in \textit{\elles Mis\'erables} is also studied in \cite{wilkinson2017visualizing} focusing on outliers. Here we conduct a similar study using the O3 plot and the DC1-DC2 space.
+The \textit{lesmis} dataset \citep{sombrero} contains the character coappearance network of characters in the novel \textit{Les Mis\'erables} by Victor Hugo. This dataset is stored as a graph, with vertices corresponding to characters and is shown in Figure~\ref{fig:lesmisgraph}. The character network in \textit{Les Mis\'erables} is also studied in \cite{wilkinson2017visualizing} focusing on outliers. Here we conduct a similar study using the O3 plot and the DC1-DC2 space.
 
 \begin{figure*}[!ht]
 	\centering
-	\includegraphics[width=0.6\textwidth]{\ellesmis.pdf}
-	\caption{The \textit{\ellesmis} dataset.}
+	\includegraphics[width=0.6\textwidth]{lesmis.pdf}
+	\caption{The \textit{lesmis} dataset.}
 	\label{fig:lesmisgraph}
 \end{figure*}
 
-As in \cite{wilkinson2017visualizing} we compute the graph-based features centrality, transitivity, closeness, betweenness, degree, average nearest neighbour degree and page rank for each character in the dataset. This transforms the original graph to a rectangular dataset of $77$ observations and $7$ variables, with each observation corresponding to a character in the novel. Figure~\ref{fig:lesmis1} shows the O3 plot for the transformed \textit{\ellesmis} dataset using the three methods \textit{HDoutliers}, \textit{mvBACON} and \textit{covMCD}. The other three outlier methods used in O3 plots gave computational errors and as such could not be used. Figure~\ref{fig:lesmis2} shows the DC1-DC2 space of the transformed \textit{\ellesmis} dataset.
+As in \cite{wilkinson2017visualizing} we compute the graph-based features centrality, transitivity, closeness, betweenness, degree, average nearest neighbour degree and page rank for each character in the dataset. This transforms the original graph to a rectangular dataset of $77$ observations and $7$ variables, with each observation corresponding to a character in the novel. Figure~\ref{fig:lesmis1} shows the O3 plot for the transformed \textit{lesmis} dataset using the three methods \textit{HDoutliers}, \textit{mvBACON} and \textit{covMCD}. The other three outlier methods used in O3 plots gave computational errors and as such could not be used. Figure~\ref{fig:lesmis2} shows the DC1-DC2 space of the transformed \textit{lesmis} dataset.
 
 \begin{figure*}[!ht]
 	\centering
@@ -451,7 +451,7 @@ As in \cite{wilkinson2017visualizing} we compute the graph-based features centra
 		\includegraphics[width=0.43\textwidth]{Ex5_2.pdf}
 		\label{fig:lesmis2}
 	}%
-	\caption{O3plot of the transformed \textit{\ellesmis} dataset in Figure~\ref{fig:lesmis1} and the first 2 DOBIN components in Figure~\ref{fig:lesmis2}.}
+	\caption{O3plot of the transformed \textit{lesmis} dataset in Figure~\ref{fig:lesmis1} and the first 2 DOBIN components in Figure~\ref{fig:lesmis2}.}
 	\label{fig:lesmis}
 \end{figure*}
 
@@ -477,7 +477,7 @@ From equation~\eqref{eq:ResWithVis5} we see that \textit{Betweenness} is the mai
 
 \subsection{Classics from Gutenberg}\label{sec:ResWithVis6}
 
-This example is on text analysis of $22$ classics downloaded from the Gutenberg project \citep{gutenberg} and is similar to the example in \cite{wilkinson2017visualizing}. We consider the novels \textit{Alice in Wonderland}, \textit{Anna Karenina}, \textit{Bleak House}, \textit{Emma}, \textit{Frankenstein}, \textit{Gullivers Travels}, \textit{Jude the Obscure}, \textit{\ellord Jim}, \textit{Mansfield Park}, \textit{Middlemarch}, \textit{Moby Dick}, \textit{Northanger Abbey}, \textit{Persuasion}, \textit{Pride and Prejudice}, \textit{Sense and Sensibility}, \textit{Silas Marner}, \textit{Sons and Lovers}, \textit{The Life and Opinions of Tristram Shandy}, \textit{Wizard of Oz}, \textit{Ulysses}, \textit{Vanity Fair} and \textit{War and Peace} in our analysis.
+This example is on text analysis of $22$ classics downloaded from the Gutenberg project \citep{gutenberg} and is similar to the example in \cite{wilkinson2017visualizing}. We consider the novels \textit{Alice in Wonderland}, \textit{Anna Karenina}, \textit{Bleak House}, \textit{Emma}, \textit{Frankenstein}, \textit{Gullivers Travels}, \textit{Jude the Obscure}, \textit{Lord Jim}, \textit{Mansfield Park}, \textit{Middlemarch}, \textit{Moby Dick}, \textit{Northanger Abbey}, \textit{Persuasion}, \textit{Pride and Prejudice}, \textit{Sense and Sensibility}, \textit{Silas Marner}, \textit{Sons and Lovers}, \textit{The Life and Opinions of Tristram Shandy}, \textit{Wizard of Oz}, \textit{Ulysses}, \textit{Vanity Fair} and \textit{War and Peace} in our analysis.
 
 We strip each novel into words and obtain the collection of words used and their relative frequencies. This set of words need to be cleaned before computing any useful features. We use the R package \textit{tidytext} \citep{tidytext} for this task. As the first `cleaning' step, we eliminate the stop words such as \textit{the}, \textit{a}, \textit{an} and \textit{in} from our collection. We also remove numbers from our word collection. Next we use a stemming procedure to reduce words to their word stem. For example the words \textit{run} and \textit{running} have the same word stem. This process gives us a cleaned set of words for each novel. We compute the tf-idf (term frequency-inverse document frequency) measure on this collection. The tf-idf statistic measures how important a word is to a document when considering a collection of documents. Consequently we end up with a rectangular dataset of $22$ observations and $39,624$ variables, where each observation is a novel and each variable is the tf-idf statistic of a word.
 
@@ -509,7 +509,7 @@ This completes the visual analysis of datasets. Next we explore the effect of DO
 
 In this section we work with a data repository of $12,642$ datasets \citep{datasets}, generated from approximately $200$ source datasets, which was used in our earlier work. Each dataset has labeled outliers and originally was used for classification purposes. The present datasets are modified from its original form by downsampling minority class observations, converting categorical attributes to numerical values, removing missing data and creating several variants from each classification dataset. More details on dataset preparation can be found in \cite{kandanaarachchi2018normalization}. This collection also includes datasets from \cite{campos2016evaluation}.
 
-From an application view point, it is fortunate if outliers arise in the full input space. It is more likely that outliers arise in subspaces, and is equally important that these are detected in a timely manner. If detecting subspace outliers is a goal, using downsampled classification datasets for outlier detection is sub-optimal. This is because classification datasets generally contain variables that are needed for effective classification, and as a result the outliers in the downsampled dataset may arise in the full space. However, as downsampled classification datasets have labeled outliers, they enable effective evaluation of different pre-processing and outlier methods. Thus, to make these datasets suitable for subspace outlier detection, we ``fatten'' each dataset by adding $20$ noise variables distributed normally, i.e. $\sim \mathcal{N}(0,1)$. We use these `fattened' datasets in our experiment.
+From an application view point, it is fortunate if outliers arise in the full input space. It is more likely that outliers arise in subspaces, and is equally important that these are detected in a timely manner. If detecting subspace outliers is a goal, using downsampled classification datasets for outlier detection is sub-optimal. This is because classification datasets generally contain variables that are needed for effective classification, and as a result the outliers in the downsampled dataset may arise in the full space. However, as downsampled classification datasets have labeled outliers, they enable effective evaluation of different pre-processing and outlier methods. Thus, to make these datasets suitable for subspace outlier detection, we ``fatten'' each dataset by adding $20$ noise variables distributed normally, i.e.\ $\sim \mathcal{N}(0,1)$. We use these `fattened' datasets in our experiment.
 
 Similar to Section~\ref{sec:synthetic}, for each dataset we compare the results of three outlier methods LOF, KNN and iForest using the area under the ROC curve (AUC), on three different coordinate systems, namely the full set of coordinates, the first half of DOBIN components and the first half of Principal Components. For a dataset with $p$ variables and $N$ observations, if $p > N$, we consider $N/2$ number of DOBIN and PC components. This is because when $p >N$, \, $N$ vectors can only span an $N$ dimensional space, which is smaller than a $p$ dimensional space.
 %To add to , the datasets are generated from approximately $200$ source datasets. Thus, dataset variants need to be accounted for.
@@ -519,16 +519,16 @@ Furthermore, we need to select appropriate tools to present results of $12,642$ 
 \subsection{Significant tests}\label{sec:DatRepo1}
 
 Figure~\ref{fig:LOF_FAT} gives the results of the three coordinate systems on outlier detection method LOF. A Friedman test gave the $p$-value $1.986 \times 10^{-5}$, and Figure~\ref{fig:LOF_FAT1} shows the associated Nemenyi plot for this data. This plot shows the ranks of the coordinate systems, with lower ranks indicating better performance. The blue squares highlight methods which are not significantly different from each other. From Figure~\ref{fig:LOF_FAT1} we see that the best coordinates for LOF are $1/2$ DOBIN, followed by $1/2$ PCA and All Vars, with $1/2$ PCA and All Vars not significantly different from each other.
-Figure~\ref{fig:LOF_FAT2} shows the distribution of performance results for LOF using the three coordinate systems. As these curves represent probability density estimates, the area under each curve is $1$. We see that $1/2$ DOBIN components give rise to larger density values for $\text{AUC} > 0.7$, i.e. it has a bigger proportion of high AUC values compared to the other two coordinate systems.
+Figure~\ref{fig:LOF_FAT2} shows the distribution of performance results for LOF using the three coordinate systems. As these curves represent probability density estimates, the area under each curve is $1$. We see that $1/2$ DOBIN components give rise to larger density values for $\text{AUC} > 0.7$, i.e.\ it has a bigger proportion of high AUC values compared to the other two coordinate systems.
 
 \begin{figure*}[!ht]
 	\centering
 	\subfloat[][]{
-		\includegraphics[width=0.48\textwidth]{\ellOF_Nemenyi_1.pdf}
+		\includegraphics[width=0.48\textwidth]{LOF_Nemenyi_1.pdf}
 		\label{fig:LOF_FAT1}
 	}\hfill
 	\subfloat[][]{
-		\includegraphics[width=0.48\textwidth]{\ellOF_Density_1.pdf}
+		\includegraphics[width=0.48\textwidth]{LOF_Density_1.pdf}
 		\label{fig:LOF_FAT2}
 	}%
 	\caption{Nemenyi plot of LOF results on the data repository in Figure~\ref{fig:LOF_FAT1} and the probability density plot of the three coordinate systems in Figure~\ref{fig:LOF_FAT2}.}
@@ -575,7 +575,7 @@ We see that $1/2$ DOBIN performs best for all three outlier detection methods an
 
 Dimension reduction for outlier detection is a topic that has not received much attention in the literature. One way to achieve this is to construct a basis that empowers outlier detection. In this paper, we present DOBIN: a Distance based Outlier Basis usIng Neighbours, which strives to accomplish this goal. We used DOBIN on an extensive data repository of real world datasets and showed that DOBIN basis improves performance of the outlier detection methods LOF, KNN and iForest. Using half of the DOBIN components we outperformed PCA and the standard basis as coordinate systems for these three outlier detection methods.
 
-In addition, we conducted a visual analysis of outliers using DOBIN on six datasets from diverse sources, which included a character graph from the novel \textit{\elles Mis\'erables} and $22$ classics from Gutenberg website. We projected the data onto a 2D space spanned by the first two DOBIN vectors, and saw that outliers identified by many methods in O3 plots were indeed far away from the rest of the data. We gained insights about the outliers in these datasets, and identified the variables that contributed to make them outliers.
+In addition, we conducted a visual analysis of outliers using DOBIN on six datasets from diverse sources, which included a character graph from the novel \textit{Les Mis\'erables} and $22$ classics from Gutenberg website. We projected the data onto a 2D space spanned by the first two DOBIN vectors, and saw that outliers identified by many methods in O3 plots were indeed far away from the rest of the data. We gained insights about the outliers in these datasets, and identified the variables that contributed to make them outliers.
 
 Currently DOBIN is sensitive to rotations in the input space. As future work we plan to investigate avenues that can contribute to a rotation invariant version of DOBIN. Such a version may be advantageous for working with datasets that are already pre-processed. The R package \textit{dobin} contains the implementation and is available at \url{https://github.com/sevvandi/dobin} for download.
 
@@ -585,7 +585,7 @@ Currently DOBIN is sensitive to rotations in the input space. As future work we 
 
 \textbf{R package dobin}: This package contains the DOBIN basis construction.
 
-\textbf{Datasets}: Datasets referred in Section~\ref{sec:DatRepo} are available at \cite{datasets}. The character network from the novel \textit{\elles Mis\'erables} was taken from the R package \textit{SOMbrero} \citep{sombrero}. The book vectors dataset used in Section~\ref{sec:ResWithVis6} is available at the github repository \url{https://github.com/sevvandi/Outlier-Basis}.
+\textbf{Datasets}: Datasets referred in Section~\ref{sec:DatRepo} are available at \cite{datasets}. The character network from the novel \textit{Les Mis\'erables} was taken from the R package \textit{SOMbrero} \citep{sombrero}. The book vectors dataset used in Section~\ref{sec:ResWithVis6} is available at the github repository \url{https://github.com/sevvandi/Outlier-Basis}.
 
 \textbf{Scripts}: The script \texttt{Figures\_For\_Paper\_1.R} contains the R code used to conduct experiments and produce graphs in Section~\ref{sec:synthetic}. The script \texttt{Figures\_For\_Paper\_2.R} contains the R code used in Section~\ref{sec:ResWithVis}. And finally, the script \texttt{Figures\_For\_Paper\_3.R} contains the R code used to produce the graphs in Section~\ref{sec:DatRepo}. The original computation on the data repository detailed in Section~\ref{sec:DatRepo} was conducted using the Monarch HPC cluster. The results of this computation are available at the github repository \url{https://github.com/sevvandi/Outlier-Basis}.
 
