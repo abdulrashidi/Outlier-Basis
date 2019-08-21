@@ -120,7 +120,7 @@ Algorithm~\ref{algo:YSpace} summarizes the construction of the $Y$ space.
 \end{figure}
 
 %% Explanation of fig:XandY
-Figure~\ref{fig:XandY} illustrates the $X$ and $Y$ spaces where $X$ is a 2 dimensional normal distribution of 100 points with a single outlier depicted in red. We see that the $Y$ space, computed with $k_1=1$ and $k_2=5$ consists of a lesser number of points compared to $X$, of which 6 points are contributed by the outlier. This is because $k_1$ to $k_2$ neighbours are considered in the construction of the $Y$ space and the points $\bm{y}_k$ with relatively small distances $\left(\sum_i y_{ki} \leq Q\right)$ are removed. Thus, the effect of outliers is magnified in the $Y$ space. %\todo{What is $k_1$ and $k_2$ in this example? - Done}
+Figure~\ref{fig:XandY} illustrates the $X$ and $Y$ spaces where $X$ is a 2 dimensional normal distribution of 100 points with a single outlier depicted in red. We see that the $Y$ space consists of a lesser number of points compared to $X$, of which 6 points are contributed by the outlier. This is because in the construction of the $Y$ space $5$ neighbours are considered for each point with $k_1=1$ to $k_2=5$, and the points $\bm{y}_k$ with relatively small distances $\left(\sum_i y_{ki} \leq Q\right)$ are removed. Thus, the effect of outliers is magnified in the $Y$ space. %\todo{What is $k_1$ and $k_2$ in this example? - Done}
 
 We summarise the salient features of the $Y$ space below:
 \begin{compactenum}
