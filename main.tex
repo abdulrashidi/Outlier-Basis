@@ -1,13 +1,16 @@
-\documentclass[a4paper,11pt]{article}
+\documentclass[a4paper,12pt]{article}
 \usepackage{newtxtext,newtxmath, amsmath, amsfonts, bm,mathtools}
 \usepackage{paralist, url, natbib, parskip}
 \usepackage{graphicx, subfig, adjustbox, todonotes}
 \usepackage[section]{placeins}
 \usepackage[linesnumbered,lined,boxed,commentsnumbered]{algorithm2e}
-\usepackage[margin=1.5cm, bottom=2cm]{geometry}
+%\usepackage[margin=1.5cm, bottom=2cm]{geometry}
+\usepackage[margin=3cm]{geometry}
 \usepackage[margin=2cm]{caption}
+\usepackage{titling}
 \DeclareCaptionStyle{italic}[justification=centering]{labelfont={bf},textfont={it},labelsep=colon}
 \captionsetup[figure]{style=italic,format=hang,singlelinecheck=true}
+\providecommand{\keywords}[1]{\textbf{\textit{Key words---}} #1}
 
 \SetKwInOut{Parameter}{parameter}
 \setlength{\algomargin}{2em}
@@ -26,13 +29,24 @@
 % =======================================================================
 
 \title{Dimension reduction for outlier detection using DOBIN}
-\author{Sevvandi Kandanaarachchi, Rob J. Hyndman}
-\maketitle
+\author{Sevvandi Kandanaarachchi$^1$, Rob J. Hyndman$^1$}
+\date{%
+   \scriptsize{ $^1$Department of Econometrics and Business Statistics, Faculty of Business and Economics, \\ Monash University, Clayton VIC 3800, Australia.\\ [2ex]}% 
+    \today \\
+}
+\begin{titlingpage}
+\maketitle 
 
 \begin{abstract}
 	This paper introduces DOBIN, a new approach to select a set of basis vectors tailored for outlier detection. DOBIN has a solid mathematical foundation and can be used as a dimension reduction tool for outlier detection tasks. We demonstrate the effectiveness of DOBIN on an extensive data repository, by comparing the performance of outlier detection methods using DOBIN and other bases. We further illustrate the utility of DOBIN as an outlier visualization tool. The R package \textit{dobin} implements this basis construction.
 \end{abstract}
 
+\begin{keywords}outlier detection, dimension reduction, outlier visualization, basis vectors
+\end{keywords}
+
+\end{titlingpage}
+
+\newgeometry{top=1.5cm,bottom=2cm,right=1.5cm,left=1.5cm}
 % =======================================================================
 \section{Introduction}
 % =======================================================================
@@ -477,7 +491,7 @@ This example is on text analysis of $22$ classics downloaded from the Gutenberg 
 
 We strip each novel into words and obtain the collection of words used and their relative frequencies. This set of words need to be cleaned before computing any useful features. We use the R package \textit{tidytext} \citep{tidytext} for this task. As the first `cleaning' step, we eliminate the stop words such as \textit{the}, \textit{a}, \textit{an} and \textit{in} from our collection. We also remove numbers from our word collection. Next we use a stemming procedure to reduce words to their word stem. For example the words \textit{run} and \textit{running} have the same word stem. This process gives us a cleaned set of words for each novel. We compute the tf-idf (term frequency-inverse document frequency) measure on this collection. The tf-idf statistic measures how important a word is to a document when considering a collection of documents. Consequently we end up with a rectangular dataset of $22$ observations and $39,624$ variables, where each observation is a novel and each variable is the tf-idf statistic of a word.
 
-\begin{figure*}[!hb]
+\begin{figure*}[!ht]
   \centering
   \subfloat[][]{
     \includegraphics[width=0.54\textwidth]{Ex6_1.pdf}
@@ -517,13 +531,14 @@ Furthermore, we need to select appropriate tools to present results of $12,642$ 
 
 \subsection{Significant tests}\label{sec:DatRepo1}
 
-\todo[inline]{The presentation of results is not clear, and I don't think density plots are the best way of showing them. For each outlier method, we are interested in how the basis set makes a difference. So just show boxplots or simlar of the three sets of AUC results. \\
-Response: Changed to boxplots and updated wording.\\
-Better, but now I think that the boxplots would be more informative if we showed the difference in AUC values between each 1/2 spaces and the All vars space. So only two plots would be shown. Positive values would indicate an improvement over all vars.}
+%\todo[inline]{The presentation of results is not clear, and I don't think density plots are the best way of showing them. For each outlier method, we are interested in how the basis set makes a difference. So just show boxplots or simlar of the three sets of AUC results. \\
+% Response: Changed to boxplots and updated wording.\\
+% Better, but now I think that the boxplots would be more informative if we showed the difference in AUC values between each 1/2 spaces and the All vars space. So only two plots would be shown. Positive values would indicate an improvement over all vars.}
 
 Figure~\ref{fig:LOF_FAT} gives the results of the three coordinate systems on outlier detection method LOF. A Friedman test gave the $p$-value $1.986 \times 10^{-5}$, and Figure~\ref{fig:LOF_FAT1} shows the associated Nemenyi plot for this data. This plot shows the ranks of the coordinate systems, with lower ranks indicating better performance. The blue squares highlight methods which are not significantly different from each other. From Figure~\ref{fig:LOF_FAT1} we see that the best coordinates for LOF are $1/2$ DOBIN, followed by $1/2$ PCA and All Vars, with $1/2$ PCA and All Vars not significantly different from each other.
 %Figure~\ref{fig:LOF_FAT2} shows the distribution of performance results for LOF using the three coordinate systems. As these curves represent probability density estimates, the area under each curve is $1$. We see that $1/2$ DOBIN components give rise to larger density values for $\text{AUC} > 0.7$, i.e.\ it has a bigger proportion of high AUC values compared to the other two coordinate systems.
-Figure~\ref{fig:LOF_FAT2} shows the boxplots for the three coordinate systems. Taking into account that all performance values are roughly between $0.4$ and $1$,  we see that $1/2$ DOBIN has a higher median AUC, and a higher third quartile compared to $1/2$ PCA and All Vars.
+Figure~\ref{fig:LOF_FAT2} shows the boxplots of performance differences between each of $1/2$ DOBIN and $1/2$ PCA with All Vars. %Taking into account that all performance values are roughly between $0.4$ and $1$,  we see that $1/2$ DOBIN has a higher median AUC, and a higher third quartile compared to $1/2$ PCA and All Vars.
+Positive values in AUC difference indicate an improvement over All Vars. We see that $1/2$ DOBIN $-$ All Vars has a positive median AUC Difference unlike $1/2$ PCA $-$ All Vars. In addition, $1/2$ DOBIN $-$ All Vars has higher first and third quartiles compared to  $1/2$ PCA $-$ All Vars.
 
 \begin{figure*}[!ht]
 	\centering
@@ -535,7 +550,7 @@ Figure~\ref{fig:LOF_FAT2} shows the boxplots for the three coordinate systems. T
 		\includegraphics[width=0.48\textwidth]{LOF_BoxPlot.pdf}
 		\label{fig:LOF_FAT2}
 	}%
-	\caption{Nemenyi plot of LOF results on the data repository in Figure~\ref{fig:LOF_FAT1} and the boxplots of the three coordinate systems in Figure~\ref{fig:LOF_FAT2}.}
+	\caption{Nemenyi plot of LOF results on the data repository in Figure~\ref{fig:LOF_FAT1} and the boxplots of performance differences with respect to All Vars in Figure~\ref{fig:LOF_FAT2}.}
 	\label{fig:LOF_FAT}
 \end{figure*}
 
@@ -551,11 +566,11 @@ Figure~\ref{fig:KNN_FAT} shows the results of the three coordinate systems on th
 		\includegraphics[width=0.48\textwidth]{KNN_BoxPlot.pdf}
 		\label{fig:KNN_FAT2}
 	}%
-	\caption{Nemenyi plot of KNN results on the data repository in Figure~\ref{fig:KNN_FAT1} and the boxplots of the three coordinate systems in Figure~\ref{fig:KNN_FAT2}.}
+	\caption{Nemenyi plot of KNN results on the data repository in Figure~\ref{fig:KNN_FAT1} and the boxplots of performance differences with respect to All Vars in Figure~\ref{fig:KNN_FAT2}.}
 	\label{fig:KNN_FAT}
 \end{figure*}
 
-Similar performances are obtained for iForest, which is illustrated in Figure~\ref{fig:IFOREST_FAT}. A Friedman test conducted on the data gave a $p$-value less than $2.2 \times 10^{-16}$. The Nemenyi plot shows that while $1/2$ DOBIN performs the best, all three methods are significantly different from each other, with All Vars outperforming $1/2$ PCA. This is supported from the boxplots in Figure~\ref{fig:IFOREST_FAT2}, with $1/2$ DOBIN having a higher median and third quartile compared to others.
+Similar performances are obtained for iForest, which is illustrated in Figure~\ref{fig:IFOREST_FAT}. A Friedman test conducted on the data gave a $p$-value less than $2.2 \times 10^{-16}$. The Nemenyi plot shows that while $1/2$ DOBIN performs the best, all three methods are significantly different from each other, with All Vars outperforming $1/2$ PCA. This is supported from the boxplots in Figure~\ref{fig:IFOREST_FAT2}, with $1/2$ DOBIN $-$ All Vars having a positive median AUC Difference and  $1/2$ PCA $-$ All Vars having a negative one.
 
 %the curve associated to $1/2$ DOBIN lying above the All Vars curve, and the All Vars curve lying above $1/2$ PCA curve for $\text{AUC} > 0.65$.
 
@@ -569,7 +584,7 @@ Similar performances are obtained for iForest, which is illustrated in Figure~\r
 		\includegraphics[width=0.48\textwidth]{IFOREST_BoxPlot.pdf}
 		\label{fig:IFOREST_FAT2}
 	}%
-	\caption{Nemenyi plot of iForest results on the data repository in Figure~\ref{fig:IFOREST_FAT1} and the boxplots of the three coordinate systems in Figure~\ref{fig:IFOREST_FAT2}.}
+	\caption{Nemenyi plot of iForest results on the data repository in Figure~\ref{fig:IFOREST_FAT1} and the boxplots of performance differences with respect to All Vars in  Figure~\ref{fig:IFOREST_FAT2}.}
 	\label{fig:IFOREST_FAT}
 \end{figure*}
 
