@@ -538,7 +538,7 @@ Furthermore, we need to select appropriate tools to present results of $12,642$ 
 Figure~\ref{fig:LOF_FAT} gives the results of the three coordinate systems on outlier detection method LOF. A Friedman test gave the $p$-value $1.986 \times 10^{-5}$, and Figure~\ref{fig:LOF_FAT1} shows the associated Nemenyi plot for this data. This plot shows the ranks of the coordinate systems, with lower ranks indicating better performance. The blue squares highlight methods which are not significantly different from each other. From Figure~\ref{fig:LOF_FAT1} we see that the best coordinates for LOF are $1/2$ DOBIN, followed by $1/2$ PCA and All Vars, with $1/2$ PCA and All Vars not significantly different from each other.
 %Figure~\ref{fig:LOF_FAT2} shows the distribution of performance results for LOF using the three coordinate systems. As these curves represent probability density estimates, the area under each curve is $1$. We see that $1/2$ DOBIN components give rise to larger density values for $\text{AUC} > 0.7$, i.e.\ it has a bigger proportion of high AUC values compared to the other two coordinate systems.
 Figure~\ref{fig:LOF_FAT2} shows the boxplots of performance differences between each of $1/2$ DOBIN and $1/2$ PCA with All Vars. %Taking into account that all performance values are roughly between $0.4$ and $1$,  we see that $1/2$ DOBIN has a higher median AUC, and a higher third quartile compared to $1/2$ PCA and All Vars.
-Positive values in AUC difference indicate an improvement over All Vars. We see that $1/2$ DOBIN $-$ All Vars has a positive median AUC Difference unlike $1/2$ PCA $-$ All Vars. In addition, $1/2$ DOBIN $-$ All Vars has higher first and third quartiles compared to  $1/2$ PCA $-$ All Vars.
+Positive values in AUC difference indicate an improvement over All Vars. We see that $1/2$ DOBIN $-$ All Vars has a positive median AUC difference unlike $1/2$ PCA $-$ All Vars. In addition, $1/2$ DOBIN $-$ All Vars has higher first and third quartiles compared to  $1/2$ PCA $-$ All Vars.
 
 \begin{figure*}[!ht]
 	\centering
@@ -570,7 +570,7 @@ Figure~\ref{fig:KNN_FAT} shows the results of the three coordinate systems on th
 	\label{fig:KNN_FAT}
 \end{figure*}
 
-Similar performances are obtained for iForest, which is illustrated in Figure~\ref{fig:IFOREST_FAT}. A Friedman test conducted on the data gave a $p$-value less than $2.2 \times 10^{-16}$. The Nemenyi plot shows that while $1/2$ DOBIN performs the best, all three methods are significantly different from each other, with All Vars outperforming $1/2$ PCA. This is supported from the boxplots in Figure~\ref{fig:IFOREST_FAT2}, with $1/2$ DOBIN $-$ All Vars having a positive median AUC Difference and  $1/2$ PCA $-$ All Vars having a negative one.
+Similar performances are obtained for iForest, which is illustrated in Figure~\ref{fig:IFOREST_FAT}. A Friedman test conducted on the data gave a $p$-value less than $2.2 \times 10^{-16}$. The Nemenyi plot shows that while $1/2$ DOBIN performs the best, all three methods are significantly different from each other, with All Vars outperforming $1/2$ PCA. This is supported from the boxplots in Figure~\ref{fig:IFOREST_FAT2}, with $1/2$ DOBIN $-$ All Vars having a positive median AUC difference and  $1/2$ PCA $-$ All Vars having a negative one.
 
 %the curve associated to $1/2$ DOBIN lying above the All Vars curve, and the All Vars curve lying above $1/2$ PCA curve for $\text{AUC} > 0.65$.
 
