@@ -11,6 +11,8 @@ folder <- paste( getwd(), "/paper/", sep="")
 source(paste(folder, "Functions_For_Paper.R", sep=""))
 library("ggplot2")
 library("tidyverse")
+library("tsutils")
+library("tidyr")
 
 # -------------------------------------------------------------------------------
 # COMMON - READ DATA
@@ -24,7 +26,7 @@ dat <- read.csv(paste(folder, "Data_For_Section_5.csv", sep=""))
 
 out <- draw_nemenyi_plots(dat, method=1)
 out$friedman
-draw_density_plots(dat, method=1)
+draw_box_plots(dat, method=1)
 
 
 # -------------------------------------------------------------------------------
@@ -32,7 +34,7 @@ draw_density_plots(dat, method=1)
 # -------------------------------------------------------------------------------
 out <- draw_nemenyi_plots(dat, method=2)
 out$friedman
-draw_density_plots(dat,method=2)
+draw_box_plots(dat, method=2)
 
 
 # -------------------------------------------------------------------------------
@@ -40,5 +42,5 @@ draw_density_plots(dat,method=2)
 # -------------------------------------------------------------------------------
 out <- draw_nemenyi_plots(dat, method=3)
 out$friedman
-draw_density_plots(dat,method=3)
+draw_box_plots(dat,method=3)
 

@@ -18,7 +18,7 @@ library("IsolationForest")
 library("DMwR")
 library("ggplot2")
 library("pROC")
-library("reshape2")
+library("tidyr")
 
 # -------------------------------------------------------------------------------
 # FIG 1 - X AND Y SPACES

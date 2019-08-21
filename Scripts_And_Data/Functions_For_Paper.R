@@ -8,7 +8,8 @@ draw_three_curves <- function(roc_u1, roc_sc1, roc_sc2,  xvals, lab, gg_title,  
   
   df <- cbind.data.frame(xvals, min_max, dobin, pca)
   
-  df2 <- melt(df, id="xvals")
+  df2 <- tidyr::gather(df, key, value, -xvals)
+  
   colnames(df2)[3] <- "AUC"
   colnames(df2)[2] <- "Coordinates"
   levels(df2[ ,2])[levels(df2[ ,2])=="min_max"] <- "All Vars"
@@ -56,16 +57,9 @@ draw_nemenyi_plots <- function(dat_all, method=2){
   
   df <- cbind.data.frame(file_source, dat2)
   
-  # --- Make a big data frame with source, outlier method and sensitivity to normalization
-  for(j in 1:3){
-    temp <- reshape::melt(df[ ,c(1,(j+1))] )
-    colnames(temp) <- c("source", "method", "value")
-    if(j==1){
-      dat <- temp
-    }else{
-      dat <- rbind.data.frame(dat, temp)
-    }
-  }
+  dat <- gather(df, key, value, -file_source)
+  colnames(dat)[2] <- "method"
+  colnames(dat)[1] <- "source"
   
   df2 <- stats::aggregate(dat$value, by=list(m=dat$method, s=dat$source), FUN=median)
   friedman_test <- stats::friedman.test(y=df2$x, groups=df2$m, blocks=df2$s)
@@ -87,7 +81,8 @@ draw_nemenyi_plots <- function(dat_all, method=2){
 }
 
 
-draw_density_plots <- function( dat_all, method=1 ){
+
+draw_box_plots <- function( dat_all, method=1 ){
   if(method==1){ # LOF
     title <- "LOF"
     colset <- 2:4
@@ -101,28 +96,11 @@ draw_density_plots <- function( dat_all, method=1 ){
   
   
   df <- dat_all[, colset]
-  colnames(df) <- c("All Variables", "1/2 DOBIN comps", "1/2 PCA comps")
-  df3 <- reshape::melt(df)
+  colnames(df) <- c("All Vars", "1/2 DOBIN", "1/2 PCA")
+  df3 <- tidyr::gather(df, key, value)
   colnames(df3)[1] <- "Coordinates"
-  print( ggplot2::ggplot(df3, aes(x=value, color=Coordinates)) + ggplot2::geom_density(alpha=0.1, size=1) + ggplot2::ggtitle(title) + ggplot2::theme_bw() + xlab("AUC") )
+  print( ggplot2::ggplot(df3, aes(x=Coordinates, y=value, fill=Coordinates)) + ggplot2::geom_boxplot() + ggplot2::ggtitle(title) + ggplot2::theme_bw() + xlab("Coordinates") + ylab("AUC") )
   
 }
 
-GetFileSources <- function(filenames){
-  file_source <-c()
-  for(ll in 1:length(filenames)){
-    fname <- filenames[ll]
-    regobj1 <- regexpr("_C", fname)
-    regobj2 <- regexpr("_withoutdupl", fname)
-    if(regobj1[1]<0){
-      regobj <- regobj2
-    }else if(regobj2[1]<0){
-      regobj <- regobj1
-    }else{
-      regobj <- regobj1
-    }
-    end.ind <- regobj[1]-1
-    file_source <- c(file_source, substring(fname, 1, end.ind))
-  }
-  return(file_source)
-}
+
