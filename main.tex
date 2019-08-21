@@ -120,7 +120,7 @@ Algorithm~\ref{algo:YSpace} summarizes the construction of the $Y$ space.
 \end{figure}
 
 %% Explanation of fig:XandY
-Figure~\ref{fig:XandY} illustrates the $X$ and $Y$ spaces where $X$ is a 2 dimensional normal distribution of 100 points with a single outlier depicted in red. We see that the $Y$ space consists of a lesser number of points compared to $X$, of which 6 points are contributed by the outlier. This is because $k_1$ to $k_2$ neighbours are considered in the construction of the $Y$ space and the points $\bm{y}_k$ with relatively small distances $\left(\sum_i y_{ki} \leq Q\right)$ are removed. Thus, the effect of outliers is magnified in the $Y$ space.\todo{What is $k_1$ and $k_2$ in this example?}
+Figure~\ref{fig:XandY} illustrates the $X$ and $Y$ spaces where $X$ is a 2 dimensional normal distribution of 100 points with a single outlier depicted in red. We see that the $Y$ space, computed with $k_1=1$ and $k_2=5$ consists of a lesser number of points compared to $X$, of which 6 points are contributed by the outlier. This is because $k_1$ to $k_2$ neighbours are considered in the construction of the $Y$ space and the points $\bm{y}_k$ with relatively small distances $\left(\sum_i y_{ki} \leq Q\right)$ are removed. Thus, the effect of outliers is magnified in the $Y$ space. %\todo{What is $k_1$ and $k_2$ in this example? - Done}
 
 We summarise the salient features of the $Y$ space below:
 \begin{compactenum}
@@ -368,7 +368,7 @@ The popular \textit{USArrests} dataset is studied by \cite{bailey1995interactive
 	\label{fig:USArrests}
 \end{figure*}
 
-From Figure\ref{fig:USArrests1} we see that $X2$ (corresponding to Alaska) is flagged as an outlier in $8$ subspaces including the full space, by one or two outlier detection methods. The adjoining outlier $X33$ (Hawaii???\todo{Which state?}) is only flagged in $4$ subspaces and the others in even smaller subspaces. Of the six outlier methods, only two identify Alaska as an outlier in certain subspaces. This also suggests that even though there is consensus between two methods, as only one third of the methods agree on this outlier, it may not be quite so outlying as the outliers in the previous examples. Indeed, this notion is validated by the DC1-DC2 plot. We see the observation $X2$ (denoted by $2$ in the plot) standing out from the rest, but not by a large margin. A KNN algorithm identifies this observation as having the highest KNN distance in DC1-DC2 space.
+From Figure\ref{fig:USArrests1} we see that $X2$ (corresponding to Alaska) is flagged as an outlier in $8$ subspaces including the full space, by one or two outlier detection methods. The adjoining outlier $X33$ (North Carolina) is only flagged in $4$ subspaces and the others in even smaller subspaces. Of the six outlier methods, only two identify Alaska as an outlier in certain subspaces. This also suggests that even though there is consensus between two methods, as only one third of the methods agree on this outlier, it may not be quite so outlying as the outliers in the previous examples. Indeed, this notion is validated by the DC1-DC2 plot. We see the observation $X2$ (denoted by $2$ in the plot) standing out from the rest, but not by a large margin. A KNN algorithm identifies this observation as having the highest KNN distance in DC1-DC2 space.
 
 We look at the coefficients of the first DOBIN vector as $X2$ deviates in DC1:
 \begin{equation}\label{eq:ResWithVis3}
@@ -503,9 +503,10 @@ This section substantiated DOBIN's ability as an outlier visualization tool. In 
 
 In this section we work with a data repository of $12,642$ datasets \citep{datasets}, generated from approximately $200$ source datasets. Each dataset has labeled outliers and originally was used for classification purposes. The present datasets are modified from its original form by downsampling minority class observations, converting categorical attributes to numerical values, removing missing data and creating several variants from each classification dataset. More details on dataset preparation can be found in \cite{kandanaarachchi2018normalization}. This collection also includes datasets from \cite{campos2016evaluation}.
 
-\todo[inline]{I don't understand the following paragraph. If there is an outlier in a subspace, it is also in the original space by definition. You cannot have outliers that are only in subspaces.}
+\todo[inline]{I don't understand the following paragraph. If there is an outlier in a subspace, it is also in the original space by definition. You cannot have outliers that are only in subspaces. \\ Response : changed paragraph beginning. }
 
-From an application view point, it is fortunate if outliers arise in the full input space. It is more likely that outliers arise in subspaces, and is equally important that these are detected in a timely manner. If detecting subspace outliers is a goal, using downsampled classification datasets for outlier detection is sub-optimal. This is because classification datasets generally contain variables that are needed for effective classification, and as a result the outliers in the downsampled dataset may arise in the full space. However, as downsampled classification datasets have labeled outliers, they enable effective evaluation of different pre-processing and outlier methods. Thus, to make these datasets suitable for subspace outlier detection, we ``fatten'' each dataset by adding $20$ noise variables distributed normally, i.e.\ $\sim \mathcal{N}(0,1)$. We use these `fattened' datasets in our experiment.
+
+A data point that is an outlier in a subspace may not necessarily be an outlier in the full space, specially if other variables drown the subspace outlier \citep{zimek2012survey}. For example in  Figure~\ref{fig:gutenberg1}, the novel \textit{Alice in Wonderland} is an outlier in the fourth subspace in the O3 plot, but not in others.  As we increasingly encounter more  high dimensional data in modern applications, we need to consider it is more likely that certain points are outliers in subspaces rather than in the full input space.  If detecting subspace outliers is a goal, using downsampled classification datasets for outlier detection is sub-optimal. This is because classification datasets generally contain variables that are needed for effective classification, and as a result the labeled outliers in the downsampled dataset may be outliers in the full space. On the other hand, downsampled datasets enable effective evaluation of different pre-processing and outlier methods because they have labeled outliers. Thus, to make these datasets suitable for subspace outlier detection, we ``fatten'' each dataset by adding $20$ noise variables distributed normally, i.e.\ $\sim \mathcal{N}(0,1)$. We use these `fattened' datasets in our experiment.
 
 Similar to Section~\ref{sec:synthetic}, for each dataset we compare the results of three outlier methods LOF, KNN and iForest using the area under the ROC curve (AUC), on three different coordinate systems, namely the full set of coordinates, the first half of the DOBIN components and the first half of the Principal Components. That is, for a dataset with $p$ variables and $N$ observations,  we consider $\lfloor\min(N/2, p/2)\rfloor$ DOBIN and PC components.
 %To add to , the datasets are generated from approximately $200$ source datasets. Thus, dataset variants need to be accounted for.
@@ -514,10 +515,12 @@ Furthermore, we need to select appropriate tools to present results of $12,642$ 
 
 \subsection{Significant tests}\label{sec:DatRepo1}
 
-\todo[inline]{The presentation of results is not clear, and I don't think density plots are the best way of showing them. For each outlier method, we are interested in how the basis set makes a difference. So just show boxplots or simlar of the three sets of AUC results.}
+\todo[inline]{The presentation of results is not clear, and I don't think density plots are the best way of showing them. For each outlier method, we are interested in how the basis set makes a difference. So just show boxplots or simlar of the three sets of AUC results. \\
+Response: Changed to boxplots and updated wording.}
 
 Figure~\ref{fig:LOF_FAT} gives the results of the three coordinate systems on outlier detection method LOF. A Friedman test gave the $p$-value $1.986 \times 10^{-5}$, and Figure~\ref{fig:LOF_FAT1} shows the associated Nemenyi plot for this data. This plot shows the ranks of the coordinate systems, with lower ranks indicating better performance. The blue squares highlight methods which are not significantly different from each other. From Figure~\ref{fig:LOF_FAT1} we see that the best coordinates for LOF are $1/2$ DOBIN, followed by $1/2$ PCA and All Vars, with $1/2$ PCA and All Vars not significantly different from each other.
-Figure~\ref{fig:LOF_FAT2} shows the distribution of performance results for LOF using the three coordinate systems. As these curves represent probability density estimates, the area under each curve is $1$. We see that $1/2$ DOBIN components give rise to larger density values for $\text{AUC} > 0.7$, i.e.\ it has a bigger proportion of high AUC values compared to the other two coordinate systems.
+%Figure~\ref{fig:LOF_FAT2} shows the distribution of performance results for LOF using the three coordinate systems. As these curves represent probability density estimates, the area under each curve is $1$. We see that $1/2$ DOBIN components give rise to larger density values for $\text{AUC} > 0.7$, i.e.\ it has a bigger proportion of high AUC values compared to the other two coordinate systems.
+Figure~\ref{fig:LOF_FAT2} shows the boxplots for the three coordinate systems. Taking into account that all performance values are roughly between $0.4$ and $1$,  we see that $1/2$ DOBIN has a higher median AUC, and a higher third quartile compared to $1/2$ PCA and All Vars. 
 
 \begin{figure*}[!ht]
 	\centering
@@ -526,14 +529,14 @@ Figure~\ref{fig:LOF_FAT2} shows the distribution of performance results for LOF 
 		\label{fig:LOF_FAT1}
 	}\hfill
 	\subfloat[][]{
-		\includegraphics[width=0.48\textwidth]{LOF_Density_1.pdf}
+		\includegraphics[width=0.48\textwidth]{LOF_BoxPlot.pdf}
 		\label{fig:LOF_FAT2}
 	}%
-	\caption{Nemenyi plot of LOF results on the data repository in Figure~\ref{fig:LOF_FAT1} and the probability density plot of the three coordinate systems in Figure~\ref{fig:LOF_FAT2}.}
+	\caption{Nemenyi plot of LOF results on the data repository in Figure~\ref{fig:LOF_FAT1} and the boxplots of the three coordinate systems in Figure~\ref{fig:LOF_FAT2}.}
 	\label{fig:LOF_FAT}
 \end{figure*}
 
-Figure~\ref{fig:KNN_FAT} shows the results of the three coordinate systems on the outlier detection method KNN. We obtained the $p$-value $1.341\times 10^{-8}$ from the Friedman test. Again, from Figure~\ref{fig:KNN_FAT1} we see that $1/2$ DOBIN outperforms All Vars and $1/2$ PCA, which is corroborated by the probability density plot in Figure~\ref{fig:KNN_FAT2}. Even though All Vars is ranked second, it is not significantly different from $1/2$ PCA for KNN.
+Figure~\ref{fig:KNN_FAT} shows the results of the three coordinate systems on the outlier detection method KNN. We obtained the $p$-value $1.341\times 10^{-8}$ from the Friedman test. Again, from Figure~\ref{fig:KNN_FAT1} we see that $1/2$ DOBIN outperforms All Vars and $1/2$ PCA, which is corroborated by the boxplot in Figure~\ref{fig:KNN_FAT2}. Even though All Vars is ranked second, it is not significantly different from $1/2$ PCA for KNN.
 
 \begin{figure*}[!ht]
 	\centering
@@ -542,14 +545,16 @@ Figure~\ref{fig:KNN_FAT} shows the results of the three coordinate systems on th
 		\label{fig:KNN_FAT1}
 	}\hfill
 	\subfloat[][]{
-		\includegraphics[width=0.48\textwidth]{KNN_Density_1.pdf}
+		\includegraphics[width=0.48\textwidth]{KNN_BoxPlot.pdf}
 		\label{fig:KNN_FAT2}
 	}%
-	\caption{Nemenyi plot of KNN results on the data repository in Figure~\ref{fig:KNN_FAT1} and the probability density plot of the three coordinate systems in Figure~\ref{fig:KNN_FAT2}.}
+	\caption{Nemenyi plot of KNN results on the data repository in Figure~\ref{fig:KNN_FAT1} and the boxplots of the three coordinate systems in Figure~\ref{fig:KNN_FAT2}.}
 	\label{fig:KNN_FAT}
 \end{figure*}
 
-Similar performances are obtained for iForest, which is illustrated in Figure~\ref{fig:IFOREST_FAT}. A Friedman test conducted on the data gave a $p$-value less than $2.2 \times 10^{-16}$. The Nemenyi plot shows that while $1/2$ DOBIN performs the best, all three methods are significantly different from each other, with All Vars outperforming $1/2$ PCA. This is supported from the probability density plot in Figure~\ref{fig:IFOREST_FAT2}, with the curve associated to $1/2$ DOBIN lying above the All Vars curve, and the All Vars curve lying above $1/2$ PCA curve for $\text{AUC} > 0.65$.
+Similar performances are obtained for iForest, which is illustrated in Figure~\ref{fig:IFOREST_FAT}. A Friedman test conducted on the data gave a $p$-value less than $2.2 \times 10^{-16}$. The Nemenyi plot shows that while $1/2$ DOBIN performs the best, all three methods are significantly different from each other, with All Vars outperforming $1/2$ PCA. This is supported from the boxplots in Figure~\ref{fig:IFOREST_FAT2}, with $1/2$ DOBIN having a higher median and third quartile compared to others. 
+
+%the curve associated to $1/2$ DOBIN lying above the All Vars curve, and the All Vars curve lying above $1/2$ PCA curve for $\text{AUC} > 0.65$.
 
 \begin{figure*}[!ht]
 	\centering
@@ -558,10 +563,10 @@ Similar performances are obtained for iForest, which is illustrated in Figure~\r
 		\label{fig:IFOREST_FAT1}
 	}\hfill
 	\subfloat[][]{
-		\includegraphics[width=0.48\textwidth]{IFOREST_Density_1.pdf}
+		\includegraphics[width=0.48\textwidth]{IFOREST_BoxPlot.pdf}
 		\label{fig:IFOREST_FAT2}
 	}%
-	\caption{Nemenyi plot of iForest results on the data repository in Figure~\ref{fig:IFOREST_FAT1} and the probability density plot of the three coordinate systems in Figure~\ref{fig:IFOREST_FAT2}.}
+	\caption{Nemenyi plot of iForest results on the data repository in Figure~\ref{fig:IFOREST_FAT1} and the boxplots of the three coordinate systems in Figure~\ref{fig:IFOREST_FAT2}.}
 	\label{fig:IFOREST_FAT}
 \end{figure*}
 
@@ -575,9 +580,10 @@ Dimension reduction for outlier detection is a topic that has not received much 
 
 In addition, we conducted a visual analysis of outliers using DOBIN on six datasets from diverse sources, which included a character graph from the novel \textit{Les Mis\'erables} and $22$ classics from Gutenberg website. We projected the data onto a 2D space spanned by the first two DOBIN vectors, and saw that outliers identified by many methods in O3 plots were indeed far away from the rest of the data. We gained insights about the outliers in these datasets, and identified the variables that contributed to make them outliers.
 
-\todo[inline]{A rotation invariant form would be PCA first followed by DOBIN. You lose the interpretability but gain on rotation-invariance. I think we should say this here}
+\todo[inline]{A rotation invariant form would be PCA first followed by DOBIN. You lose the interpretability but gain on rotation-invariance. I think we should say this here \\
+Response :  added these comments. }
 
-Currently DOBIN is sensitive to rotations in the input space. As future work we plan to investigate avenues that can contribute to a rotation invariant version of DOBIN. Such a version may be advantageous for working with datasets that are already pre-processed. The R package \textit{dobin} contains the implementation and is available at \url{https://github.com/sevvandi/dobin} for download.
+Currently DOBIN is sensitive to rotations in the input space. As future work we plan to investigate avenues that can contribute to a rotation invariant version of DOBIN. A rotation invariant form would give the same results if PCA was performed before DOBIN. Even though we gain rotation-invariance from such a version, we lose the interpretablity of results by performing an arbitrary rotation.  However, rotation-invariance may be advantageous for working with datasets that are already pre-processed.   The R package \textit{dobin} contains the implementation and is available at \url{https://github.com/sevvandi/dobin} for download.
 
 % =======================================================================
 \subsection*{Supplementary Material}
@@ -589,7 +595,7 @@ Currently DOBIN is sensitive to rotations in the input space. As future work we 
 
 \textbf{Scripts}: The script \texttt{Figures\_For\_Paper\_1.R} contains the R code used to conduct experiments and produce graphs in Section~\ref{sec:synthetic}. The script \texttt{Figures\_For\_Paper\_2.R} contains the R code used in Section~\ref{sec:ResWithVis}. And finally, the script \texttt{Figures\_For\_Paper\_3.R} contains the R code used to produce the graphs in Section~\ref{sec:DatRepo}. The original computation on the data repository detailed in Section~\ref{sec:DatRepo} was conducted using the MonARCH HPC Cluster. The results of this computation are available at the github repository \url{https://github.com/sevvandi/Outlier-Basis}.
 
-\textbf{Other R-packages}: In addition to the R package \textit{dobin} we have also used the R packages \textit{OutliersO3} \citep{O3Rpack}, \textit{isolationForest} \citep{isolationForest}, \textit{DMwR} \citep{DMwR}, \textit{pROC} \citep{pROC}, \textit{ggplot2} \citep{ggplot2}, \textit{mbgraphic} \citep{mbgraphic}, \textit{gridExtra} \citep{gridextra}, \textit{tidyverse} \citep{tidyverse} and \textit{reshape2} \citep{reshape2}.\todo{Suggest you replace reshape2 with tidyr. This is not recommended these days.}
+\textbf{Other R-packages}: In addition to the R package \textit{dobin} we have also used the R packages \textit{OutliersO3} \citep{O3Rpack}, \textit{isolationForest} \citep{isolationForest}, \textit{DMwR} \citep{DMwR}, \textit{pROC} \citep{pROC}, \textit{ggplot2} \citep{ggplot2}, \textit{mbgraphic} \citep{mbgraphic}, \textit{gridExtra} \citep{gridextra}, \textit{tsutils} \citep{tsutils}, \textit{tidyverse} \citep{tidyverse} and \textit{tidyr} \citep{tidyr}.%\todo{Suggest you replace reshape2 with tidyr. This is not recommended these days.}
 
 
 % =======================================================================
