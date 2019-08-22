@@ -166,7 +166,7 @@ colnames(df_ifor2)[4] <- "Method"
 
 gg_title <- "Area under ROC for LOF, KNN and iForest"
 df <- rbind.data.frame(df_lof2, df_knn2, df_ifor2)
-ggplot(df, aes(xvals, AUC)) + geom_point(aes(color=Coordinates, shape=Coordinates), size=2.5) + geom_line(aes(color=Coordinates)) + ggtitle(gg_title) + xlab(expression(mu)) + ylab(lab[2]) + facet_grid(.~Method)   + theme_bw()
+ggplot(df, aes(xvals, AUC)) + geom_point(aes(color=Coordinates, shape=Coordinates), size=2.5) + geom_line(aes(color=Coordinates)) + ggtitle(gg_title) + xlab(expression(mu)) + ylab(lab[2]) + facet_grid(.~Method) + coord_fixed(ratio=14)  + theme_bw()
 
 
 
@@ -298,7 +298,7 @@ colnames(df_ifor2)[4] <- "Method"
 
 gg_title <- "Area under ROC for LOF, KNN and iForest"
 df <- rbind.data.frame(df_lof2, df_knn2, df_ifor2)
-ggplot(df, aes(xvals, AUC)) + geom_point(aes(color=Coordinates, shape=Coordinates), size=2.5) + geom_line(aes(color=Coordinates)) + ggtitle(gg_title) + xlab(expression(mu)) + ylab(lab[2]) + facet_grid(.~Method)   + theme_bw()
+ggplot(df, aes(xvals, AUC)) + geom_point(aes(color=Coordinates, shape=Coordinates), size=2.5) + geom_line(aes(color=Coordinates)) + ggtitle(gg_title) + xlab(expression(mu)) + ylab(lab[2]) + facet_grid(.~Method) + coord_fixed(ratio=14)   + theme_bw()
 
 
 # -------------------------------------------------------------------------------
@@ -425,4 +425,5 @@ colnames(df_ifor2)[4] <- "Method"
 
 gg_title <- "Area under ROC for LOF, KNN and iForest"
 df <- rbind.data.frame(df_lof2, df_knn2, df_ifor2)
-ggplot(df, aes(xvals, AUC)) + geom_point(aes(color=Coordinates, shape=Coordinates), size=2.5) + geom_line(aes(color=Coordinates)) + ggtitle(gg_title) + xlab("Outlier Dimension") + ylab(lab[2]) + facet_grid(.~Method)   + theme_bw()
+ggplot(df, aes(xvals, AUC)) + geom_point(aes(color=Coordinates, shape=Coordinates), size=2.5) + geom_line(aes(color=Coordinates)) + ggtitle(gg_title) + xlab("Outlier Dimension") + ylab(lab[2]) + facet_grid(.~Method) + coord_fixed(ratio=62) + theme_bw()
+
