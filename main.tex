@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[letter,12pt]{article}
 \usepackage{newtxtext,newtxmath, amsmath, amsfonts, bm,mathtools}
 \usepackage{paralist, url, natbib, parskip}
 \usepackage{graphicx, subfig, adjustbox, todonotes}
@@ -31,11 +31,11 @@
 \title{Dimension reduction for outlier detection using DOBIN}
 \author{Sevvandi Kandanaarachchi$^1$, Rob J. Hyndman$^1$}
 \date{%
-   \scriptsize{ $^1$Department of Econometrics and Business Statistics, Faculty of Business and Economics, \\ Monash University, Clayton VIC 3800, Australia.\\ [2ex]}% 
+   \scriptsize{ $^1$Department of Econometrics and Business Statistics, Faculty of Business and Economics, \\ Monash University, Clayton VIC 3800, Australia.\\ [2ex]}%
     \today \\
 }
 \begin{titlingpage}
-\maketitle 
+\maketitle
 
 \begin{abstract}
 	This paper introduces DOBIN, a new approach to select a set of basis vectors tailored for outlier detection. DOBIN has a solid mathematical foundation and can be used as a dimension reduction tool for outlier detection tasks. We demonstrate the effectiveness of DOBIN on an extensive data repository, by comparing the performance of outlier detection methods using DOBIN and other bases. We further illustrate the utility of DOBIN as an outlier visualization tool. The R package \textit{dobin} implements this basis construction.
@@ -400,7 +400,7 @@ We see that the variables \textit{UrbanPop} and \textit{Rape} contribute more to
 
 \begin{figure*}[!ht]
 	\centering
-	\includegraphics[width=0.6\textwidth]{Ex3_3.pdf}
+	\includegraphics[width=0.5\textwidth]{Ex3_3.pdf}
 	\caption{USArrests dataset -- Rape to Urban population ratio values.}
 	\label{fig:USArrests3}
 \end{figure*}
