@@ -259,17 +259,17 @@ Using $3$ DOBIN components gives the highest performance for all $3$ outlier det
 
 \begin{figure}[!p]
   \centering
-  \includegraphics[width=0.6\textwidth]{Exp1.pdf}
+  \includegraphics[width=0.65\textwidth]{Exp1.pdf}
   \caption{Results of Experiment 1, in $\mathbb{R}^6$.}
   \label{fig:Exp1}\vspace*{0.3cm}
 
   \centering
-  \includegraphics[width=0.6\textwidth]{Exp2.pdf}
+  \includegraphics[width=0.65\textwidth]{Exp2.pdf}
   \caption{Results of Experiment 2, in $\mathbb{R}^6$.}
   \label{fig:Exp2}\vspace*{0.3cm}
 
   \centering
-  \includegraphics[width=0.6\textwidth]{Exp3.pdf}
+  \includegraphics[width=0.65\textwidth]{Exp3.pdf}
   \caption{Results of Experiment 3, in $\mathbb{R}^{20}$.}
   \label{fig:Exp3}
 \end{figure}
@@ -529,6 +529,44 @@ Similar to Section~\ref{sec:synthetic}, for each dataset we compare the results 
 
 Furthermore, we need to select appropriate tools to present results of $12,642$ datasets across three methods and three coordinate systems. The ability to delve into each dataset and obtain insights is no longer feasible with a large repository. In addition, we want to ascertain whether DOBIN coordinates improve the performance of the three outlier detection methods compared to the other two coordinate systems. Therefore, we investigate each outlier detection method separately. For each outlier method, we compare the performance of the three coordinate systems using a Friedman test adjusting for the dataset variants. To adjust for the dataset variants, we take the median performance for each dataset source and each coordinate system. If the Friedman test is significant, then we perform a Nemenyi test, so that we can rank the coordinate systems according to performance. For convenience we use the shortened names $1/2$ DOBIN for using the first half of DOBIN components, $1/2$ PCA for using the first half of Principal Components and `All Vars' for using all variables in the remainder of the section.
 
+\begin{figure}[!p]
+  \centering
+  \subfloat[][]{
+    \includegraphics[width=0.48\textwidth]{LOF_Nemenyi_1.pdf}
+    \label{fig:LOF_FAT1}
+  }\hfill
+  \subfloat[][]{
+    \includegraphics[width=0.48\textwidth]{LOF_BoxPlot.pdf}
+    \label{fig:LOF_FAT2}
+  }%
+  \caption{Nemenyi plot of LOF results and the boxplots of performance differences in Figures~\ref{fig:LOF_FAT1} and~\ref{fig:LOF_FAT2}.}
+  \label{fig:LOF_FAT}
+
+  \centering
+  \subfloat[][]{
+    \includegraphics[width=0.48\textwidth]{KNN_Nemenyi_1.pdf}
+    \label{fig:KNN_FAT1}
+  }\hfill
+  \subfloat[][]{
+    \includegraphics[width=0.48\textwidth]{KNN_BoxPlot.pdf}
+    \label{fig:KNN_FAT2}
+  }%
+  \caption{Nemenyi plot of KNN results and the boxplots of performance differences in Figures~\ref{fig:KNN_FAT1} and~\ref{fig:KNN_FAT2}.}
+  \label{fig:KNN_FAT}
+
+  \centering
+  \subfloat[][]{
+    \includegraphics[width=0.48\textwidth]{IFOREST_Nemenyi_1.pdf}
+    \label{fig:IFOREST_FAT1}
+  }\hfill
+  \subfloat[][]{
+    \includegraphics[width=0.48\textwidth]{IFOREST_BoxPlot.pdf}
+    \label{fig:IFOREST_FAT2}
+  }%
+  \caption{Nemenyi plot of iForest results and the boxplots of performance differences in Figures~\ref{fig:IFOREST_FAT1} and~\ref{fig:IFOREST_FAT2}.}
+  \label{fig:IFOREST_FAT}
+\end{figure}
+
 \subsection{Significant tests}\label{sec:DatRepo1}
 %\todo[inline]{The presentation of results is not clear, and I don't think density plots are the best way of showing them. For each outlier method, we are interested in how the basis set makes a difference. So just show boxplots or simlar of the three sets of AUC results. \\
 % Response: Changed to boxplots and updated wording.\\
@@ -539,45 +577,7 @@ Figure~\ref{fig:LOF_FAT2} shows the boxplots of performance differences between 
 
 Figure~\ref{fig:KNN_FAT} shows the results of the three coordinate systems on the outlier detection method KNN. We obtained the $p$-value $1.341\times 10^{-8}$ from the Friedman test. Again, from Figure~\ref{fig:KNN_FAT1} we see that $1/2$ DOBIN outperforms All Vars and $1/2$ PCA, which is corroborated by the boxplots in Figure~\ref{fig:KNN_FAT2}. Even though All Vars is ranked second, it is not significantly different from $1/2$ PCA for KNN.
 
-Similar performances are obtained for iForest, which is illustrated in Figure~\ref{fig:IFOREST_FAT}. A Friedman test conducted on the data gave a $p$-value less than $2.2 \times 10^{-16}$. The Nemenyi plot shows that while $1/2$ DOBIN performs the best, all three methods are significantly different from each other, with All Vars outperforming $1/2$ PCA. This is supported from the boxplots in Figure~\ref{fig:IFOREST_FAT2}, with $1/2$ DOBIN $-$ $1/2$ PCA and $1/2$ DOBIN $-$ All Vars having positive median AUC differences and  $1/2$ PCA $-$ All Vars having a negative one.  
-
-\begin{figure}[!p]
-  \centering
-	\subfloat[][]{
-		\includegraphics[width=0.48\textwidth]{LOF_Nemenyi_1.pdf}
-		\label{fig:LOF_FAT1}
-	}\hfill
-	\subfloat[][]{
-		\includegraphics[width=0.48\textwidth]{LOF_BoxPlot.pdf}
-		\label{fig:LOF_FAT2}
-	}%
-	\caption{Nemenyi plot of LOF results and the boxplots of performance differences in Figures~\ref{fig:LOF_FAT1} and~\ref{fig:LOF_FAT2}.}
-	\label{fig:LOF_FAT}
-
-  \centering
-  \subfloat[][]{
-		\includegraphics[width=0.48\textwidth]{KNN_Nemenyi_1.pdf}
-		\label{fig:KNN_FAT1}
-	}\hfill
-	\subfloat[][]{
-		\includegraphics[width=0.48\textwidth]{KNN_BoxPlot.pdf}
-		\label{fig:KNN_FAT2}
-	}%
-	\caption{Nemenyi plot of KNN results and the boxplots of performance differences in Figures~\ref{fig:KNN_FAT1} and~\ref{fig:KNN_FAT2}.}
-	\label{fig:KNN_FAT} 
-
-  \centering
-	\subfloat[][]{
-		\includegraphics[width=0.48\textwidth]{IFOREST_Nemenyi_1.pdf}
-		\label{fig:IFOREST_FAT1}
-	}\hfill
-	\subfloat[][]{
-		\includegraphics[width=0.48\textwidth]{IFOREST_BoxPlot.pdf}
-		\label{fig:IFOREST_FAT2}
-	}%
-	\caption{Nemenyi plot of iForest results and the boxplots of performance differences in Figures~\ref{fig:IFOREST_FAT1} and~\ref{fig:IFOREST_FAT2}.}
-	\label{fig:IFOREST_FAT}
-\end{figure}
+Similar performances are obtained for iForest, which is illustrated in Figure~\ref{fig:IFOREST_FAT}. A Friedman test conducted on the data gave a $p$-value less than $2.2 \times 10^{-16}$. The Nemenyi plot shows that while $1/2$ DOBIN performs the best, all three methods are significantly different from each other, with All Vars outperforming $1/2$ PCA. This is supported from the boxplots in Figure~\ref{fig:IFOREST_FAT2}, with $1/2$ DOBIN $-$ $1/2$ PCA and $1/2$ DOBIN $-$ All Vars having positive median AUC differences and  $1/2$ PCA $-$ All Vars having a negative one.
 
 We see that $1/2$ DOBIN performs best for all three outlier detection methods and is significantly better than $1/2$ PCA and All Vars. This is evidence that DOBIN is better as a dimension reduction tool for outier detection compared to PCA and the original variables. We attribute this success to DOBIN's firm mathematical foundations.
 
@@ -593,6 +593,8 @@ In addition, we conducted a visual analysis of outliers using DOBIN on six datas
 %Response :  added these comments. }
 
 Currently DOBIN is sensitive to rotations in the input space. In future work we plan to investigate avenues that can contribute to a rotation invariant version of DOBIN. One possibility, for example, would be to first perform a PCA decomposition followed by DOBIN. We would gain rotation-invariance from such a version, but we would potentially lose some interpretablity of the results. The R package \textit{dobin} contains the implementation and is available at \url{https://github.com/sevvandi/dobin} for download.
+
+\clearpage
 
 % =======================================================================
 \subsection*{Supplementary Material}
