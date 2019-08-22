@@ -31,7 +31,7 @@
 \title{Dimension reduction for outlier detection using DOBIN}
 \author{Sevvandi Kandanaarachchi$^1$, Rob J. Hyndman$^1$}
 \date{%
-   \scriptsize{ $^1$Department of Econometrics and Business Statistics, Faculty of Business and Economics, \\ Monash University, Clayton VIC 3800, Australia.\\ [2ex]}%
+   \scriptsize{ $^1$Department of Econometrics and Business Statistics, Monash University, Clayton VIC 3800, Australia.\\ [2ex]}%
     \today \\
 }
 \begin{titlingpage}
@@ -530,18 +530,19 @@ Similar to Section~\ref{sec:synthetic}, for each dataset we compare the results 
 Furthermore, we need to select appropriate tools to present results of $12,642$ datasets across three methods and three coordinate systems. The ability to delve into each dataset and obtain insights is no longer feasible with a large repository. In addition, we want to ascertain whether DOBIN coordinates improve the performance of the three outlier detection methods compared to the other two coordinate systems. Therefore, we investigate each outlier detection method separately. For each outlier method, we compare the performance of the three coordinate systems using a Friedman test adjusting for the dataset variants. To adjust for the dataset variants, we take the median performance for each dataset source and each coordinate system. If the Friedman test is significant, then we perform a Nemenyi test, so that we can rank the coordinate systems according to performance. For convenience we use the shortened names $1/2$ DOBIN for using the first half of DOBIN components, $1/2$ PCA for using the first half of Principal Components and `All Vars' for using all variables in the remainder of the section.
 
 \subsection{Significant tests}\label{sec:DatRepo1}
-
 %\todo[inline]{The presentation of results is not clear, and I don't think density plots are the best way of showing them. For each outlier method, we are interested in how the basis set makes a difference. So just show boxplots or simlar of the three sets of AUC results. \\
 % Response: Changed to boxplots and updated wording.\\
 % Better, but now I think that the boxplots would be more informative if we showed the difference in AUC values between each 1/2 spaces and the All vars space. So only two plots would be shown. Positive values would indicate an improvement over all vars.}
-
 Figure~\ref{fig:LOF_FAT} gives the results of the three coordinate systems on outlier detection method LOF. A Friedman test gave the $p$-value $1.986 \times 10^{-5}$, and Figure~\ref{fig:LOF_FAT1} shows the associated Nemenyi plot for this data. This plot shows the ranks of the coordinate systems, with lower ranks indicating better performance. The blue squares highlight methods which are not significantly different from each other. From Figure~\ref{fig:LOF_FAT1} we see that the best coordinates for LOF are $1/2$ DOBIN, followed by $1/2$ PCA and All Vars, with $1/2$ PCA and All Vars not significantly different from each other.
 %Figure~\ref{fig:LOF_FAT2} shows the distribution of performance results for LOF using the three coordinate systems. As these curves represent probability density estimates, the area under each curve is $1$. We see that $1/2$ DOBIN components give rise to larger density values for $\text{AUC} > 0.7$, i.e.\ it has a bigger proportion of high AUC values compared to the other two coordinate systems.
-Figure~\ref{fig:LOF_FAT2} shows the boxplots of performance differences between each of $1/2$ DOBIN and $1/2$ PCA with All Vars. %Taking into account that all performance values are roughly between $0.4$ and $1$,  we see that $1/2$ DOBIN has a higher median AUC, and a higher third quartile compared to $1/2$ PCA and All Vars.
-Positive values in AUC difference indicate an improvement over All Vars. We see that $1/2$ DOBIN $-$ All Vars has a positive median AUC difference unlike $1/2$ PCA $-$ All Vars. In addition, $1/2$ DOBIN $-$ All Vars has higher first and third quartiles compared to  $1/2$ PCA $-$ All Vars.
+Figure~\ref{fig:LOF_FAT2} shows the boxplots of performance differences between the three coordinate systems. Positive values in AUC difference between coordinates  indicate an improvement of one coordinate system over the other. We see that $1/2$ DOBIN $-$ $1/2$ PCA and $1/2$ DOBIN $-$ All Vars have positive median AUC differences unlike $1/2$ PCA $-$ All Vars. %In addition, $1/2$ DOBIN $-$ $1/2$ PCA and $1/2$ DOBIN $-$ All Vars have higher first and third quartiles compared to  $1/2$ PCA $-$ All Vars.
 
-\begin{figure*}[!ht]
-	\centering
+Figure~\ref{fig:KNN_FAT} shows the results of the three coordinate systems on the outlier detection method KNN. We obtained the $p$-value $1.341\times 10^{-8}$ from the Friedman test. Again, from Figure~\ref{fig:KNN_FAT1} we see that $1/2$ DOBIN outperforms All Vars and $1/2$ PCA, which is corroborated by the boxplots in Figure~\ref{fig:KNN_FAT2}. Even though All Vars is ranked second, it is not significantly different from $1/2$ PCA for KNN.
+
+Similar performances are obtained for iForest, which is illustrated in Figure~\ref{fig:IFOREST_FAT}. A Friedman test conducted on the data gave a $p$-value less than $2.2 \times 10^{-16}$. The Nemenyi plot shows that while $1/2$ DOBIN performs the best, all three methods are significantly different from each other, with All Vars outperforming $1/2$ PCA. This is supported from the boxplots in Figure~\ref{fig:IFOREST_FAT2}, with $1/2$ DOBIN $-$ $1/2$ PCA and $1/2$ DOBIN $-$ All Vars having positive median AUC differences and  $1/2$ PCA $-$ All Vars having a negative one.  
+
+\begin{figure}[!p]
+  \centering
 	\subfloat[][]{
 		\includegraphics[width=0.48\textwidth]{LOF_Nemenyi_1.pdf}
 		\label{fig:LOF_FAT1}
@@ -550,15 +551,11 @@ Positive values in AUC difference indicate an improvement over All Vars. We see 
 		\includegraphics[width=0.48\textwidth]{LOF_BoxPlot.pdf}
 		\label{fig:LOF_FAT2}
 	}%
-	\caption{Nemenyi plot of LOF results on the data repository in Figure~\ref{fig:LOF_FAT1} and the boxplots of performance differences with respect to All Vars in Figure~\ref{fig:LOF_FAT2}.}
+	\caption{Nemenyi plot of LOF results and the boxplots of performance differences in Figures~\ref{fig:LOF_FAT1} and~\ref{fig:LOF_FAT2}.}
 	\label{fig:LOF_FAT}
-\end{figure*}
 
-Figure~\ref{fig:KNN_FAT} shows the results of the three coordinate systems on the outlier detection method KNN. We obtained the $p$-value $1.341\times 10^{-8}$ from the Friedman test. Again, from Figure~\ref{fig:KNN_FAT1} we see that $1/2$ DOBIN outperforms All Vars and $1/2$ PCA, which is corroborated by the boxplot in Figure~\ref{fig:KNN_FAT2}. Even though All Vars is ranked second, it is not significantly different from $1/2$ PCA for KNN.
-
-\begin{figure*}[!ht]
-	\centering
-	\subfloat[][]{
+  \centering
+  \subfloat[][]{
 		\includegraphics[width=0.48\textwidth]{KNN_Nemenyi_1.pdf}
 		\label{fig:KNN_FAT1}
 	}\hfill
@@ -566,16 +563,10 @@ Figure~\ref{fig:KNN_FAT} shows the results of the three coordinate systems on th
 		\includegraphics[width=0.48\textwidth]{KNN_BoxPlot.pdf}
 		\label{fig:KNN_FAT2}
 	}%
-	\caption{Nemenyi plot of KNN results on the data repository in Figure~\ref{fig:KNN_FAT1} and the boxplots of performance differences with respect to All Vars in Figure~\ref{fig:KNN_FAT2}.}
-	\label{fig:KNN_FAT}
-\end{figure*}
+	\caption{Nemenyi plot of KNN results and the boxplots of performance differences in Figures~\ref{fig:KNN_FAT1} and~\ref{fig:KNN_FAT2}.}
+	\label{fig:KNN_FAT} 
 
-Similar performances are obtained for iForest, which is illustrated in Figure~\ref{fig:IFOREST_FAT}. A Friedman test conducted on the data gave a $p$-value less than $2.2 \times 10^{-16}$. The Nemenyi plot shows that while $1/2$ DOBIN performs the best, all three methods are significantly different from each other, with All Vars outperforming $1/2$ PCA. This is supported from the boxplots in Figure~\ref{fig:IFOREST_FAT2}, with $1/2$ DOBIN $-$ All Vars having a positive median AUC difference and  $1/2$ PCA $-$ All Vars having a negative one.
-
-%the curve associated to $1/2$ DOBIN lying above the All Vars curve, and the All Vars curve lying above $1/2$ PCA curve for $\text{AUC} > 0.65$.
-
-\begin{figure*}[!ht]
-	\centering
+  \centering
 	\subfloat[][]{
 		\includegraphics[width=0.48\textwidth]{IFOREST_Nemenyi_1.pdf}
 		\label{fig:IFOREST_FAT1}
@@ -584,16 +575,16 @@ Similar performances are obtained for iForest, which is illustrated in Figure~\r
 		\includegraphics[width=0.48\textwidth]{IFOREST_BoxPlot.pdf}
 		\label{fig:IFOREST_FAT2}
 	}%
-	\caption{Nemenyi plot of iForest results on the data repository in Figure~\ref{fig:IFOREST_FAT1} and the boxplots of performance differences with respect to All Vars in  Figure~\ref{fig:IFOREST_FAT2}.}
+	\caption{Nemenyi plot of iForest results and the boxplots of performance differences in Figures~\ref{fig:IFOREST_FAT1} and~\ref{fig:IFOREST_FAT2}.}
 	\label{fig:IFOREST_FAT}
-\end{figure*}
+\end{figure}
 
 We see that $1/2$ DOBIN performs best for all three outlier detection methods and is significantly better than $1/2$ PCA and All Vars. This is evidence that DOBIN is better as a dimension reduction tool for outier detection compared to PCA and the original variables. We attribute this success to DOBIN's firm mathematical foundations.
+
 
 % =======================================================================
 \section{Conclusion}
 % =======================================================================
-
 Dimension reduction for outlier detection is a topic that has not received much attention in the literature. One way to achieve this is to construct a basis that empowers outlier detection. In this paper, we present DOBIN: a Distance based Outlier BasIs using Neighbours, which strives to accomplish this goal. We used DOBIN on an extensive data repository of real world datasets and showed that DOBIN basis improves performance of the outlier detection methods LOF, KNN and iForest. Using half of the DOBIN components we outperformed PCA and the standard basis as coordinate systems for these three outlier detection methods.
 
 In addition, we conducted a visual analysis of outliers using DOBIN on six datasets from diverse sources, which included a character graph from the novel \textit{Les Mis\'erables} and $22$ classics from Gutenberg website. We projected the data onto a 2D space spanned by the first two DOBIN vectors, and saw that outliers identified by many methods in O3 plots were indeed far away from the rest of the data. We gained insights about the outliers in these datasets, and identified the variables that contributed to make them outliers.
