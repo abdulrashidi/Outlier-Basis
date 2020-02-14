@@ -49,7 +49,7 @@
 \maketitle
 
 \begin{abstract}
-	This paper introduces DOBIN, a new approach to select a set of basis vectors tailored for outlier detection. DOBIN has a solid mathematical foundation and can be used as a dimension reduction tool for outlier detection tasks. We demonstrate the effectiveness of DOBIN on an extensive data repository, by comparing the performance of outlier detection methods using DOBIN and other bases. We further illustrate the utility of DOBIN as an outlier visualization tool. The R package \textit{dobin} implements this basis construction.
+	This paper introduces DOBIN, a new approach to select a set of basis vectors tailored for outlier detection. DOBIN has a {\color{blue} simple} mathematical foundation and can be used as a dimension reduction tool for outlier detection tasks. We demonstrate the effectiveness of DOBIN on an extensive data repository, by comparing the performance of outlier detection methods using DOBIN and other bases. We further illustrate the utility of DOBIN as an outlier visualization tool. The R package \textit{dobin} implements this basis construction.
 \end{abstract}
 
 \begin{keywords}outlier detection, dimension reduction, outlier visualization, basis vectors
@@ -436,19 +436,18 @@ The parameter $q$ determines the cut-off quantile needed to obtain a subset of $
 
 The other parameter for constructing the $Y$ space is the choice of normalization. While Min-Max normalization is commonly used by the computer science community \citep{campos2016evaluation}, other normalization techniques such as distance from univariate medians and Mahalanobis distance are commonly used by the statistical community \citep{billor2000bacon}. We give two options for normalization: Min-Max and Median-IQR,  { \color{blue} and use  Min-Max as the default method. }
 
-\todo{Ask Rob about this parameter.}
 
-The purpose of the final parameter is to aid visualization in two dimensions. As points $\{\bm{y}_{\ell}\}_{i=1}^M$ lie in the positive orthant, the first vector $\eta_1$ which maximizes $\sum_\ell \langle \eta\, \bm{y}_\ell\rangle$ also lies in the positive orthant. However, this may not render the best possible 2D-visualization of the outliers in $X$ space, because points can have positive and negative coordinates in $X$ space. Hence we compute the signed $\bm{y}_{\ell}$, denoted by $\bm{\tilde{y}}_\ell$, by keeping track of the signs of the point differences $(\bm{x}_i - \bm{x}_j)$. Let $T(\ell) = (i, j)$, then
-\begin{equation}\label{eq:secMF16}
-	\bm{\tilde{y}}_\ell = \sign(\bm{x}_i - \bm{x}_j) \circ \bm{y}_{\ell} \, ,
-\end{equation}
-where $\circ$ denotes element-wise multiplication. {\color{blue} For example, suppose $({x}_{ik} - {x}_{jk}) \ll 0 $. But as $ \bm{y}_{\ell k} = ({x}_{ik} - {x}_{jk})^2$, $\bm{y}_{\ell k} $ does not include this sign. The purpose of equation~\eqref{eq:secMF16} is to preserve this sign. }  Then
-\begin{align}\label{eq:secMF17}
-	\sign(\eta_1) & = \sign \left( \sum_{i=1}^M \bm{\tilde{y}}_\ell \right) \, , \notag \\
-	\text{and}\qquad
-  \tilde\eta_1  & = \sign (\eta_1) \circ \eta_1,
-\end{align}
-where $\eta_1 $ is computed using equation~\eqref{eq:secMF9}. {\color{blue}  We have empirically observed that this sign change yields better visualizations for smaller datasets. }
+% The purpose of the final parameter is to aid visualization in two dimensions. As points $\{\bm{y}_{\ell}\}_{i=1}^M$ lie in the positive orthant, the first vector $\eta_1$ which maximizes $\sum_\ell \langle \eta\, \bm{y}_\ell\rangle$ also lies in the positive orthant. However, this may not render the best possible 2D-visualization of the outliers in $X$ space, because points can have positive and negative coordinates in $X$ space. Hence we compute the signed $\bm{y}_{\ell}$, denoted by $\bm{\tilde{y}}_\ell$, by keeping track of the signs of the point differences $(\bm{x}_i - \bm{x}_j)$. Let $T(\ell) = (i, j)$, then
+% \begin{equation}\label{eq:secMF16}
+% 	\bm{\tilde{y}}_\ell = \sign(\bm{x}_i - \bm{x}_j) \circ \bm{y}_{\ell} \, ,
+% \end{equation}
+% where $\circ$ denotes element-wise multiplication. {\color{blue} For example, suppose $({x}_{ik} - {x}_{jk}) \ll 0 $. But as $ \bm{y}_{\ell k} = ({x}_{ik} - {x}_{jk})^2$, $\bm{y}_{\ell k} $ does not include this sign. The purpose of equation~\eqref{eq:secMF16} is to preserve this sign. }  Then
+% \begin{align}\label{eq:secMF17}
+% 	\sign(\eta_1) & = \sign \left( \sum_{i=1}^M \bm{\tilde{y}}_\ell \right) \, , \notag \\
+% 	\text{and}\qquad
+%   \tilde\eta_1  & = \sign (\eta_1) \circ \eta_1,
+% \end{align}
+% where $\eta_1 $ is computed using equation~\eqref{eq:secMF9}. {\color{blue}  We have empirically observed that this sign change yields better visualizations for smaller datasets. }
  
 %However, this adds to the computation and is only recommended if 2D-visualization is an aim of the exercise.
 
@@ -580,9 +579,10 @@ Figure~\ref{fig:Election20051} shows the O3 plot of this dataset using all six o
 Figure~\ref{fig:Election20052} shows the first $2$ DOBIN components of the \textit{Election2005} dataset. This is a projection of the dataset onto a two dimensional subspace spanned by the first $2$ DOBIN vectors. Here we see the observation $X84$ (denoted by $84$ on the plot) far away from the rest of the data with $X76$, $X83$ and $X82$ somewhat detached from the rest. The observations $X87$ an $X81$ are almost at the same position in this $2$-dimensional space. The observations $X221$ and $X21$ also appear a bit outside the boundary of other points. A simple KNN algorithm in the DC1-DC2 space gives the top $8$ candidates as $X84$, $X76$, $X83$, $X82$, $X221$, $X81$, $X87$, and $X21$. Thus, the DC1-DC2 space accentuates the eight most outlying observations according to the O3 plot, while showing clearly that $X84$ is the most outlying observation.
 
 The first DOBIN vector is of interest to us as the outliers deviate most in this direction. Equation~\eqref{eq:ResWithVis1} gives the first DOBIN vector, DC1, as a linear combination of the input variables.
+{\color{blue}
 \begin{equation}\label{eq:ResWithVis1}
 	\text{DC1} = \begin{bmatrix}
-		0.008 & 0.998 & 0.040 & -0.050
+		0.024 & 0.980 & 0.118 & 0.154
 	\end{bmatrix}
 	\begin{bmatrix}
 		\text{Area}               \\
@@ -590,7 +590,7 @@ The first DOBIN vector is of interest to us as the outliers deviate most in this
 		\text{Birthrate}          \\
 		\text{Car Ownership}
 	\end{bmatrix}
-\end{equation}
+\end{equation}}
 From equation~\eqref{eq:ResWithVis1} we see that \textit{Population Density} is the main variable contributing to outliers in the DC1-DC2 space. The O3 plot supports this observation. If we look carefully at the O3 plot we see that $X21$ to $X84$ gets identified as outliers in all subspaces that contain \textit{Population Density}. This insight gives us a better understanding of the dataset.
 
 \subsection{\textit{Diamonds} dataset}\label{sec:ResWithVis2}
@@ -614,9 +614,10 @@ The next example is taken from the \textit{O3Outliers} R package \citep{O3Rpack}
 Figure~\ref{fig:Diamonds1} shows the O3 plot of this dataset using the three outlier methods \textit{HDoutliers}, \textit{FastPCs} and \textit{adjOutlyingness}. We could not use all six methods on this dataset as the other three methods included in the \textit{OutliersO3} R package gave computational errors. Of the three methods used, all methods identified $X4792$, $X2315$ and $X2208$ as outliers in 6 subspaces including the full space. These $3$ points appear in the DC1-DC2 space in the bottom right corner. In addition, the point $X4519$ (denoted by $4519$ in the plot) appears in the top right corner in the DC1-DC2 space, away from other points. Comparing with the O3 plot, we see that $X4519$ is identified as an outlier by $2$ methods in $6$ subspaces. In keeping with the guidelines of the previous section, we use half of the DC components to evaluate a KNN algorithm. The top $4$ candidates in this $3$-dimensional DC space are $X4792$, $X2315$, $X2208$ and $X4519$ in that order.
 
 To understand the first DOBIN vector, we look at its coefficients:
+{\color{blue}
 \begin{equation}\label{eq:ResWithVis2}
 	\text{DC1} = \begin{bmatrix}
-		0.098 & -0.659 & 0.185 & 0.097 & 0.126 & -0.704
+		0.155 & 0.497 & 0.343 & 0.158 & 0.193 & 0.739
 	\end{bmatrix}
 	\begin{bmatrix}
 		\text{Carat} \\
@@ -626,50 +627,50 @@ To understand the first DOBIN vector, we look at its coefficients:
 		\text{y}     \\
 		\text{z}
 	\end{bmatrix}
-\end{equation}
-We see that the variables \textit{z} and \textit{Depth} contribute more to outliers in the DC1-DC2 space as well as in the O3 plot.
+\end{equation}}
+We see that the variable \textit{z} contributes more to outliers in the DC1-DC2 space as well as in the O3 plot.
 %Thus the DOBIN basis can be used to project data for easy visualization of outliers.
 
-\subsection{\textit{USArrests} dataset}\label{sec:ResWithVis3}
+% \subsection{\textit{USArrests} dataset}\label{sec:ResWithVis3}
 
-The popular \textit{USArrests} dataset is studied by \cite{bailey1995interactive, sarkar2008labels, yaminiviolent} and many others. This dataset contains violent crime rates for the 50 US states in 1973. The O3 plot using all six outlier detection methods and the DC1-DC2 space of this dataset are illustrated in Figure~\ref{fig:USArrests}.
+% The popular \textit{USArrests} dataset is studied by \cite{bailey1995interactive, sarkar2008labels, yaminiviolent} and many others. This dataset contains violent crime rates for the 50 US states in 1973. The O3 plot using all six outlier detection methods and the DC1-DC2 space of this dataset are illustrated in Figure~\ref{fig:USArrests}.
 
-\begin{figure*}[!ht]
-	\centering
-	\subfloat[][]{
-		\includegraphics[width=0.52\textwidth]{Ex3_1.pdf}
-		\label{fig:USArrests1}
-	}\hfill
-	\subfloat[][]{
-		\includegraphics[width=0.43\textwidth]{Ex3_2.pdf}
-		\label{fig:USArrests2}
-	}%
-	\caption{O3plot of the \textit{USArrests} dataset in Figure~\ref{fig:USArrests1} and the first 2 DOBIN components in Figure~\ref{fig:USArrests2}.}
-	\label{fig:USArrests}
-\end{figure*}
+% \begin{figure*}[!ht]
+% 	\centering
+% 	\subfloat[][]{
+% 		\includegraphics[width=0.52\textwidth]{Ex3_1.pdf}
+% 		\label{fig:USArrests1}
+% 	}\hfill
+% 	\subfloat[][]{
+% 		\includegraphics[width=0.43\textwidth]{Ex3_2.pdf}
+% 		\label{fig:USArrests2}
+% 	}%
+% 	\caption{O3plot of the \textit{USArrests} dataset in Figure~\ref{fig:USArrests1} and the first 2 DOBIN components in Figure~\ref{fig:USArrests2}.}
+% 	\label{fig:USArrests}
+% \end{figure*}
 
-From Figure\ref{fig:USArrests1} we see that $X2$ (corresponding to Alaska) is flagged as an outlier in $8$ subspaces including the full space, by one or two outlier detection methods. The adjoining outlier $X33$ (North Carolina) is only flagged in $4$ subspaces and the others in even smaller subspaces. Of the six outlier methods, only two identify Alaska as an outlier in certain subspaces. This also suggests that even though there is consensus between two methods, as only one third of the methods agree on this outlier, it may not be quite so outlying as the outliers in the previous examples. Indeed, this notion is validated by the DC1-DC2 plot. We see the observation $X2$ (denoted by $2$ in the plot) standing out from the rest, but not by a large margin. A KNN algorithm identifies this observation as having the highest KNN distance in DC1-DC2 space.
+% From Figure\ref{fig:USArrests1} we see that $X2$ (corresponding to Alaska) is flagged as an outlier in $8$ subspaces including the full space, by one or two outlier detection methods. The adjoining outlier $X33$ (North Carolina) is only flagged in $4$ subspaces and the others in even smaller subspaces. Of the six outlier methods, only two identify Alaska as an outlier in certain subspaces. This also suggests that even though there is consensus between two methods, as only one third of the methods agree on this outlier, it may not be quite so outlying as the outliers in the previous examples. Indeed, this notion is validated by the DC1-DC2 plot. We see the observation $X2$ (denoted by $2$ in the plot) standing out from the rest, but not by a large margin. A KNN algorithm identifies this observation as having the highest KNN distance in DC1-DC2 space.
 
-We look at the coefficients of the first DOBIN vector as $X2$ deviates in DC1:
-\begin{equation}\label{eq:ResWithVis3}
-	\text{DC1} = \begin{bmatrix}
-		0.173 & 0.077 & -0.675 & 0.713
-	\end{bmatrix}
-	\begin{bmatrix}
-		\text{Murder}   \\
-		\text{Assault}  \\
-		\text{UrbanPop} \\
-		\text{Rape}
-	\end{bmatrix} \,
-\end{equation}
-We see that the variables \textit{UrbanPop} and \textit{Rape} contribute more to the first DOBIN vector than the other variables. From equation~\eqref{eq:ResWithVis3}, high values of DC1 indicate low percentages of urban population and high rape arrests per $100,000$ residents. Therefore, we might expect Alaska to have higher rape arrests per urban capita. Indeed from Figure~\ref{fig:USArrests3} we see that Alaska has the highest ratio of \textit{Rape/UrbanPop} of all $50$ states confirming the insight gleaned from the first DOBIN vector.
+% We look at the coefficients of the first DOBIN vector as $X2$ deviates in DC1:
+% \begin{equation}\label{eq:ResWithVis3}
+% 	\text{DC1} = \begin{bmatrix}
+% 		0.173 & 0.077 & -0.675 & 0.713
+% 	\end{bmatrix}
+% 	\begin{bmatrix}
+% 		\text{Murder}   \\
+% 		\text{Assault}  \\
+% 		\text{UrbanPop} \\
+% 		\text{Rape}
+% 	\end{bmatrix} \,
+% \end{equation}
+% We see that the variables \textit{UrbanPop} and \textit{Rape} contribute more to the first DOBIN vector than the other variables. From equation~\eqref{eq:ResWithVis3}, high values of DC1 indicate low percentages of urban population and high rape arrests per $100,000$ residents. Therefore, we might expect Alaska to have higher rape arrests per urban capita. Indeed from Figure~\ref{fig:USArrests3} we see that Alaska has the highest ratio of \textit{Rape/UrbanPop} of all $50$ states confirming the insight gleaned from the first DOBIN vector.
 
-\begin{figure*}[!ht]
-	\centering
-	\includegraphics[width=0.5\textwidth]{Ex3_3.pdf}
-	\caption{USArrests dataset -- Rape to Urban population ratio values.}
-	\label{fig:USArrests3}
-\end{figure*}
+% \begin{figure*}[!ht]
+% 	\centering
+% 	\includegraphics[width=0.5\textwidth]{Ex3_3.pdf}
+% 	\caption{USArrests dataset -- Rape to Urban population ratio values.}
+% 	\label{fig:USArrests3}
+% \end{figure*}
 
 \subsection{\textit{Airquality} dataset}\label{sec:ResWithVis4}
 
@@ -691,9 +692,10 @@ The \textit{Airquality} dataset discussed in \cite{john1983graphical} has measur
 The O3 plot in Figure~\ref{fig:Airquality1} shows $X117$ as the only outlier identified in $6$ subspaces by $2$ methods. The associated DC1-DC2 space shows the observation $X117$ (denoted by $117$ in the plot) away from the rest at the bottom right. Again, we see agreement between the O3 plot and DC1-DC2 space. The observation $X117$ was identified as an outlier only by a third of the outlier methods. This is corroborated in the DC1-DC2 plot by comparatively less outlyingness of observation $X117$ compared to outliers in the \textit{Diamonds} dataset. Performing a KNN algorithm revealed the observation with the highest KNN distance as $X117$ in the DC1-DC2 space.
 
 The first DOBIN vector has the following coefficients:
+{\color{blue}
 \begin{equation}\label{eq:ResWithVis4}
 	\text{DC1} = \begin{bmatrix}
-		0.842 & -0.078 & 0.512 & -0.151
+	0.650 & 0.209 & 0.667 & 0.296
 	\end{bmatrix}
 	\begin{bmatrix}
 		\text{Ozone}   \\
@@ -701,7 +703,7 @@ The first DOBIN vector has the following coefficients:
 		\text{Wind}    \\
 		\text{Temp}
 	\end{bmatrix} \,
-\end{equation}
+\end{equation}}
 From equation~\eqref{eq:ResWithVis4} we see that the observation $X117$ is an outlier due to high values of \textit{Ozone} and \textit{Wind}.
 
 \subsection{\textit{lesmis} dataset}\label{sec:ResWithVis5}
@@ -735,9 +737,10 @@ From the O3 plot it is evident that Valjean is the main outlier consistently ide
 
 As the first DOBIN vector is discriminatory, we look at its coefficients:
 The first DOBIN vector has the following coefficients:
+{\color{blue}
 \begin{equation}\label{eq:ResWithVis5}
 	\text{DC1} = \begin{bmatrix}
-		0.0022 & -0.0001 & 0.0032 & 0.9999 & 0.0029 & 0.0025 & 0.0057
+		0.0081 & 0.0001 & 0.0050 & 0.9999 & 0.0050 & 0.0040 & 0.0066
 	\end{bmatrix}
 	\begin{bmatrix}
 		\text{Centrality}            \\
@@ -748,7 +751,7 @@ The first DOBIN vector has the following coefficients:
 		\text{Avg. neighbor Degree} \\
 		\text{Page Rank}
 	\end{bmatrix} \, .
-\end{equation}
+\end{equation} }
 From equation~\eqref{eq:ResWithVis5} we see that \textit{Betweenness} is the main feature that makes Valjean an outlier in the DC1-DC2 space. The property \textit{Betweenness} is defined as the number of shortest paths going through a vertex \citep{igraph}. Thus Valjean becomes a node in many shortest paths in the character network making him the main outlier.
 
 \subsection{Classics from Gutenberg}\label{sec:ResWithVis6}
@@ -842,15 +845,14 @@ We consider the set of datasets that have valid performance values, that is we r
 % Response: Changed to boxplots and updated wording.\\
 % Better, but now I think that the boxplots would be more informative if we showed the difference in AUC values between each 1/2 spaces and the All vars space. So only two plots would be shown. Positive values would indicate an improvement over all vars.}
 
-Figure~\ref{fig:LOF_FAT} gives the results of the three coordinate systems on outlier detection method LOF. A Friedman test gave the $p$-value $ 2.18 \times 10^{-23}$, and Figure~\ref{fig:LOF_FAT1} shows the associated Nemenyi plot for this data. This plot shows the ranks of the coordinate systems, with lower ranks indicating better performance. The blue squares highlight methods which are not significantly different from each other. From Figure~\ref{fig:LOF_FAT1} we see that the best coordinates for LOF are $1/2$ DOBIN, followed by First $1/2$ PCA and All Vars, with $1/2$ PCA and All Vars not significantly different from each other. {\color{blue} The coordinates Last $1/2$ PCA and $1/2$ COV4 give weaker results compared to others.  }
-\todo{Check with Rob - boxplots}
-% Figure~\ref{fig:LOF_FAT2} shows the boxplots of performance differences between the three coordinate systems. Positive values in AUC difference between coordinates  indicate an improvement of one coordinate system over the other. We see that $1/2$ DOBIN $-$ $1/2$ PCA and $1/2$ DOBIN $-$ All Vars have positive median AUC differences unlike $1/2$ PCA $-$ All Vars. 
+Figure~\ref{fig:LOF_FAT} gives the results of the {\color{blue} five } coordinate systems on outlier detection method LOF. A Friedman test gave the $p$-value $ 2.18 \times 10^{-23}$, and Figure~\ref{fig:LOF_FAT1} shows the associated Nemenyi plot for this data. This plot shows the ranks of the coordinate systems, with lower ranks indicating better performance. The blue squares highlight methods which are not significantly different from each other. From Figure~\ref{fig:LOF_FAT1} we see that the best coordinates for LOF are $1/2$ DOBIN, followed by First $1/2$ PCA and All Vars, with $1/2$ PCA and All Vars not significantly different from each other. {\color{blue} The coordinates Last $1/2$ PCA and $1/2$ COV4 give weaker results compared to others.  }
 
-Figure~\ref{fig:KNN_FAT} shows the results of the three coordinate systems on the outlier detection method KNN. We obtained the $p$-value $1.47\times 10^{-113}$ from the Friedman test. Again, from Figure~\ref{fig:KNN_FAT1} we see that $1/2$ DOBIN outperforms {\color{blue} First $1/2$ PCA,  All Vars, $1/2$ COV4 and Last $1/2$ PCA. }
-% \todo{Check with Rob - boxplots} This is corroborated by the boxplots in Figure~\ref{fig:KNN_FAT2}. Even though All Vars is ranked second, it is not significantly different from $1/2$ PCA for KNN.
+Figure~\ref{fig:LOF_FAT2} shows the boxplots of performance differences between the {\color{blue} five } coordinate systems. Positive values in AUC difference between coordinates  indicate an improvement of one coordinate system over the other. We see that $1/2$ DOBIN $-$ {\color{blue} all coordinate systems have positive median AUC differences}. 
 
-Similar performances are obtained for iForest, which is illustrated in Figure~\ref{fig:IFOREST_FAT}. A Friedman test conducted on the data gave a $p$-value less than $1.79 \times 10^{-108}$. The Nemenyi plot shows that while $1/2$ DOBIN performs the best, {\color{blue} the top} three methods are significantly different from each other, with All Vars outperforming First $1/2$ PCA.  
-% \todo{Check with Rob - boxplots} This is supported from the boxplots in Figure~\ref{fig:IFOREST_FAT2}, with $1/2$ DOBIN $-$ $1/2$ PCA and $1/2$ DOBIN $-$ All Vars having positive median AUC differences and  $1/2$ PCA $-$ All Vars having a negative one.
+Figure~\ref{fig:KNN_FAT} shows the results of the {\color{blue} five } coordinate systems on the outlier detection method KNN. We obtained the $p$-value $1.47\times 10^{-113}$ from the Friedman test. Again, from Figure~\ref{fig:KNN_FAT1} we see that $1/2$ DOBIN outperforms {\color{blue} First $1/2$ PCA,  All Vars, $1/2$ COV4 and Last $1/2$ PCA. First $1/2$ PCA and All Vars are not significantly different, similar to $1/2$ COV4 and Last $1/2$ PCA. }
+This is corroborated by the boxplots in Figure~\ref{fig:KNN_FAT2}. % Even though All Vars is ranked second, it is not significantly different from $1/2$ PCA for KNN.
+
+Similar performances are obtained for iForest, which is illustrated in Figure~\ref{fig:IFOREST_FAT}. A Friedman test conducted on the data gave a $p$-value less than $1.79 \times 10^{-108}$. The Nemenyi plot shows that while $1/2$ DOBIN performs the best, {\color{blue} the top} three methods are significantly different from each other, with All Vars outperforming First $1/2$ PCA.  This is supported from the boxplots in Figure~\ref{fig:IFOREST_FAT2}. %, with $1/2$ DOBIN $-$ $1/2$ PCA and $1/2$ DOBIN $-$ All Vars having positive median AUC differences and  $1/2$ PCA $-$ All Vars having a negative one.
 
 We see that $1/2$ DOBIN performs best for all three outlier detection methods and is significantly better than {\color{blue} First $1/2$ PCA, Last $1/2$, $1/2$ COV4} and All Vars. This is evidence that DOBIN is better as a dimension reduction tool for outlier detection compared to PCA, {\color{blue} COV4} and the original variables. We attribute this success to DOBIN's  mathematical foundations.
 
@@ -881,7 +883,7 @@ Currently DOBIN is sensitive to rotations in the input space. In future work we 
 
 \textbf{Scripts}: The script \texttt{Figures\_For\_Paper\_1.R} contains the R code used to conduct experiments and produce graphs in Section~\ref{sec:synthetic}. The script \texttt{Figures\_For\_Paper\_2.R} contains the R code used in Section~\ref{sec:ResWithVis}. And finally, the script \texttt{Figures\_For\_Paper\_3.R} contains the R code used to produce the graphs in Section~\ref{sec:DatRepo}. The original computation on the data repository detailed in Section~\ref{sec:DatRepo} was conducted using the MonARCH HPC Cluster. The results of this computation are available at the github repository \url{https://github.com/sevvandi/Outlier-Basis}.
 
-\textbf{Other R-packages}: In addition to the R package \textit{dobin} we have also used the R packages \textit{OutliersO3} \citep{O3Rpack}, \textit{isolationForest} \citep{isolationForest}, \textit{DMwR} \citep{DMwR}, \textit{pROC} \citep{pROC}, \textit{ggplot2} \citep{ggplot2}, \textit{mbgraphic} \citep{mbgraphic}, \textit{gridExtra} \citep{gridextra}, \textit{tsutils} \citep{tsutils}, \textit{tidyverse} \citep{tidyverse} and \textit{tidyr} \citep{tidyr}.%\todo{Suggest you replace reshape2 with tidyr. This is not recommended these days.}
+\textbf{Other R-packages}: In addition to the R package \textit{dobin} we have also used the R packages \textit{OutliersO3} \citep{O3Rpack}, {\color{blue} \textit{HDoutliers} \citep{hdoutliers}}, \textit{isolationForest} \citep{isolationForest}, \textit{DMwR} \citep{DMwR}, \textit{pROC} \citep{pROC}, \textit{ggplot2} \citep{ggplot2}, \textit{mbgraphic} \citep{mbgraphic}, \textit{gridExtra} \citep{gridextra}, \textit{tsutils} \citep{tsutils}, \textit{dplyr} \citep{dplyr} and \textit{tidyr} \citep{tidyr}.%\todo{Suggest you replace reshape2 with tidyr. This is not recommended these days.}
 
 
 % =======================================================================
