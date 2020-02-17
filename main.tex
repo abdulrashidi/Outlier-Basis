@@ -313,7 +313,7 @@ and we obtain the coordinates of $\bm{u}$ in basis $B$. Alternatively we can eva
 \begin{equation}\label{eq:ChBas3}
      \bm{u}^C = \alpha \bm{v}^C + \beta \bm{w}^C \, , 
 \end{equation}
-giving coodinates of $\bm{u}$ in basis $C$. Both coordinate representations $\bm{u}^B$ and $\bm{u}^C$ describe the vector  $\bm{u}$.  \\
+giving coordinates of $\bm{u}$ in basis $C$. Both coordinate representations $\bm{u}^B$ and $\bm{u}^C$ describe the vector  $\bm{u}$.  \\
 
 Now we consider the change of basis mentioned in Section~\ref{sec:MathFrame3}. 
 
@@ -470,7 +470,7 @@ For each outlier detection method, we compare the results using these three sets
 
 The first experiment considers two normal distributions: an inlier normal distribution and an outlier normal distribution, which moves out from the inlier distribution as its mean increases. We consider a dataset of $405$ observations in $\mathbb{R}^6$, of which $400$ observations in each dimension are normally distributed with mean $0$ and standard deviation $1$. The remaining $5$ observations signify outliers and are normally distributed with mean $\mu$ and standard deviation $0.2$ in one dimension, and mean $0$ and standard deviation $1$ in other dimensions. The value of $\mu$ is changed from $0$ to $4.5$ by increments of $0.5$. The reason for a smaller standard deviation in the first dimension is to ensure that the outliers stay close to the mean $\mu$ and move out of the inlier distribution as $\mu$ increases. For each value of $\mu$ we consider the {\color{blue} five}  sets of coordinates described above and their performance using the outlier methods LOF, KNN and iForest. We perform $10$ repetitions of this experiment. Figure~\ref{fig:Exp1} shows the results for all {\color{blue} five} outlier methods using the average performance values of $10$ repetitions.
 
-{\color{blue} We see that DOBIN and COV4 give similar results and perform better than the other methods. As our outlier distribution contributes to the kurtotis, COV4 performs well in this example. }
+{\color{blue} We see that DOBIN and COV4 give similar results and perform better than the other methods. As our outlier distribution contributes to the kurtosis, COV4 performs well in this example. }
 Using $3$ DOBIN {\color{blue} and COV4 } components give {\color{blue} better }  performance for all $3$ outlier detection methods for $\mu > 1$. Indeed, we are interested in a set of coordinates that can accentuate the outliers as they move out from the inlier distribution. For values of $\mu \in \{0, 0.5, 1\}$, the outlier distribution lies in the interior of the inlier distribution, making a performance comparison between the coordinates not meaningful.
 
 \subsection{Experiment 2}
@@ -800,7 +800,7 @@ Similar to Section~\ref{sec:synthetic}, for each dataset we compare the results 
 
 Furthermore, we need to select appropriate tools to present results of $12,222$ datasets across three methods and {\color{blue}five} coordinate systems. The ability to delve into each dataset and obtain insights is no longer feasible with a large repository. In addition, we want to ascertain whether DOBIN coordinates improve the performance of the three outlier detection methods compared to the other {\color{blue}four} coordinate systems. Therefore, we investigate each outlier detection method separately. 
 
-{\color{blue} For each dataset we record the performance of each outlier detection method for each coordinate system. If coordinates cannot be computed or if an outier detection method fails, we record the value as missing. For $1485$ datasets COV4 coordinates could not be computed as it involves computing the inverse of the covariance matrix. For some datasets with more variables than observations, i.e. $p > N$, this inverse may not exist.  Nevertheless, it is common to have real world datasets with $p > N$.
+{\color{blue} For each dataset we record the performance of each outlier detection method for each coordinate system. If coordinates cannot be computed or if an outlier detection method fails, we record the value as missing. For $1485$ datasets COV4 coordinates could not be computed as it involves computing the inverse of the covariance matrix. For some datasets with more variables than observations, i.e. $p > N$, this inverse may not exist.  Nevertheless, it is common to have real world datasets with $p > N$.
 
 We consider the set of datasets that have valid performance values, that is we remove datasets having missing values.}  For each outlier method, we compare the performance of the {\color{blue}five} coordinate systems using a Friedman test adjusting for the dataset variants. To adjust for the dataset variants, we {\color{blue} randomly sample 20 datasets from each source, so that each dataset source has a fixed number of variants and none of the sources are over represented}. If the Friedman test is significant, then we perform a Nemenyi test {\color{blue} \citep{hollander2013nonparametric}}, so that we can rank the coordinate systems according to performance. For convenience we use the shortened names $1/2$ DOBIN for using the first half of DOBIN components, First $1/2$ PCA for using the first half of Principal Components, {\color{blue} Last $1/2$ PCA for using the second half of Principal Components, $1/2$ COV4 for using the first half of COV4 components }  and `All Vars' for using all variables in the remainder of the section.
 
@@ -870,7 +870,7 @@ In addition, we conducted a visual analysis of outliers using DOBIN on five data
 %\todo[inline]{A rotation invariant form would be PCA first followed by DOBIN. You lose the interpretability but gain on rotation-invariance. I think we should say this here \\
 %Response :  added these comments. }
 
-Currently DOBIN is sensitive to rotations in the input space. In future work we plan to investigate avenues that can contribute to a rotation invariant version of DOBIN. One possibility, for example, would be to first perform a PCA decomposition followed by DOBIN. We would gain rotation-invariance from such a version, but we would potentially lose some interpretablity of the results. The R package \textit{dobin} contains the implementation and is available at \url{https://CRAN.R-project.org/package=dobin} for download.
+Currently DOBIN is sensitive to rotations in the input space. In future work we plan to investigate avenues that can contribute to a rotation invariant version of DOBIN. One possibility, for example, would be to first perform a PCA decomposition followed by DOBIN. We would gain rotation-invariance from such a version, but we would potentially lose some interpretability of the results. The R package \textit{dobin} contains the implementation and is available at \url{https://CRAN.R-project.org/package=dobin} for download.
 
 \clearpage
 
@@ -888,7 +888,7 @@ Currently DOBIN is sensitive to rotations in the input space. In future work we 
 
 
 % =======================================================================
-\subsection*{Acknowledgements}
+\subsection*{Acknowledgments}
 % =======================================================================
 
 Funding was provided by the Australian Research Council through the Linkage Project LP160101885. This research was also supported by the Monash eResearch Centre and eSolutions-Research Support Services through the MonARCH HPC Cluster.
