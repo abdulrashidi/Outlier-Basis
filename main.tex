@@ -83,7 +83,7 @@ We have produced an R package \textit{dobin} \citep{dobin}, which computes the D
 % =======================================================================
 \section{Mathematical Framework}\label{sec:MathFrame}
 % =======================================================================
-{\color{blue} Before we begin describing the mathematical notation, we explain our intuition behind this specific basis construction. Our goal is to find a basis that maximizes $k$ nearest neighbor (knn) distances. The reason for this choice is that knn distances are a simple and  effective method of detecting outliers \citep{ramaswamy2000efficient}. Indeed, certain outlier detection evaluation studies  \citep{campos2016evaluation, kandanaarachchi2018normalization, goldstein2016comparative} found that knn and weighted knn distances performed better than most outlier detection methods. Furthermore, researchers have used knn distances as a springboard to develop new outlier detection methods \citep{wilkinson2017visualizing}. Armed with this knowledge, we find a set of basis vectors such that the first vector is in the direction of the highest knn distances, the second vector corresponding to the second highest knn distances, and so on.   
+{\color{blue} Before we begin describing the mathematical notation, we explain our intuition behind this specific basis construction. Our goal is to find a basis that maximizes $k$ nearest neighbor (knn) distances. The reason for this choice is that knn distances are a simple and  effective method of detecting outliers \citep{ramaswamy2000efficient}. Indeed, certain outlier detection evaluation studies  \citep{campos2016evaluation, kandanaarachchi2018normalization, goldstein2016comparative} found that knn and weighted knn distances performed better than most outlier detection methods. Furthermore, researchers have used knn distances as a springboard to develop new outlier detection methods \citep{wilkinson2017visualizing}. Armed with this knowledge, we find a set of basis vectors such that the first vector is in the direction of the highest knn distances, the second vector corresponds to the second highest knn distances, and so on.   
  }
 
 
@@ -91,7 +91,7 @@ Let $X_{N \times p}$ be a matrix denoting a dataset of $N$ observations and $p$ 
 \begin{equation}\label{eq:secMF1}
 	\dist(\bm{x}_i, \bm{x}_j)^2 = ( \bm{x}_i - \bm{x}_j)^\top S ( \bm{x}_i - \bm{x}_j ) \, ,
 \end{equation}
-where $S$ is a symmetric positive definite matrix. {\color{blue} Thus, $S$ in equation~\eqref{eq:secMF1} is diagonalizable, giving us motivation for considering a diagonal $S$ with } \ $S = \diag(s_1, s_2, \dots, s_p)$. Using this we obtain
+where $S$ is a symmetric positive definite matrix. {\color{blue} Thus, matrix $S$ in equation~\eqref{eq:secMF1} is diagonalizable, giving us motivation for considering a diagonal $S$ with } \ $S = \diag(s_1, s_2, \dots, s_p)$. Using this we obtain
 \begin{equation}\label{eq:secMF2}
 	\dist(\bm{x}_i, \bm{x}_j)^2 = \left\langle \eta\, , ( \bm{x}_i - \bm{x}_j )\circ ( \bm{x}_i - \bm{x}_j ) \right\rangle \,,
 \end{equation}
@@ -514,7 +514,7 @@ The second experiment considers a bi-modal setting with two inlier normal distri
 
 The third experiment is motivated from \cite{zimek2012survey}. We consider a uniform distribution in $\mathbb{R}^{20}$ and place a manual outlier at $0.9$ in $i$ dimensions where $i$ is changed from $1$ to $20$. While this is not an outlier in any single dimension, as $i$ increases this point stands out from the rest of the distribution. Indeed, for large $i$ this point lies furthest from the rest. An equivalent outlier is $0.1$ in $i$ dimensions. The reason that these points are outliers is because they are at the corners of the hyper-cube and are so far away from other points. On the contrary, $0.5$ in $i$ dimensions would be closest to other points. This is because $(0.5, 0.5, \dots)$ has neighbors from all sides and has on average $2^{20}$ more neighbors compared to $(1, 1, \dots)$ which is a corner on the unit hyper-cube. For practical purposes the point $(0.9, 0.9, \dots)$ is similar to $(1, 1, \dots)$ and has significantly {\color{blue} fewer } neighbors compared to $(0.5, 0.5, \dots)$. Figure~\ref{fig:Exp3} shows the results of all three outlier methods on all {\color{blue} five } coordinate systems. % Again we see that using half of the DOBIN components gives the best performance for all three outlier methods.
 
-{\color{blue} For LOF and KNN, using 10 DOBIN components gives similar performance results to using all 20 variables. The next best performance for LOF and KNN is achieved by using COV4 coordinates. Again, this is an example where outlyingness overlaps with kurtosis as the point $(0.9, 0.9, \ldots, 0.9)$ contributes to a heavy tail. In contrast, the first and the last 10 PC components give much lower results for these two outlier methods. Again, iForest behaves somewhat differently in this example. The COV4 coordinates are not as competitive for iForest as they were for LOF and KNN. For dimensions greater than 8, DOBIN achieves better results for iForest followed closely by all 20 variables.  We also see that iForest results are quite noisy compared with LOF and KNN. }
+{\color{blue} For LOF and KNN, using 10 DOBIN components gives similar performance results as using all 20 variables. The next best performance for LOF and KNN is achieved by using COV4 coordinates. Again, this is an example where outlyingness overlaps with kurtosis as the point $(0.9, 0.9, \ldots, 0.9)$ contributes to a heavy tail. In contrast, the first and the last 10 PC components give much lower results for these two outlier methods. Again, iForest behaves somewhat differently in this example. The COV4 coordinates are not as competitive for iForest as they were for LOF and KNN. For dimensions greater than 8, DOBIN achieves better results for iForest followed closely by all 20 variables.  We also see that iForest results are quite noisy compared with LOF and KNN. }
 
 {\color{blue}
 \subsection{Experiment 4}
@@ -529,7 +529,7 @@ We see that for LOF and KNN,  DOBIN outperforms all other coordinates by a fair 
 
 This experiment is somewhat similar to the previous experiment. We consider $805$ points in $\mathbb{R}^{16}$. In the first two dimensions the points lie on a parabola as shown in Figure~\ref{fig:Exp5_Pic}. In other dimensions all points are normally distributed with mean $0$ and standard deviation $1$. Similar to the previous experiments, there are $800$  non-outliers and $5$ outliers, which are distributed normally with mean $0$ and standard deviation $0.1$ in the first dimension and mean $(i-1)0.5$ and standard deviation $0.1$ in the second dimension. With each iteration $i$ increases by $1$ making the outlier distribution move out of the parabola.  We repeat this experiment 10 times. 
 
-We see that for LOF and KNN,  DOBIN outperforms all other coordinates. For iForest there is no clear winner. Even though, DOBIN and COV4 perform better than the other coordinates for the last two iterations, the performance values are quite low. 
+We see that for LOF and KNN,  DOBIN outperforms all other coordinates. For iForest there is no clear winner. Even though DOBIN and COV4 perform better than the other coordinates for the last two iterations, the performance values are quite low. 
 
 }
 
@@ -870,7 +870,7 @@ In addition, we conducted a visual analysis of outliers using DOBIN on five data
 %\todo[inline]{A rotation invariant form would be PCA first followed by DOBIN. You lose the interpretability but gain on rotation-invariance. I think we should say this here \\
 %Response :  added these comments. }
 
-Currently DOBIN is sensitive to rotations in the input space. In future work we plan to investigate avenues that can contribute to a rotation invariant version of DOBIN. One possibility, for example, would be to first perform a PCA decomposition followed by DOBIN. We would gain rotation-invariance from such a version, but we would potentially lose some interpretability of the results. The R package \textit{dobin} contains the implementation and is available at \url{https://CRAN.R-project.org/package=dobin} for download.
+Currently DOBIN is sensitive to rotations in the input space. As future work we plan to investigate avenues that can contribute to a rotation invariant version of DOBIN. One possibility, for example, would be to first perform a PCA decomposition followed by DOBIN. We would gain rotation-invariance from such a version, but we would potentially lose some interpretability of the results. The R package \textit{dobin} contains the implementation and is available at \url{https://CRAN.R-project.org/package=dobin} for download.
 
 \clearpage
 
