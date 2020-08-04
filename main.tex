@@ -40,16 +40,16 @@
 
 
 \title{Dimension reduction for outlier detection using DOBIN}
-\author{Sevvandi Kandanaarachchi$^1$, Rob J. Hyndman$^1$}
+\author{Sevvandi Kandanaarachchi$^1$, Rob J. Hyndman$^2$}
 \date{%
-   \scriptsize{ $^1$Department of Econometrics and Business Statistics, Monash University, Clayton VIC 3800, Australia.\\ [2ex]}%
-    \today \\
-}
+   \scriptsize{ $^1$ School of Science,  Mathematical Sciences, RMIT University, Melbourne VIC 3000, Australia.\\ 
+   $^2$Department of Econometrics and Business Statistics, Monash University, Clayton VIC 3800, Australia.\\ [2ex]}%
+    }
 \begin{titlingpage}
 \maketitle
 
 \begin{abstract}
-	This paper introduces DOBIN, a new approach to select a set of basis vectors tailored for outlier detection. DOBIN has a {\color{blue} simple} mathematical foundation and can be used as a dimension reduction tool for outlier detection tasks. We demonstrate the effectiveness of DOBIN on an extensive data repository, by comparing the performance of outlier detection methods using DOBIN and other bases. We further illustrate the utility of DOBIN as an outlier visualization tool. The R package \textit{dobin} implements this basis construction.
+	This paper introduces DOBIN, a new approach to select a set of basis vectors tailored for outlier detection. DOBIN has a {\color{black} simple} mathematical foundation and can be used as a dimension reduction tool for outlier detection tasks. We demonstrate the effectiveness of DOBIN on an extensive data repository, by comparing the performance of outlier detection methods using DOBIN and other bases. We further illustrate the utility of DOBIN as an outlier visualization tool. The R package \textit{dobin} implements this basis construction.
 \end{abstract}
 
 \begin{keywords}outlier detection, dimension reduction, outlier visualization, basis vectors
@@ -74,7 +74,7 @@ The literature on outlier detection has evolved in two fields, with contribution
 
 Some methods treat outlier identification as a binary rule, with observations classified as outliers or otherwise \citep[e.g.,][]{billor2000bacon, wilkinson2017visualizing, rousseeuw2018detecting}, while other methods rank all observations in terms of ``outlyingness'' \citep[e.g.,][]{breunig2000lof, liu2008isolation}, or provide a probability of an observation being an outlier \citep[e.g.,][]{kriegel2009loop}. This difference impacts the performance evaluation metrics. Metrics such as false negatives and false positives or positive predictive value and negative predictive value are used to evaluate the binary results \citep{wilkinson2017visualizing}. By contrast, having a ranking of the observations leads to use tools such as area under the Receiver Operator Characteristic (ROC) curve, area under the Precision-Recall (PR) curve or precision at $n$ to evaluate performance \citep{campos2016evaluation}.
 
-In Sections~\ref{sec:synthetic} and~\ref{sec:DatRepo} we investigate the effect of DOBIN on three outlier detection methods which first appeared in the computer science literature: LOF \citep{breunig2000lof}, KNN \citep{ramaswamy2000efficient} and iForest \citep{liu2008isolation}. To evaluate their performance, we use area under the ROC curve. We examine the effectiveness of DOBIN by comparing it against {\color{blue} four other bases: 2 PCA bases,  the original basis and a kurtosis maximizing basis \citep{tyler2009invariant}}. In Section~\ref{sec:synthetic} we use synthetic data to conduct experiments and in Section~\ref{sec:DatRepo} we use real data from our repository of more than $12,000$ datasets \citep{datasets}.
+In Sections~\ref{sec:synthetic} and~\ref{sec:DatRepo} we investigate the effect of DOBIN on three outlier detection methods which first appeared in the computer science literature: LOF \citep{breunig2000lof}, KNN \citep{ramaswamy2000efficient} and iForest \citep{liu2008isolation}. To evaluate their performance, we use area under the ROC curve. We examine the effectiveness of DOBIN by comparing it against {\color{black} four other bases: 2 PCA bases,  the original basis and a kurtosis maximizing basis \citep{tyler2009invariant}}. In Section~\ref{sec:synthetic} we use synthetic data to conduct experiments and in Section~\ref{sec:DatRepo} we use real data from our repository of more than $12,000$ datasets \citep{datasets}.
 
 Section~\ref{sec:ResWithVis} examines outlier detection methods developed by the statistical community on some associated datasets. We use O3 plots by \cite{unwin2019multivariate}, which can be used to compare the results of six different outlier detection methods: \textit{HDoutliers} \citep{wilkinson2017visualizing}, \textit{mvBACON} \citep{billor2000bacon}, \textit{adjOutlyingness} \citep{brys2005robustification}, \textit{covMcd} \citep{rousseeuw1999fast} , \textit{FastPCs} \citep{vakili2014finding} and \textit{DetectDeviatingCells} \citep{rousseeuw2018detecting}. We use O3 plots in conjunction with the first two DOBIN components of each dataset and visually inspect if the outliers identified by the O3 plots are further away from the other points in the DOBIN space. This section highlights the usage of DOBIN as an outlier visualization tool.
 
@@ -83,7 +83,7 @@ We have produced an R package \textit{dobin} \citep{dobin}, which computes the D
 % =======================================================================
 \section{Mathematical Framework}\label{sec:MathFrame}
 % =======================================================================
-{\color{blue} Before we begin describing the mathematical notation, we explain our intuition behind this specific basis construction. Our goal is to find a basis that maximizes $k$ nearest neighbor (knn) distances. The reason for this choice is that knn distances are a simple and  effective method of detecting outliers \citep{ramaswamy2000efficient}. Indeed, certain outlier detection evaluation studies  \citep{campos2016evaluation, kandanaarachchi2018normalization, goldstein2016comparative} found that knn and weighted knn distances performed better than most outlier detection methods. Furthermore, researchers have used knn distances as a springboard to develop new outlier detection methods \citep{wilkinson2017visualizing}. Armed with this knowledge, we find a set of basis vectors such that the first vector is in the direction of the highest knn distances, the second vector corresponds to the second highest knn distances, and so on.   
+{\color{black} Before we begin describing the mathematical notation, we explain our intuition behind this specific basis construction. Our goal is to find a basis that maximizes $k$ nearest neighbor (knn) distances. The reason for this choice is that knn distances are a simple and  effective method of detecting outliers \citep{ramaswamy2000efficient}. Indeed, certain outlier detection evaluation studies  \citep{campos2016evaluation, kandanaarachchi2018normalization, goldstein2016comparative} found that knn and weighted knn distances performed better than most outlier detection methods. Furthermore, researchers have used knn distances as a springboard to develop new outlier detection methods \citep{wilkinson2017visualizing}. Armed with this knowledge, we find a set of basis vectors such that the first vector is in the direction of the highest knn distances, the second vector corresponds to the second highest knn distances, and so on.   
  }
 
 
@@ -91,7 +91,7 @@ Let $X_{N \times p}$ be a matrix denoting a dataset of $N$ observations and $p$ 
 \begin{equation}\label{eq:secMF1}
 	\dist(\bm{x}_i, \bm{x}_j)^2 = ( \bm{x}_i - \bm{x}_j)^\top S ( \bm{x}_i - \bm{x}_j ) \, ,
 \end{equation}
-where $S$ is a symmetric positive definite matrix. {\color{blue} Thus, matrix $S$ in equation~\eqref{eq:secMF1} is diagonalizable, giving us motivation for considering a diagonal $S$ with } \ $S = \diag(s_1, s_2, \dots, s_p)$. Using this we obtain
+where $S$ is a symmetric positive definite matrix. {\color{black} Thus, matrix $S$ in equation~\eqref{eq:secMF1} is diagonalizable, giving us motivation for considering a diagonal $S$ with } \ $S = \diag(s_1, s_2, \dots, s_p)$. Using this we obtain
 \begin{equation}\label{eq:secMF2}
 	\dist(\bm{x}_i, \bm{x}_j)^2 = \left\langle \eta\, , ( \bm{x}_i - \bm{x}_j )\circ ( \bm{x}_i - \bm{x}_j ) \right\rangle \,,
 \end{equation}
@@ -109,28 +109,20 @@ By finding the appropriate $\eta$ of unit length, we can maximize the distance b
 
 If we were to calculate $\bm{y}_{ij}$ for all pairs, it would be computationally expensive as there are $N(N+1)/2$ pairs to consider. In addition, this would give us pairwise distances between points that we are not interested in, such as points on the boundary of the point cloud, that are opposite each other. Finding $\eta$ that maximizes the distances between such points is not beneficial for outlier detection, because a large distance between polar-opposite points does not mean that either of those points are outliers. Therefore we do not compute $\bm{y}_{ij}$ for all pairs of $\bm{x}_i$ and $\bm{x}_j$; rather we select the pairs that we want to include in our $Y$ space.
 
-For each point $\bm{x}_i$ we compute $\bm{y}_{ij}$ arising from a set a nearest neighbors. From \cite{kandanaarachchi2018normalization} we know that nearest neighbors depend on the normalization technique. As a result, we {\color{blue} have a choice of} two normalization techniques to pre-process the data; Min-Max and Median-IQR. Min-Max normalization scales each column to values between $0$ and $1$, with the minimum mapped to $0$ and the maximum mapped to $1$. Median-IQR scales each column to median $0$ and IQR $1$. %Let $X_1$ denote the normalized data using Min-Max and $X_2$ using Median-IQR. For each normalization technique we choose a set of nearest neighbors from $k_1$ to $k_2$, that is for any point $\bm{x}_i$ we choose the $k_1^{\text{th}}$ nearest neighbor to the $k_2^{\text{th}}$ nearest neighbor. Here $k_1$ and $k_2$ are parameters and one can choose $k_1 =1$.
-{\color{blue} The choice of normalization is a parameter with a default value of Min-Max as it was shown that Min-Max achieves better performance for most outlier detection methods \citep{kandanaarachchi2018normalization}. Let $X_1$ denote the normalized data using Min-Max or Median-IQR. We compute the set of nearest neighbors from $1$ to $k$ for $X_1$ where $k$ is a parameter.
-}
-%Next, for each point we find the union of nearest neighbors computed using the two normalization techniques. For example, for a given point $\bm{x}_i$, if the nearest neighbors according to Min-Max are $\{\bm{x}_2, \bm{x}_5, \bm{x}_9 \}$ and Median-IQR gives $\{\bm{x}_4, \bm{x}_5, \bm{x}_7 \}$, then we consider the union of these two sets as the set of nearest neighbors of $\bm{x}_i$. 
-Using the nearest neighbors we construct a list of pairs denoted by $T$. {\color{blue} For example, if the nearest neighbors of $\bm{x}_i$  are $\{\bm{x}_2, \bm{x}_5, \bm{x}_9 \}$,   the pairs $(i, 2)$, $(i, 5)$, $(i, 9)$, will be in $T$. }
+For each point $\bm{x}_i$ we compute $\bm{y}_{ij}$ arising from a set a nearest neighbors. From \cite{kandanaarachchi2018normalization} we know that nearest neighbors depend on the normalization technique. As a result, we {\color{black} have a choice of} two normalization techniques to pre-process the data; Min-Max and Median-IQR. Min-Max normalization scales each column to values between $0$ and $1$, with the minimum mapped to $0$ and the maximum mapped to $1$. Median-IQR scales each column to median $0$ and IQR $1$. 
+{\color{black} The choice of normalization is a parameter with a default value of Min-Max as it was shown that Min-Max achieves better performance for most outlier detection methods \citep{kandanaarachchi2018normalization}. Let $X_1$ denote the normalized data using Min-Max or Median-IQR. We compute the set of nearest neighbors from $1$ to $k$ for $X_1$ where $k$ is a parameter.
+} Using the nearest neighbors we construct a list of pairs denoted by $T$. {\color{black} For example, if the nearest neighbors of $\bm{x}_i$  are $\{\bm{x}_2, \bm{x}_5, \bm{x}_9 \}$,   the pairs $(i, 2)$, $(i, 5)$, $(i, 9)$, will be in $T$. }
 
 For each pair in $T$, we compute $\bm{y}_{ij}$ as in equation~\eqref{eq:secMF2} on the normalized space $X_1$. We now have the initial $Y$ space: a set of $\tilde{M}$ points in $\mathbb{R}^{p+}$. As the list of pairs that give rise to the initial $Y$ space are contained in $T$, we can denote $Y = \{ \bm{y}_\ell \}_{\ell=1}^{\tilde{M}} = \left\{ \left(y_{l1}. \ldots, y_{lp} \right) \right\}_{l=1}^{\tilde{M}}$, where each $\bm{y}_\ell = \bm{y}_{i_{(\ell)} j_{(\ell)} }$, i.e.\ $\ell$ is the row number in the matrix $Y$ and each $\bm{y}_\ell$ comes from the $\ell^{\text{th}}$ pair in $T$.
 
-We are interested in neighboring distances that are relatively large. { \color{blue}  If we consider the sum of knn distances as a measure of outlyingness, data points anywhere between the top $0 - 5\%$ distances may be labeled as outliers or marked for further scrutiny. We mimic this procedure in our $Y$ space construction.} The Euclidean distance squared between two points in the $X_1$ space can be written as $\sum_{m=1}^p y_{\ell m}$ for the appropriate $\ell$. In order to consider only points with relatively large distances, we remove points that contribute to distances below a certain threshold determined by a percentile, i.e.\ we remove points such that $\sum_{m=1}^p y_{\ell m} < Q$ where $Q$ is the $q^{\text{th}}$ percentile of $ \left \{\sum_{m=1}^p y_{\ell m} \right \}_{\ell=1}^{\tilde{M}}$. We remove the associated pairs from $T$ as well. This constitutes the $Y$ space: $Y = \{\bm{y}_\ell \}_{\ell=1}^M$. { \color{blue}  We illustrate this with a toy example having $6$ data points.  For simplicity, let us  consider only five nearest neighbors and let the $q^{\text{th}}$ percentile be $19$. The knn distances which do not contribute to the $Y$ space are crossed out in  Table~\ref{tab:outlierToy}. The associated pairs of points are removed from the $Y$ space. Thus, by removing these point pairs we are putting a spotlight on point pairs with high knn distances, emulating knn outlier detection method. This example is for illustration purposes only as finding outliers in a dataset of $6$ data points with $k=5$ is not a meaningful exercise. 
-
-
-
-
-
-% We want  in  In the toy example illustrated in Table~\ref{tab:outlierToy}
+We are interested in neighboring distances that are relatively large. { \color{black}  If we consider the sum of knn distances as a measure of outlyingness, data points anywhere between the top $0 - 5\%$ distances may be labeled as outliers or marked for further scrutiny. We mimic this procedure in our $Y$ space construction.} The Euclidean distance squared between two points in the $X_1$ space can be written as $\sum_{m=1}^p y_{\ell m}$ for the appropriate $\ell$. In order to consider only points with relatively large distances, we remove points that contribute to distances below a certain threshold determined by a percentile, i.e.\ we remove points such that $\sum_{m=1}^p y_{\ell m} < Q$ where $Q$ is the $q^{\text{th}}$ percentile of $ \left \{\sum_{m=1}^p y_{\ell m} \right \}_{\ell=1}^{\tilde{M}}$. We remove the associated pairs from $T$ as well. This constitutes the $Y$ space: $Y = \{\bm{y}_\ell \}_{\ell=1}^M$. { \color{black}  We illustrate this with a toy example having $6$ data points.  For simplicity, let us  consider only five nearest neighbors and let the $q^{\text{th}}$ percentile be $19$. The knn distances which do not contribute to the $Y$ space are crossed out in  Table~\ref{tab:outlierToy}. The associated pairs of points are removed from the $Y$ space. Thus, by removing these point pairs we are putting a spotlight on point pairs with high knn distances, emulating knn outlier detection method. This example is for illustration purposes only as finding outliers in a dataset of $6$ data points with $k=5$ is not a meaningful exercise. 
 
 \begin{table}[!t]
 	\centering
-	\caption{\color{blue}Removing pairs of points for the $Y$ space construction }
+	\caption{\color{black}Removing pairs of points for the $Y$ space construction }
 	\begin{tabular}{cccccc}
 	\toprule
-	\multirow{2}{2cm}{\color{blue} Point index} & \multicolumn{5}{c}{\color{blue} knn distance squared for} \\ 
+	\multirow{2}{2cm}{\color{black} Point index} & \multicolumn{5}{c}{\color{black} knn distance squared for} \\ 
     &	$k=1$ & $k=2$ & $k=3$ & $k=4$ & $k=5$ \\
 	\midrule
 		   1     & 20  & 25   & 28 & 32 &  37     \\
@@ -151,12 +143,12 @@ Algorithm~\ref{algo:YSpace} summarizes the construction of the $Y$ space.
 \begin{algorithm}\fontsize{11}{12}\selectfont
 	\SetKwInOut{Input}{input~~~}
 	\SetKwInOut{Output}{output}
-	\Input{~$X$, { \color{blue} $k \in \mathbb{Z}^+$}, $q \in (0, 1)$ and choice of normalization.}
+	\Input{~$X$, { \color{black} $k \in \mathbb{Z}^+$}, $q \in (0, 1)$ and choice of normalization.}
 	\Output{~The space $Y$ consisting of all $\{\bm{y}_\ell \}_{\ell=1}^M$ and the associated indices $i$ and $j$.}
-	Normalize $X$ using { \color{blue} Min-Max or Median-IQR normalization according to the choice parameter}. Let us call this space $X_1$. \\
-	{ \color{blue}Find $k$ nearest neighbors for each point in $X_1$.} \\
-	Let $T = $ the set of $i$ and $j$ indices { \color{blue} as in equation \eqref{eq:secMF1}},  corresponding to the pairs of points in $X_1$. \\
-	{ \color{blue} For all these pairs, compute $\bm{y}_{ij}$.} Let $Y =\big\{ \bm{y}_{1} =\bm{y}_{i_{(1)}j_{(1)}} , \bm{y}_{2} =\bm{y}_{i_{(2)}j_{(2)}}, \dots, \bm{y}_{\tilde{M}} =\bm{y}_{i_{(\tilde{M})}j_{(\tilde{M})}} \big\}$, where $\big( i_{(1)},j_{(1)} \big)$ is the first $(i, j)^{\text{th}}$ pair in $T$. Consequently $Y$ is an $\tilde{M}\times p$ matrix, with the $\ell^{\text{th}}$ row denoted by $\bm{y}_\ell$.\\
+	Normalize $X$ using { \color{black} Min-Max or Median-IQR normalization according to the choice parameter}. Let us call this space $X_1$. \\
+	{ \color{black}Find $k$ nearest neighbors for each point in $X_1$.} \\
+	Let $T = $ the set of $i$ and $j$ indices { \color{black} as in equation \eqref{eq:secMF1}},  corresponding to the pairs of points in $X_1$. \\
+	{ \color{black} For all these pairs, compute $\bm{y}_{ij}$.} Let $Y =\big\{ \bm{y}_{1} =\bm{y}_{i_{(1)}j_{(1)}} , \bm{y}_{2} =\bm{y}_{i_{(2)}j_{(2)}}, \dots, \bm{y}_{\tilde{M}} =\bm{y}_{i_{(\tilde{M})}j_{(\tilde{M})}} \big\}$, where $\big( i_{(1)},j_{(1)} \big)$ is the first $(i, j)^{\text{th}}$ pair in $T$. Consequently $Y$ is an $\tilde{M}\times p$ matrix, with the $\ell^{\text{th}}$ row denoted by $\bm{y}_\ell$.\\
 	Let $Q$ be the $q^{\text{th}}$ percentile of $ \left\{\sum_{m=1}^p {y}_{\ell m}\right\}$. The quantity $\sum_{m=1}^p {y}_{\ell m}$ is the distance between points $\bm{x}_{i_{(\ell)}}$ and $\bm{x}_{j_{(\ell)}}$ in $X_1$ space. \\
 	Remove points for which $ \sum_{m=1}^p {y}_{\ell m} < Q $. \\
 	Remove the associated pairs of $(i, j)$ from $T$. \\
@@ -176,19 +168,18 @@ Algorithm~\ref{algo:YSpace} summarizes the construction of the $Y$ space.
 %% Explanation of fig:XandY
 Figure~\ref{fig:XandY} illustrates the $X$ and $Y$ spaces where $X$ is a 2 dimensional normal distribution of 100 points with a single outlier depicted in red.  We see that the $Y$ space consists of a lesser number of points compared to $X$, of which 6 points are contributed by the outlier. This is because in the construction of the $Y$ space $5$ neighbors are considered for each point with $k_1=1$ to $k_2=5$, and the points $\bm{y}_k$ with relatively small distances $\left(\sum_i y_{ki} \leq Q\right)$ are removed. Thus, the effect of outliers is magnified in the $Y$ space. 
 
-{\color{blue} The $Y$ space computes relative vectors between $k$ nearest neighbors. As such, it is not designed to find the position vector of an outlier. As we discuss later, we find the direction of outlyingness by computing the average of these vectors so that the outliers contribute considerably more to this direction than non-outliers clustered near the origin.  Furthermore, the $Y$ space is not rotationally invariant; it depends  on the input coordinates. Performing PCA before computing the $Y$ space gives rotational invariance to the overall algorithm. However, we have not adopted this approach as we loose some interpretability.  } %\todo{What is $k_1$ and $k_2$ in this example? - Done}
+{\color{black} The $Y$ space computes relative vectors between $k$ nearest neighbors. As such, it is not designed to find the position vector of an outlier. As we discuss later, we find the direction of outlyingness by computing the average of these vectors so that the outliers contribute considerably more to this direction than non-outliers clustered near the origin.  Furthermore, the $Y$ space is not rotationally invariant; it depends  on the input coordinates. Performing PCA before computing the $Y$ space gives rotational invariance to the overall algorithm. However, we have not adopted this approach as we loose some interpretability.  } 
 
 We summarize the salient features of the $Y$ space below:
 \begin{compactenum}
 	\item $Y = \{\bm{y}_\ell \}_{\ell=1}^M$, where $\bm{y}_\ell \in \mathbb{R}^{p+}$.
-	\item Each $\bm{y}_\ell \in Y$ is constructed from two points $\bm{x}_i$ and $\bm{x}_j$ in $X$ with $T(\ell) = (i,j)$, where $T$ is a list consisting of the pairs in $X$ that are used to construct $Y$. In addition, $\bm{x}_i$ and $\bm{x}_j$ are $k$-nearest neighbors for some { \color{blue} $k \in \mathbb{N}$}.
+	\item Each $\bm{y}_\ell \in Y$ is constructed from two points $\bm{x}_i$ and $\bm{x}_j$ in $X$ with $T(\ell) = (i,j)$, where $T$ is a list consisting of the pairs in $X$ that are used to construct $Y$. In addition, $\bm{x}_i$ and $\bm{x}_j$ are $k$-nearest neighbors for some { \color{black} $k \in \mathbb{N}$}.
 	\item For $i,j,\ell$ as above, $\bm{y}_\ell = (\bm{x}_i - \bm{x}_j) \circ (\bm{x}_i - \bm{x}_j) $, where $\circ$ denotes the element-wise vector product.
 	\item The $Y$ space contains points $\bm{y}_\ell$ with relatively high $\sum_{m=1}^p y_{\ell m}$, i.e.\ it contains vectors that contribute to high knn distances in the $X$ space.
 \end{compactenum}
 
 \subsection{Maximizing the distance between points}\label{sec:MathFrame2}
 
-%The $Y$ space has points $\bm{y}_\ell$ that correspond to neighboring points $\bm{x}_i$ and $\bm{x}_j$ in $X$, which have relatively high $k$ nearest neighbor distances.
 Restating equation~\eqref{eq:secMF3} using $T(\ell) = (i,j)$ we obtain
 \begin{equation} \label{eq:secMF4}
 	\sum_{(i,j) \in T}\dist(\bm{x}_i, \bm{x}_j)^2 = \sum_{\ell}\langle \eta\, , \bm{y}_{\ell} \rangle\, .
@@ -200,7 +191,7 @@ We now state our optimization problem as
   \qquad
 	\text{subject to} \hspace{0.2cm} \lVert\eta\rVert^2 = 1 .
 \end{equation}
-{\color{blue} 
+{\color{black} 
 As
 \begin{align}  
  \sum_{\ell}\left\langle \eta\, , \bm{y}_{\ell} \right\rangle &  =   \left\langle \eta\, , \sum_{\ell}\bm{y}_{\ell} \right\rangle  \, ,  \\
@@ -219,7 +210,6 @@ With the standard inner product in $\mathbb{R}^n$, equality can only occur when 
 
 We can also arrive at the same solution using Lagrange Multipliers.  For }
 
-%Solving this using Lagrange Multipliers we obtain $\nabla f = \lambda \nabla g$, with
 \begin{align}\label{eq:secMF6}
 	f(\eta)  = \sum_{\ell}\langle \eta\, , \bm{y}_{\ell} \rangle \qquad \text{and} \qquad
 	g(\eta) =  \lVert\eta\rVert^2 - 1 = 0 \, ,
@@ -238,13 +228,10 @@ where $\delta_{ij}$ is the Kronecker delta function which equals 1 when $i=j$ an
 	\nabla f = \left(\sum_{\ell=1}^M y_{\ell1}, \sum_{\ell=1}^M y_{\ell2}, \dots, \sum_{\ell=1}^M y_{\ell p} \right) = \sum_{\ell=1}^M \bm{y}_\ell \, .
 \end{equation}
 Similarly, as $g(\eta) = \left( \sum_{j=1}^p \eta_j^2\right) - 1$, we get $\nabla g = \eta$. By substituting $\nabla f = \lambda \nabla g$ and using $\lVert\eta\rVert = 1$, we obtain the same solution as in equation~\eqref{eq:secMF9}.
-% \begin{equation*}
-% 	\eta = \frac{\sum_{\ell=1}^M \bm{y}_\ell }{ \left\lVert\sum_{\ell=1}^M \bm{y}_\ell \right\rVert } \, .
-% \end{equation*}
 
 \subsection{Constructing a basis}\label{sec:MathFrame3}
 
-We have computed the vector $\eta$ that maximizes $\sum_{\ell}\langle \eta\, , \bm{y}_{\ell}\rangle$. To find a basis, we need to find the second, third and subsequent vectors which are orthogonal and in some way maximize the quantity $\sum_{\ell}\langle \eta\, , \bm{y}_{\ell}\rangle$. Let us first rename $\eta$ as $\eta_1$. {\color{blue} Taking $\eta_1$ as the first basis vector, we take the projection of $\bm{x}_\ell$ on to $\eta_1$ and remove these components from $\bm{x}_\ell$: 
+We have computed the vector $\eta$ that maximizes $\sum_{\ell}\langle \eta\, , \bm{y}_{\ell}\rangle$. To find a basis, we need to find the second, third and subsequent vectors which are orthogonal and in some way maximize the quantity $\sum_{\ell}\langle \eta\, , \bm{y}_{\ell}\rangle$. Let us first rename $\eta$ as $\eta_1$. {\color{black} Taking $\eta_1$ as the first basis vector, we take the projection of $\bm{x}_\ell$ on to $\eta_1$ and remove these components from $\bm{x}_\ell$: 
 \begin{equation}\label{eq:secMF10}
 	\bm{x}_{\ell_1} = \bm{x}_\ell - \langle \eta_1 \, , \bm{x}_\ell \rangle \eta_1.
 \end{equation}
@@ -261,15 +248,13 @@ and after computing the $Y$ space for $\bm{x}_{\ell_{b}}$ we compute
     \eta_{b+1}  = \frac{\sum_{\ell=1}^M \bm{y}_{\ell_b} }{ \left\lVert\sum_{\ell=1}^M \bm{y}_{\ell_b} \right\rVert } \, ,
 \end{equation}
 with $\bm{x}_{\ell_0} = \bm{x}_{\ell}$. } The set $\Theta = \{ \eta_1, \eta_2, \dots , \eta_p \}$ gives a basis for $Y$ with each $\eta_{i+1}$ maximizing $\sum_{\ell}\langle \eta\, , \bm{y}_{\ell_i} \rangle$.
-{\color{blue} This constitutes the central computation of the basis construction.}  This process is somewhat similar to Gram Schmidt orthogonalisation { \color{blue} \citep{anton2013elementary}, which computes an orthonormal basis for a  given set of basis vectors using orthogonal complements. In our case, we find each basis vector using the orthogonal complement of the previous basis vectors.  }
+{\color{black} This constitutes the central computation of the basis construction.}  This process is somewhat similar to Gram Schmidt orthogonalisation { \color{black} \citep{anton2013elementary}, which computes an orthonormal basis for a  given set of basis vectors using orthogonal complements. In our case, we find each basis vector using the orthogonal complement of the previous basis vectors.  }
 
-{\color{blue}
+{\color{black}
 We note that each subsequent $X_j$ lies in a lower dimensional subspace compared to the original $X$ space, because $X_j$ constitutes of the remaining vectors after removing the projections on to $\{ \eta_1, \eta_2, \ldots , \eta_{j} \}$. Consequently, it is not optimal to use the original set of coordinates to describe vectors in $X_j$,  even though $X_{N \times p}$ was described using coordinates in $\mathbb{R}^p$. Therefore, for each $X_j$ we change the basis to that of a lower dimensional space, compute the $Y$ space and find $\eta_{j+1}$ using this basis and transform $\eta_{j+1}$ back to the original basis. We explain this process next.  
-% In addition to this main construction, we use a change of basis 
-
 }
 
-{ \color{blue} 
+{ \color{black} 
 \subsubsection{Same vectors, two bases}
 \begin{figure}
    \begin{tikzpicture}
@@ -296,7 +281,7 @@ We note that each subsequent $X_j$ lies in a lower dimensional subspace compared
     \draw[thick,->-=.5](12,0) -- (17,4) node[midway, above]{$\boldsymbol{u}$};
     \draw[step=1cm,gray,very thin] (6,0) grid (11,4);
     \end{tikzpicture}
-    \caption{\color{blue} Here $\bm{u} = 2\bm{v} + \bm{w}$. In the coordinate system in the middle $\bm{v} = (2,1)^T$, $\bm{w} = c(1,2)^T$ and $\bm{u} = (5,4)^T$. In the coordinate system on the right $\bm{v} = (1,1)^T$, $\bm{w} = c(-1,2)^T$ and $\bm{u} = (1,4)^T$. Regardless of the coordinate system the vector equation $\bm{u} = 2\bm{v} + \bm{w}$ holds true. }
+    \caption{\color{black} Here $\bm{u} = 2\bm{v} + \bm{w}$. In the coordinate system in the middle $\bm{v} = (2,1)^T$, $\bm{w} = c(1,2)^T$ and $\bm{u} = (5,4)^T$. In the coordinate system on the right $\bm{v} = (1,1)^T$, $\bm{w} = c(-1,2)^T$ and $\bm{u} = (1,4)^T$. Regardless of the coordinate system the vector equation $\bm{u} = 2\bm{v} + \bm{w}$ holds true. }
     \label{fig:difbases}
 \end{figure}
 
@@ -328,7 +313,7 @@ Now we consider the change of basis mentioned in Section~\ref{sec:MathFrame3}.
     \draw[thick,|-|](1, 0.25)--(5, 0.25)node[midway, below]{$\langle \bm{x}_{l1}\, ,  \gamma_{1} \rangle$};
      \draw[thick,|-|](0.5, 1)--(0.5, 4)node[midway, left]{$\langle \bm{x}_{l1}\, ,  \gamma_{2} \rangle$};
     \end{tikzpicture}
-    \caption{\color{blue} The coordinates of $\bm{x}_{l_1}$ in the orthonormal basis $\{\gamma_1, \gamma_2\}$ are $\left( \langle \bm{x}_{l1}\, ,  \gamma_{1} \rangle, \langle \bm{x}_{l1}\, ,  \gamma_{2} \rangle \right)$, i.e. $\bm{x}_{l1} = \langle \bm{x}_{l1}\, ,  \gamma_{1} \rangle \gamma_1 + \langle \bm{x}_{l1}\, ,  \gamma_{2} \rangle \gamma_2$.    }
+    \caption{\color{black} The coordinates of $\bm{x}_{l_1}$ in the orthonormal basis $\{\gamma_1, \gamma_2\}$ are $\left( \langle \bm{x}_{l1}\, ,  \gamma_{1} \rangle, \langle \bm{x}_{l1}\, ,  \gamma_{2} \rangle \right)$, i.e. $\bm{x}_{l1} = \langle \bm{x}_{l1}\, ,  \gamma_{1} \rangle \gamma_1 + \langle \bm{x}_{l1}\, ,  \gamma_{2} \rangle \gamma_2$.    }
     \label{fig:dotprodcoords}
 \end{figure}
 
@@ -345,7 +330,7 @@ $\bm{x}_{\ell_1}$ lies in the null space of $\eta_1^T$, that is  $\Null(\eta_1^T
 where we have used the standard inner product. This is illustrated in Figure~\ref{fig:dotprodcoords}. The vector equation~\eqref{eq:changeOfBasis1}  holds in any coordinate system. This gives us the new coordinates of $\bm{x}_{\ell_1}$ in $B_1$ basis
 $$ \bm{x}_{\ell_1}^{B1}  = \left(\left\langle \bm{x}_{\ell_1}\, , \gamma_1 \right\rangle , \ldots, \left\langle \bm{x}_{\ell_1}\, , \gamma_{p-1} \right\rangle    \right)^T = \left(a_1, \ldots, a_{p-1} \right)^T \, .
 $$
-%The vector $\bm{x}_{\ell_1}$ is described using $p-1$ coordinates using $B_1$ basis. 
+ 
 Let $X_1^{B_1}$ denote the new coordinates of $X_1$ in the basis $B_1$. Then 
 $$ X_1^{B_1} = X_1 B_1 \, , 
 $$
@@ -353,7 +338,7 @@ where $\bm{x}_{\ell_1}$ is a row vector of $X_1$ and $\gamma_j$ is a column vect
 
 \subsubsection{Step 2 - Changing coordinates of $\eta_2$ back to $\mathbb{R}^p$ }
 
-Next we repeat the $Y$ space construction for $X_1^{B_1}$ and find the vector $\eta_2$ using $B_1$ basis: %Let $\bm{y}_{\ell_1}$ denote the points in corresponding $Y$ space using $B_1$ basis. Thus, we find the vector $\eta_2^{B_1}$ that maximizes the distance between points:
+Next we repeat the $Y$ space construction for $X_1^{B_1}$ and find the vector $\eta_2$ using $B_1$ basis: 
 \begin{equation}\label{eq:secMF11}
 	\eta_2^{B_1} = \frac{\sum_{\ell=1}^M \bm{y}_{\ell_1}^{B_1} }{ \left\lVert\sum_{\ell=1}^M \bm{y}_{\ell_1}^{B_1}\right\rVert }\,,
 \end{equation}
@@ -361,8 +346,8 @@ Let $\eta_2^{B_1} = \left( \zeta_1, \ldots, \zeta_{p-1} \right)^T$, then
 \begin{equation}\label{eq:changeOfBasis2}
     \eta_2 = \zeta_1 \gamma_1 + \cdots + \zeta_{p-1}\gamma_{p-1} \, .
 \end{equation}
-%If we evaluate the vector equation~\eqref{eq:changeOfBasis2} using the basis $B_1$, with $\gamma_1 = (1, \, \ldots, 0)$, and $\gamma_{p-1} = (0, \, \ldots, 1)$ then the coordinates of $\eta_2$ in $B_1$ basis $\eta_2^{B_1} = \left( \zeta_1, \cdots, \zeta_{p-1} \right)$. 
-Equation \eqref{eq:changeOfBasis2} is a vector equation that holds in any coordinate system. If we evaluate  equation~\eqref{eq:changeOfBasis2} using the original basis $E$, %and then we need to use the original coordinates for $\gamma_i$ as computed in the null space computation. This would give us $\eta_2$ in the original basis. Thus, we transform $\eta_2^{B_1}$ to the original basis by 
+
+Equation \eqref{eq:changeOfBasis2} is a vector equation that holds in any coordinate system. If we evaluate  equation~\eqref{eq:changeOfBasis2} using the original basis $E$, 
 \begin{align}\label{eq:changeOfBasis3}
     \eta_2^{E} & = \zeta_1 \gamma_1^E + \cdots + \zeta_{p-1}\gamma_{p-1}^E \, , \notag \\
  \text{giving us} \qquad    \eta_2^{E} &=  B_1 \eta_2^{B_1} \, ,
@@ -379,41 +364,19 @@ We repeat Steps 1 and 2 for the lower dimensional space $X_1^{B_1}$, which conta
  giving us $\{\eta_1, \eta_2, \eta_3\}$ in standard coordinates. Then we start the Steps 1 and 2 again for $X_2^{B_2}$, which contains $\bm{x}_{l_2} \in \mathbb{R}^{p-2}$. Continuing this way we obtain all the basis vectors. 
 }
 
-% Taking $\eta_1$ as the first basis vector, we take the projection of vector $\bm{y}_\ell$ on to $\eta_1$ and remove these components from $\bm{y}_\ell$:
-% \begin{equation}\label{eq:secMF10}
-% 	\bm{y}_{\ell_1} = \bm{y}_\ell - \langle \eta_1 \, , \bm{y}_\ell \rangle \eta_1.
-% \end{equation}
-% Thus $\bm{y}_{\ell_1} \perp \eta_1$. Let $Y_1 = \{\bm{y}_{\ell_1} \}_{\ell=1}^M $ be the set of remaining components of $\{ \bm{y}_\ell \}_{\ell=1}^M$ after removing the projection on to $\eta_1$. Now we can compute $\eta_2$ which maximizes $\sum_{\ell}\langle \eta\, , \bm{y}_{\ell_1}\rangle$ as
-% \begin{equation}\label{eq:secMF11}
-% 	\eta_2 = \frac{\sum_{\ell=1}^M \bm{y}_{\ell_1} }{ \left\lVert\sum_{\ell=1}^M \bm{y}_{\ell_1} \right\rVert }\,.
-% \end{equation}
-% Proceeding in this way we obtain
-% \begin{align}
-% 	\bm{y}_{\ell_{b}} & = \bm{y}_{\ell_{b-1}} - \langle \eta_b \, , \bm{y}_{\ell_{b-1}} \rangle \eta_b \, , \label{eq:secMF12} \\
-% 	\text{and}\qquad \eta_{b+1}     & = \frac{\sum_{\ell=1}^M \bm{y}_{\ell_b} }{ \left\lVert\sum_{\ell=1}^M \bm{y}_{\ell_b} \right\rVert } \, , \label{eq:secMF13}
-% \end{align}
- %which aims to maximise the quantity $\sum_{\ell}\left\langle \eta\, , \bm{y}_{\ell} \right\rangle$.
-
-
-
-%Note that Equation~\eqref{eq:secMF4} is only true for $\bm{y}_\ell \in \mathbb{R}^{p+}$. The other $Y$ spaces $(Y_1, Y_2, \dots)$ are not subsets of $\mathbb{R}^{p+}$. To adjust for this, after computing $\bm{y}_{\ell_{b}}$ as in equation~\eqref{eq:secMF12}, we temporarily change the basis such that the points $\{\bm{y}_{\ell_{b}}\}_{\ell=1}^M$ are in a positive orthant. Then after computing $\eta_{b+1}$ as in equation~\eqref{eq:secMF13} using positive $\{\bm{y}_{\ell_{b}}\}_{\ell=1}^M$, we transform it back again to the original basis.
-
-{\color{blue} 
-
-
-%Indeed, it is more effective to describe $X_j$ using $p-j$ coordinates than $p$ ****
+{\color{black} 
 
 }
 
 
 
 
-{ \color{blue} \subsection{New DOBIN coordinates} }
+{ \color{black} \subsection{New DOBIN coordinates} }
 Once the basis $\Theta$ is computed, we change the basis of the original data as follows:
 \begin{equation}\label{eq:secMF14}
 	\tilde{X} = X_1 \Theta \, 
 \end{equation}
-where $X_1$ is the normalized $X$ space according to the choice of normalization. We note that the basis $\Theta$ is not invariant to rotations; i.e.\ if one were to start with a different basis, the resulting $\Theta$ would be different. This is because when constructing the $Y$ space we compute element-wise squares of vector differences. While vector addition is basis invariant, squared element-wise components depend on the basis vectors. Notwithstanding this limitation, we achieve good results for experiments conducted on our extensive collection of more than $12,000$ real world datasets. For almost all of our experiments, we constructed DOBIN using the original basis as input. We only used a different basis if the number of variables were much higher than the number of observations. %DOBIN generally performs better with the original basis than with a transformed basis, and finds it is easier to compute the true direction of outliers when the axes are original variables, compared to when each axis is a linear combination of them.
+where $X_1$ is the normalized $X$ space according to the choice of normalization. We note that the basis $\Theta$ is not invariant to rotations; i.e.\ if one were to start with a different basis, the resulting $\Theta$ would be different. This is because when constructing the $Y$ space we compute element-wise squares of vector differences. While vector addition is basis invariant, squared element-wise components depend on the basis vectors. Notwithstanding this limitation, we achieve good results for experiments conducted on our extensive collection of more than $12,000$ real world datasets. For almost all of our experiments, we constructed DOBIN using the original basis as input. We only used a different basis if the number of variables were much higher than the number of observations. 
 Furthermore, as we will see in Section~\ref{sec:ResWithVis} it is easier to gain insights about the outlying directions when the axes are original variables.
 
 We conclude this mathematical discussion by summarizing the key steps of DOBIN:
@@ -426,41 +389,27 @@ We conclude this mathematical discussion by summarizing the key steps of DOBIN:
 
 \subsection{Parameters of DOBIN}\label{sec:MathFrame4}
 
-We have {\color{blue} two} numerical parameters {\color{blue} $k$ } and $q$ for constructing the $Y$ space with the following default values:
+We have {\color{black} two} numerical parameters {\color{black} $k$ } and $q$ for constructing the $Y$ space with the following default values:
 \begin{align} \label{eq:secMF15}
 	k & = \min\left(20, \max (\lfloor N/20 \rfloor ,2) \right) \notag \, , \\
 	q   & = 0.95 \notag \, ,
 \end{align}
-where $N$ is the number of observations in the dataset. {\color{blue} The parameter $k$ set to be the minimum of $20$ and $N/20$, i.e.  $5\%$ of $N$. As outliers are rare observations we have taken $5\%$ of the dataset as the upper limit for the outlier population. For real world applications such as credit card frauds and intrusion detection, this percentage is much lower than $5\%$ \citep{goldstein2016comparative, kaggle_dat_cc_fraud}.}  We set a maximum value of $20$ for $k$ as it affects the run time of the algorithm. %As $k_1 < k_2$, we consider a maximum of $10$ neighbors for each point. 
+where $N$ is the number of observations in the dataset. {\color{black} The parameter $k$ set to be the minimum of $20$ and $N/20$, i.e.  $5\%$ of $N$. As outliers are rare observations we have taken $5\%$ of the dataset as the upper limit for the outlier population. For real world applications such as credit card frauds and intrusion detection, this percentage is much lower than $5\%$ \citep{goldstein2016comparative, kaggle_dat_cc_fraud}.}  We set a maximum value of $20$ for $k$ as it affects the run time of the algorithm.  
 
 The parameter $q$ determines the cut-off quantile needed to obtain a subset of $\bm{y}$ with large distances. Therefore $q$ needs to be a relatively high value in the interval $(0,1)$. From equation~\eqref{eq:secMF5} we maximize the projection of $\bm{y}$ on to $\eta$. If $q$ is too low, many $\bm{y}$ with smaller projections may contribute heavily to the sum, making DOBIN vectors less effective.
 
-The other parameter for constructing the $Y$ space is the choice of normalization. While Min-Max normalization is commonly used by the computer science community \citep{campos2016evaluation}, other normalization techniques such as distance from univariate medians and Mahalanobis distance are commonly used by the statistical community \citep{billor2000bacon}. We give two options for normalization: Min-Max and Median-IQR,  { \color{blue} and use  Min-Max as the default method. }
+The other parameter for constructing the $Y$ space is the choice of normalization. While Min-Max normalization is commonly used by the computer science community \citep{campos2016evaluation}, other normalization techniques such as distance from univariate medians and Mahalanobis distance are commonly used by the statistical community \citep{billor2000bacon}. We give two options for normalization: Min-Max and Median-IQR,  { \color{black} and use  Min-Max as the default method. }
 
-
-% The purpose of the final parameter is to aid visualization in two dimensions. As points $\{\bm{y}_{\ell}\}_{i=1}^M$ lie in the positive orthant, the first vector $\eta_1$ which maximizes $\sum_\ell \langle \eta\, \bm{y}_\ell\rangle$ also lies in the positive orthant. However, this may not render the best possible 2D-visualization of the outliers in $X$ space, because points can have positive and negative coordinates in $X$ space. Hence we compute the signed $\bm{y}_{\ell}$, denoted by $\bm{\tilde{y}}_\ell$, by keeping track of the signs of the point differences $(\bm{x}_i - \bm{x}_j)$. Let $T(\ell) = (i, j)$, then
-% \begin{equation}\label{eq:secMF16}
-% 	\bm{\tilde{y}}_\ell = \sign(\bm{x}_i - \bm{x}_j) \circ \bm{y}_{\ell} \, ,
-% \end{equation}
-% where $\circ$ denotes element-wise multiplication. {\color{blue} For example, suppose $({x}_{ik} - {x}_{jk}) \ll 0 $. But as $ \bm{y}_{\ell k} = ({x}_{ik} - {x}_{jk})^2$, $\bm{y}_{\ell k} $ does not include this sign. The purpose of equation~\eqref{eq:secMF16} is to preserve this sign. }  Then
-% \begin{align}\label{eq:secMF17}
-% 	\sign(\eta_1) & = \sign \left( \sum_{i=1}^M \bm{\tilde{y}}_\ell \right) \, , \notag \\
-% 	\text{and}\qquad
-%   \tilde\eta_1  & = \sign (\eta_1) \circ \eta_1,
-% \end{align}
-% where $\eta_1 $ is computed using equation~\eqref{eq:secMF9}. {\color{blue}  We have empirically observed that this sign change yields better visualizations for smaller datasets. }
- 
-%However, this adds to the computation and is only recommended if 2D-visualization is an aim of the exercise.
 
 % =======================================================================
 \section{Experiments with synthetic data}\label{sec:synthetic}
 % =======================================================================
 
-In this section we do {\color{blue} five} experiments with synthetic data. For each experiment we compare results for three outlier detection methods, namely LOF \citep{breunig2000lof}, KNN \citep{ramaswamy2000efficient} and isolation forest \citep{liu2008isolation}. We choose these methods as they are well recognized and fundamentally different: LOF uses a local density based approach; KNN uses a global distance based approach; and iForest uses a randomized tree based approach. For each outlier detection method we consider the following {\color{blue} five} coordinate systems:
+In this section we do {\color{black} five} experiments with synthetic data. For each experiment we compare results for three outlier detection methods, namely LOF \citep{breunig2000lof}, KNN \citep{ramaswamy2000efficient} and isolation forest \citep{liu2008isolation}. We choose these methods as they are well recognized and fundamentally different: LOF uses a local density based approach; KNN uses a global distance based approach; and iForest uses a randomized tree based approach. For each outlier detection method we consider the following {\color{black} five} coordinate systems:
 \begin{enumerate}
 	\item All variables in the dataset;
 	\item Perform Principal Component Analysis (PCA) on the dataset, and use the first half of the principal components (PCs).
-	{\color{blue} \item Perform PCA, and use the second half of the principal components \citep{amnarttrakul2011new}. 
+	{\color{black} \item Perform PCA, and use the second half of the principal components \citep{amnarttrakul2011new}. 
 	\item Use the eigenvectors of the fourth moment matrix as detailed in \cite{tyler2009invariant} as a basis. The fourth moment matrix is a measure of the kurtosis of a distribution and as such is associated with its tails.  We compute the coordinates of the dataset with respect to this basis, and use the first half of these coordinates. This set of coordinates is denoted by COV4 in the rest of the paper.  }
 	\item Perform DOBIN on the dataset, and use the first half of the DOBIN components.
 \end{enumerate}
@@ -468,10 +417,10 @@ For each outlier detection method, we compare the results using these three sets
 
 \subsection{Experiment 1}
 
-The first experiment considers two normal distributions: an inlier normal distribution and an outlier normal distribution, which moves out from the inlier distribution as its mean increases. We consider a dataset of $405$ observations in $\mathbb{R}^6$, of which $400$ observations in each dimension are normally distributed with mean $0$ and standard deviation $1$. The remaining $5$ observations signify outliers and are normally distributed with mean $\mu$ and standard deviation $0.2$ in one dimension, and mean $0$ and standard deviation $1$ in other dimensions. The value of $\mu$ is changed from $0$ to $4.5$ by increments of $0.5$. The reason for a smaller standard deviation in the first dimension is to ensure that the outliers stay close to the mean $\mu$ and move out of the inlier distribution as $\mu$ increases. For each value of $\mu$ we consider the {\color{blue} five}  sets of coordinates described above and their performance using the outlier methods LOF, KNN and iForest. We perform $10$ repetitions of this experiment. Figure~\ref{fig:Exp1} shows the results for all {\color{blue} five} outlier methods using the average performance values of $10$ repetitions.
+The first experiment considers two normal distributions: an inlier normal distribution and an outlier normal distribution, which moves out from the inlier distribution as its mean increases. We consider a dataset of $405$ observations in $\mathbb{R}^6$, of which $400$ observations in each dimension are normally distributed with mean $0$ and standard deviation $1$. The remaining $5$ observations signify outliers and are normally distributed with mean $\mu$ and standard deviation $0.2$ in one dimension, and mean $0$ and standard deviation $1$ in other dimensions. The value of $\mu$ is changed from $0$ to $4.5$ by increments of $0.5$. The reason for a smaller standard deviation in the first dimension is to ensure that the outliers stay close to the mean $\mu$ and move out of the inlier distribution as $\mu$ increases. For each value of $\mu$ we consider the {\color{black} five}  sets of coordinates described above and their performance using the outlier methods LOF, KNN and iForest. We perform $10$ repetitions of this experiment. Figure~\ref{fig:Exp1} shows the results for all {\color{black} five} outlier methods using the average performance values of $10$ repetitions.
 
-{\color{blue} We see that DOBIN and COV4 give similar results and perform better than the other methods. As our outlier distribution contributes to the kurtosis, COV4 performs well in this example. }
-Using $3$ DOBIN {\color{blue} and COV4 } components give {\color{blue} better }  performance for all $3$ outlier detection methods for $\mu > 1$. Indeed, we are interested in a set of coordinates that can accentuate the outliers as they move out from the inlier distribution. For values of $\mu \in \{0, 0.5, 1\}$, the outlier distribution lies in the interior of the inlier distribution, making a performance comparison between the coordinates not meaningful.
+{\color{black} We see that DOBIN and COV4 give similar results and perform better than the other methods. As our outlier distribution contributes to the kurtosis, COV4 performs well in this example. }
+Using $3$ DOBIN {\color{black} and COV4 } components give {\color{black} better }  performance for all $3$ outlier detection methods for $\mu > 1$. Indeed, we are interested in a set of coordinates that can accentuate the outliers as they move out from the inlier distribution. For values of $\mu \in \{0, 0.5, 1\}$, the outlier distribution lies in the interior of the inlier distribution, making a performance comparison between the coordinates not meaningful.
 
 \subsection{Experiment 2}
 
@@ -505,25 +454,24 @@ Using $3$ DOBIN {\color{blue} and COV4 } components give {\color{blue} better } 
 	\caption{Results of experiments 1 - 5 for LOF, KNN and iForest.  }
 \end{figure}
 
-The second experiment considers a bi-modal setting with two inlier normal distributions and one outlier normal distribution which moves into the valley as its mean changes. Somewhat similar to the previous example we consider $805$ observations in $\mathbb{R}^6$; $800$ inlier observations of which $400$ centered at $(5,0,0,0,0,0)$ and the other $400$ centered at $(-5,0,0,0,0,0)$. All inlier observations come from normal distributions with standard deviation $1$ in each dimension. The outlier distribution consists of $5$ points with mean $(5-\mu,0,0,0,0,0)$ and standard deviations $0.2$ in the first dimension and $1$ in other dimensions. The value of $\mu$ is increased from $0$ to $4.5$ in increments of $0.5$. Again, a smaller standard deviation is to ensure that the outliers move into the valley. Figure~\ref{fig:Exp2} shows the results for all three outlier methods on all { \color{blue}five } coordinate systems using the average values of 10 iterations.
+The second experiment considers a bi-modal setting with two inlier normal distributions and one outlier normal distribution which moves into the valley as its mean changes. Somewhat similar to the previous example we consider $805$ observations in $\mathbb{R}^6$; $800$ inlier observations of which $400$ centered at $(5,0,0,0,0,0)$ and the other $400$ centered at $(-5,0,0,0,0,0)$. All inlier observations come from normal distributions with standard deviation $1$ in each dimension. The outlier distribution consists of $5$ points with mean $(5-\mu,0,0,0,0,0)$ and standard deviations $0.2$ in the first dimension and $1$ in other dimensions. The value of $\mu$ is increased from $0$ to $4.5$ in increments of $0.5$. Again, a smaller standard deviation is to ensure that the outliers move into the valley. Figure~\ref{fig:Exp2} shows the results for all three outlier methods on all { \color{black}five } coordinate systems using the average values of 10 iterations.
 
-{\color{blue} We see that using 3 DOBIN components gives significantly higher performance for LOF and KNN methods compared to the other coordinates. For iForest, DOBIN and COV4 gives similar performance values. However, iForest does not perform particularly well for this example as the best performance for both DOBIN and COV4 is less than 0.9, indicating that the outliers are not ranked in the top 10\%. }
+{\color{black} We see that using 3 DOBIN components gives significantly higher performance for LOF and KNN methods compared to the other coordinates. For iForest, DOBIN and COV4 gives similar performance values. However, iForest does not perform particularly well for this example as the best performance for both DOBIN and COV4 is less than 0.9, indicating that the outliers are not ranked in the top 10\%. }
 
 
 \subsection{Experiment 3}
 
-The third experiment is motivated from \cite{zimek2012survey}. We consider a uniform distribution in $\mathbb{R}^{20}$ and place a manual outlier at $0.9$ in $i$ dimensions where $i$ is changed from $1$ to $20$. While this is not an outlier in any single dimension, as $i$ increases this point stands out from the rest of the distribution. Indeed, for large $i$ this point lies furthest from the rest. An equivalent outlier is $0.1$ in $i$ dimensions. The reason that these points are outliers is because they are at the corners of the hyper-cube and are so far away from other points. On the contrary, $0.5$ in $i$ dimensions would be closest to other points. This is because $(0.5, 0.5, \dots)$ has neighbors from all sides and has on average $2^{20}$ more neighbors compared to $(1, 1, \dots)$ which is a corner on the unit hyper-cube. For practical purposes the point $(0.9, 0.9, \dots)$ is similar to $(1, 1, \dots)$ and has significantly {\color{blue} fewer } neighbors compared to $(0.5, 0.5, \dots)$. Figure~\ref{fig:Exp3} shows the results of all three outlier methods on all {\color{blue} five } coordinate systems. % Again we see that using half of the DOBIN components gives the best performance for all three outlier methods.
+The third experiment is motivated from \cite{zimek2012survey}. We consider a uniform distribution in $\mathbb{R}^{20}$ and place a manual outlier at $0.9$ in $i$ dimensions where $i$ is changed from $1$ to $20$. While this is not an outlier in any single dimension, as $i$ increases this point stands out from the rest of the distribution. Indeed, for large $i$ this point lies furthest from the rest. An equivalent outlier is $0.1$ in $i$ dimensions. The reason that these points are outliers is because they are at the corners of the hyper-cube and are so far away from other points. On the contrary, $0.5$ in $i$ dimensions would be closest to other points. This is because $(0.5, 0.5, \dots)$ has neighbors from all sides and has on average $2^{20}$ more neighbors compared to $(1, 1, \dots)$ which is a corner on the unit hyper-cube. For practical purposes the point $(0.9, 0.9, \dots)$ is similar to $(1, 1, \dots)$ and has significantly {\color{black} fewer } neighbors compared to $(0.5, 0.5, \dots)$. Figure~\ref{fig:Exp3} shows the results of all three outlier methods on all {\color{black} five } coordinate systems. % 
 
-{\color{blue} For LOF and KNN, using 10 DOBIN components gives similar performance results as using all 20 variables. The next best performance for LOF and KNN is achieved by using COV4 coordinates. Again, this is an example where outlyingness overlaps with kurtosis as the point $(0.9, 0.9, \ldots, 0.9)$ contributes to a heavy tail. In contrast, the first and the last 10 PC components give much lower results for these two outlier methods. Again, iForest behaves somewhat differently in this example. The COV4 coordinates are not as competitive for iForest as they were for LOF and KNN. For dimensions greater than 8, DOBIN achieves better results for iForest followed closely by all 20 variables.  We also see that iForest results are quite noisy compared with LOF and KNN. }
+{\color{black} For LOF and KNN, using 10 DOBIN components gives similar performance results as using all 20 variables. The next best performance for LOF and KNN is achieved by using COV4 coordinates. Again, this is an example where outlyingness overlaps with kurtosis as the point $(0.9, 0.9, \ldots, 0.9)$ contributes to a heavy tail. In contrast, the first and the last 10 PC components give much lower results for these two outlier methods. Again, iForest behaves somewhat differently in this example. The COV4 coordinates are not as competitive for iForest as they were for LOF and KNN. For dimensions greater than 8, DOBIN achieves better results for iForest followed closely by all 20 variables.  We also see that iForest results are quite noisy compared with LOF and KNN. }
 
-{\color{blue}
+{\color{black}
 \subsection{Experiment 4}
 
 For this experiment we consider $805$ points in $\mathbb{R}^{14}$. In the first two dimensions the points lie in an annulus as shown in Figure~\ref{fig:Exp4_Pic}. In other dimensions all points are normally distributed with mean $0$ and standard deviation $1$. There are $800$  non-outliers and $5$ outliers, which are distributed normally with mean $5 - (i-1)0.5$ and standard deviation $0.1$ in the first dimension and mean $0$ and standard deviation $0.1$ in the second dimension. With each iteration $i$ increases by $1$ making the outlier distribution move inward into the annulus. We repeat this experiment 10 times. 
 
 We see that for LOF and KNN,  DOBIN outperforms all other coordinates by a fair margin. All coordinates perform poorly for iForest, with most scores below 0.5. 
 
-%start with $\mathcal{N}(0.9, 0.1)$ in the first dimension and $\mathcal{N}(0.9, 0.1)$ in the second dimension and move into the center $(0, 0)$  with each iteration. 
 
 \subsection{Experiment 5}
 
@@ -545,13 +493,13 @@ We see that for LOF and KNN,  DOBIN outperforms all other coordinates. For iFore
         % \caption{Results of Experiment 2, in $\mathbb{R}^6$.}
         \label{fig:Exp5_Pic}
  	}
- 	\caption{\color{blue} Figures~\ref{fig:Exp4_Pic} and~\ref{fig:Exp5_Pic} show data for experiments 4 and 5 in the first two dimensions with inliers in orange and outliers in blue. The other dimensions are normally distributed with mean $0$ and standard deviation $1$.  }
+ 	\caption{\color{black} Figures~\ref{fig:Exp4_Pic} and~\ref{fig:Exp5_Pic} show data for experiments 4 and 5 in the first two dimensions with inliers in orange and outliers in blue. The other dimensions are normally distributed with mean $0$ and standard deviation $1$.  }
 \end{figure}
 
-{\color{blue} DOBIN is a top performer for all five experiments. For experiments 2, 4 and 5, DOBIN outperforms all other methods by a fair margin for KNN and LOF. For these three experiments iForest gives poorer performance compared to KNN and LOF.  For experiment 1, COV4 gives equally good performance results to DOBIN. For experiment 3,  COV4 is a close contender to DOBIN. For both these experiments outlyingness coincides with kurtosis, as the outliers are placed in the tails of the distribution. As such, we may expect COV4 to perform well in such instances.  Furthermore, LOF and KNN perform better than iForest for most experiments. This may be attributed to the randomness of iForest and the tree structure property, which acts on one attribute at a time. }
-Principal Components are generally less effective than the full set of coordinates for these three experiments and outlier methods. We note that this is not a failure of PCA, as outlier detection is not its intended goal. Rather, PCA maximizes the variance in each component such that a low dimensional representation of the dataset is a good approximation to the original. These results suggest that DOBIN is preferred over COV4 and PCA as a dimension reduction technique for outlier detection. % \citep{talagala2019anomaly, hyndman2015large}
+{\color{black} DOBIN is a top performer for all five experiments. For experiments 2, 4 and 5, DOBIN outperforms all other methods by a fair margin for KNN and LOF. For these three experiments iForest gives poorer performance compared to KNN and LOF.  For experiment 1, COV4 gives equally good performance results to DOBIN. For experiment 3,  COV4 is a close contender to DOBIN. For both these experiments outlyingness coincides with kurtosis, as the outliers are placed in the tails of the distribution. As such, we may expect COV4 to perform well in such instances.  Furthermore, LOF and KNN perform better than iForest for most experiments. This may be attributed to the randomness of iForest and the tree structure property, which acts on one attribute at a time. }
+Principal Components are generally less effective than the full set of coordinates for these three experiments and outlier methods. We note that this is not a failure of PCA, as outlier detection is not its intended goal. Rather, PCA maximizes the variance in each component such that a low dimensional representation of the dataset is a good approximation to the original. These results suggest that DOBIN is preferred over COV4 and PCA as a dimension reduction technique for outlier detection. % 
 
-% REDO EXPERIMENT 1 AND 2 WITH REFLE = FALSE
+
 % =======================================================================
 \section{Results with visualization}\label{sec:ResWithVis}
 % =======================================================================
@@ -581,7 +529,7 @@ Figure~\ref{fig:Election20051} shows the O3 plot of this dataset using all six o
 Figure~\ref{fig:Election20052} shows the first $2$ DOBIN components of the \textit{Election2005} dataset. This is a projection of the dataset onto a two dimensional subspace spanned by the first $2$ DOBIN vectors. Here we see the observation $X84$ far away from the rest of the data with $X76$, $X83$ and $X82$ somewhat detached from the rest. The observations $X87$ an $X81$ are almost at the same position in this $2$-dimensional space. The observations $X221$ and $X21$ also appear a bit outside the boundary of other points. A simple KNN algorithm in the DC1-DC2 space gives the top $8$ candidates as $X84$, $X76$, $X83$, $X82$, $X221$, $X81$, $X87$, and $X21$. Thus, the DC1-DC2 space accentuates the eight most outlying observations according to the O3 plot, while showing clearly that $X84$ is the most outlying observation.
 
 The first DOBIN vector is of interest to us as the outliers deviate most in this direction. Equation~\eqref{eq:ResWithVis1} gives the first DOBIN vector, DC1, as a linear combination of the input variables.
-{\color{blue}
+{\color{black}
 \begin{equation}\label{eq:ResWithVis1}
 	\text{DC1} = \begin{bmatrix}
 		0.024 & 0.980 & 0.118 & 0.154
@@ -616,7 +564,7 @@ The next example is taken from the \textit{O3Outliers} R package \citep{O3Rpack}
 Figure~\ref{fig:Diamonds1} shows the O3 plot of this dataset using the three outlier methods \textit{HDoutliers}, \textit{FastPCs} and \textit{adjOutlyingness}. We could not use all six methods on this dataset as the other three methods included in the \textit{OutliersO3} R package gave computational errors. Of the three methods used, all methods identified $X4792$, $X2315$ and $X2208$ as outliers in 6 subspaces including the full space. These $3$ points and $X4519$ appear in the DC1-DC2 space in the bottom left region. Comparing with the O3 plot, we see that $X4519$ is identified as an outlier by $2$ methods in $6$ subspaces. In keeping with the guidelines of the previous section, we use half of the DC components to evaluate a KNN algorithm. The top $4$ candidates in this $3$-dimensional DC space are $X4792$, $X2315$, $X2208$ and $X4519$ in that order.
 
 To understand the first DOBIN vector, we look at its coefficients:
-{\color{blue}
+{\color{black}
 \begin{equation}\label{eq:ResWithVis2}
 	\text{DC1} = \begin{bmatrix}
 		0.155 & 0.497 & 0.343 & 0.158 & 0.193 & 0.739
@@ -631,48 +579,8 @@ To understand the first DOBIN vector, we look at its coefficients:
 	\end{bmatrix}
 \end{equation}}
 We see that the variable \textit{z} contributes more to outliers in the DC1-DC2 space as well as in the O3 plot.
-%Thus the DOBIN basis can be used to project data for easy visualization of outliers.
 
-% \subsection{\textit{USArrests} dataset}\label{sec:ResWithVis3}
 
-% The popular \textit{USArrests} dataset is studied by \cite{bailey1995interactive, sarkar2008labels, yaminiviolent} and many others. This dataset contains violent crime rates for the 50 US states in 1973. The O3 plot using all six outlier detection methods and the DC1-DC2 space of this dataset are illustrated in Figure~\ref{fig:USArrests}.
-
-% \begin{figure*}[!ht]
-% 	\centering
-% 	\subfloat[][]{
-% 		\includegraphics[width=0.52\textwidth]{Ex3_1.pdf}
-% 		\label{fig:USArrests1}
-% 	}\hfill
-% 	\subfloat[][]{
-% 		\includegraphics[width=0.43\textwidth]{Ex3_2.pdf}
-% 		\label{fig:USArrests2}
-% 	}%
-% 	\caption{O3plot of the \textit{USArrests} dataset in Figure~\ref{fig:USArrests1} and the first 2 DOBIN components in Figure~\ref{fig:USArrests2}.}
-% 	\label{fig:USArrests}
-% \end{figure*}
-
-% From Figure\ref{fig:USArrests1} we see that $X2$ (corresponding to Alaska) is flagged as an outlier in $8$ subspaces including the full space, by one or two outlier detection methods. The adjoining outlier $X33$ (North Carolina) is only flagged in $4$ subspaces and the others in even smaller subspaces. Of the six outlier methods, only two identify Alaska as an outlier in certain subspaces. This also suggests that even though there is consensus between two methods, as only one third of the methods agree on this outlier, it may not be quite so outlying as the outliers in the previous examples. Indeed, this notion is validated by the DC1-DC2 plot. We see the observation $X2$ (denoted by $2$ in the plot) standing out from the rest, but not by a large margin. A KNN algorithm identifies this observation as having the highest KNN distance in DC1-DC2 space.
-
-% We look at the coefficients of the first DOBIN vector as $X2$ deviates in DC1:
-% \begin{equation}\label{eq:ResWithVis3}
-% 	\text{DC1} = \begin{bmatrix}
-% 		0.173 & 0.077 & -0.675 & 0.713
-% 	\end{bmatrix}
-% 	\begin{bmatrix}
-% 		\text{Murder}   \\
-% 		\text{Assault}  \\
-% 		\text{UrbanPop} \\
-% 		\text{Rape}
-% 	\end{bmatrix} \,
-% \end{equation}
-% We see that the variables \textit{UrbanPop} and \textit{Rape} contribute more to the first DOBIN vector than the other variables. From equation~\eqref{eq:ResWithVis3}, high values of DC1 indicate low percentages of urban population and high rape arrests per $100,000$ residents. Therefore, we might expect Alaska to have higher rape arrests per urban capita. Indeed from Figure~\ref{fig:USArrests3} we see that Alaska has the highest ratio of \textit{Rape/UrbanPop} of all $50$ states confirming the insight gleaned from the first DOBIN vector.
-
-% \begin{figure*}[!ht]
-% 	\centering
-% 	\includegraphics[width=0.5\textwidth]{Ex3_3.pdf}
-% 	\caption{USArrests dataset -- Rape to Urban population ratio values.}
-% 	\label{fig:USArrests3}
-% \end{figure*}
 
 \subsection{\textit{Airquality} dataset}\label{sec:ResWithVis4}
 
@@ -694,7 +602,7 @@ The \textit{Airquality} dataset discussed in \cite{john1983graphical} has measur
 The O3 plot in Figure~\ref{fig:Airquality1} shows $X117$ as the only outlier identified in $6$ subspaces by $2$ methods. The associated DC1-DC2 space shows the observation $X117$ away from the rest at the bottom right. Again, we see agreement between the O3 plot and DC1-DC2 space. The observation $X117$ was identified as an outlier only by a third of the outlier methods. This is corroborated in the DC1-DC2 plot by comparatively less outlyingness of observation $X117$ compared to outliers in the \textit{Diamonds} dataset. Performing a KNN algorithm revealed the observation with the highest KNN distance as $X117$ in the DC1-DC2 space.
 
 The first DOBIN vector has the following coefficients:
-{\color{blue}
+{\color{black}
 \begin{equation}\label{eq:ResWithVis4}
 	\text{DC1} = \begin{bmatrix}
 	0.650 & 0.209 & 0.667 & 0.296
@@ -739,7 +647,7 @@ From the O3 plot it is evident that Valjean is the main outlier consistently ide
 
 As the first DOBIN vector is discriminatory, we look at its coefficients:
 The first DOBIN vector has the following coefficients:
-{\color{blue}
+{\color{black}
 \begin{equation}\label{eq:ResWithVis5}
 	\text{DC1} = \begin{bmatrix}
 		0.0081 & 0.0001 & 0.0050 & 0.9999 & 0.0050 & 0.0040 & 0.0066
@@ -788,21 +696,18 @@ This section substantiated DOBIN's ability as an outlier visualization tool. In 
 
 In this section we work with a data repository of $12,222$ datasets \citep{datasets}, generated from approximately $200$ source datasets. Each dataset has labeled outliers and originally was used for classification purposes. The present datasets are modified from its original form by downsampling minority class observations, converting categorical attributes to numerical values, removing missing data and creating several variants from each classification dataset. More details on dataset preparation can be found in \cite{kandanaarachchi2018normalization}. This collection also includes datasets from \cite{campos2016evaluation}.
 
-%\todo[inline]{I don't understand the following paragraph. If there is an outlier in a subspace, it is also in the original space by definition. You cannot have outliers that are only in subspaces. \\ Response : changed paragraph beginning.
-% RJH. Fixed}
-
 A data point that is clearly an outlier in a subspace may be difficult to detect as an outlier in the full space, particularly when other variables drown the subspace outlier \citep{zimek2012survey}. For example in Figure~\ref{fig:gutenberg1}, the novel \textit{Alice in Wonderland} is detected as an outlier in the fourth subspace in the O3 plot, but not in others.  Conversely, when testing algorithms for outlier detection, we need to consider data where some variables contribute noise that mask outliers.
 
 Therefore, to make these datasets suitable for testing our outlier detection algorithms, we ``fatten'' each dataset by adding $20$ noise variables distributed normally, i.e.\ $\sim \mathcal{N}(0,1)$. We use these `fattened' datasets in our experiment.
 
-Similar to Section~\ref{sec:synthetic}, for each dataset we compare the results of three outlier methods LOF, KNN and iForest using the area under the ROC curve (AUC), on {\color{blue} five} different coordinate systems, namely the full set of coordinates, the first half of the DOBIN components, the first half of the Principal Components, {\color{blue} the last half of Principal Components, and the first half of COV4 coordinates}. That is, for a dataset with $p$ variables and $N$ observations,  we consider $\lfloor\min(N/2, p/2)\rfloor$ DOBIN, {\color{blue} COV4} and PC components.
-%To add to , the datasets are generated from approximately $200$ source datasets. Thus, dataset variants need to be accounted for.
+Similar to Section~\ref{sec:synthetic}, for each dataset we compare the results of three outlier methods LOF, KNN and iForest using the area under the ROC curve (AUC), on {\color{black} five} different coordinate systems, namely the full set of coordinates, the first half of the DOBIN components, the first half of the Principal Components, {\color{black} the last half of Principal Components, and the first half of COV4 coordinates}. That is, for a dataset with $p$ variables and $N$ observations,  we consider $\lfloor\min(N/2, p/2)\rfloor$ DOBIN, {\color{black} COV4} and PC components.
 
-Furthermore, we need to select appropriate tools to present results of $12,222$ datasets across three methods and {\color{blue}five} coordinate systems. The ability to delve into each dataset and obtain insights is no longer feasible with a large repository. In addition, we want to ascertain whether DOBIN coordinates improve the performance of the three outlier detection methods compared to the other {\color{blue}four} coordinate systems. Therefore, we investigate each outlier detection method separately. 
 
-{\color{blue} For each dataset we record the performance of each outlier detection method for each coordinate system. If coordinates cannot be computed or if an outlier detection method fails, we record the value as missing. For $1485$ datasets COV4 coordinates could not be computed as it involves computing the inverse of the covariance matrix. For some datasets with more variables than observations, i.e. $p > N$, this inverse may not exist.  Nevertheless, it is common to have real world datasets with $p > N$.
+Furthermore, we need to select appropriate tools to present results of $12,222$ datasets across three methods and {\color{black}five} coordinate systems. The ability to delve into each dataset and obtain insights is no longer feasible with a large repository. In addition, we want to ascertain whether DOBIN coordinates improve the performance of the three outlier detection methods compared to the other {\color{black}four} coordinate systems. Therefore, we investigate each outlier detection method separately. 
 
-We consider the set of datasets that have valid performance values, that is we remove datasets having missing values.}  For each outlier method, we compare the performance of the {\color{blue}five} coordinate systems using a Friedman test adjusting for the dataset variants. To adjust for the dataset variants, we {\color{blue} randomly sample 20 datasets from each source, so that each dataset source has a fixed number of variants and none of the sources are over represented}. If the Friedman test is significant, then we perform a Nemenyi test {\color{blue} \citep{hollander2013nonparametric}}, so that we can rank the coordinate systems according to performance. For convenience we use the shortened names $1/2$ DOBIN for using the first half of DOBIN components, First $1/2$ PCA for using the first half of Principal Components, {\color{blue} Last $1/2$ PCA for using the second half of Principal Components, $1/2$ COV4 for using the first half of COV4 components }  and `All Vars' for using all variables in the remainder of the section.
+{\color{black} For each dataset we record the performance of each outlier detection method for each coordinate system. If coordinates cannot be computed or if an outlier detection method fails, we record the value as missing. For $1485$ datasets COV4 coordinates could not be computed as it involves computing the inverse of the covariance matrix. For some datasets with more variables than observations, i.e. $p > N$, this inverse may not exist.  Nevertheless, it is common to have real world datasets with $p > N$.
+
+We consider the set of datasets that have valid performance values, that is we remove datasets having missing values.}  For each outlier method, we compare the performance of the {\color{black}five} coordinate systems using a Friedman test adjusting for the dataset variants. To adjust for the dataset variants, we {\color{black} randomly sample 20 datasets from each source, so that each dataset source has a fixed number of variants and none of the sources are over represented}. If the Friedman test is significant, then we perform a Nemenyi test {\color{black} \citep{hollander2013nonparametric}}, so that we can rank the coordinate systems according to performance. For convenience we use the shortened names $1/2$ DOBIN for using the first half of DOBIN components, First $1/2$ PCA for using the first half of Principal Components, {\color{black} Last $1/2$ PCA for using the second half of Principal Components, $1/2$ COV4 for using the first half of COV4 components }  and `All Vars' for using all variables in the remainder of the section.
 
 \begin{figure}[!p]
   \centering
@@ -843,32 +748,26 @@ We consider the set of datasets that have valid performance values, that is we r
 \end{figure}
 
 \subsection{Significance tests}\label{sec:DatRepo1}
-%\todo[inline]{The presentation of results is not clear, and I don't think density plots are the best way of showing them. For each outlier method, we are interested in how the basis set makes a difference. So just show boxplots or simlar of the three sets of AUC results. \\
-% Response: Changed to boxplots and updated wording.\\
-% Better, but now I think that the boxplots would be more informative if we showed the difference in AUC values between each 1/2 spaces and the All vars space. So only two plots would be shown. Positive values would indicate an improvement over all vars.}
 
-Figure~\ref{fig:LOF_FAT} gives the results of the {\color{blue} five } coordinate systems on outlier detection method LOF. A Friedman test gave the $p$-value $ 2.18 \times 10^{-23}$, and Figure~\ref{fig:LOF_FAT1} shows the associated Nemenyi plot for this data. This plot shows the ranks of the coordinate systems, with lower ranks indicating better performance. The blue squares highlight methods which are not significantly different from each other. From Figure~\ref{fig:LOF_FAT1} we see that the best coordinates for LOF are $1/2$ DOBIN, followed by First $1/2$ PCA and All Vars, with  First $1/2$ PCA and All Vars not significantly different from each other. {\color{blue} The coordinates Last $1/2$ PCA and $1/2$ COV4 give weaker results compared to others.  }
+Figure~\ref{fig:LOF_FAT} gives the results of the {\color{black} five } coordinate systems on outlier detection method LOF. A Friedman test gave the $p$-value $ 2.18 \times 10^{-23}$, and Figure~\ref{fig:LOF_FAT1} shows the associated Nemenyi plot for this data. This plot shows the ranks of the coordinate systems, with lower ranks indicating better performance. The blue squares highlight methods which are not significantly different from each other. From Figure~\ref{fig:LOF_FAT1} we see that the best coordinates for LOF are $1/2$ DOBIN, followed by First $1/2$ PCA and All Vars, with  First $1/2$ PCA and All Vars not significantly different from each other. {\color{black} The coordinates Last $1/2$ PCA and $1/2$ COV4 give weaker results compared to others.  }
 
-Figure~\ref{fig:LOF_FAT2} shows the boxplots of performance differences between  {\color{blue} DOBIN and the other four } coordinate systems. Positive values in AUC difference {\color{blue} indicate an improvement in DOBIN over the other coordinates. }  We see that $1/2$ DOBIN $-$ {\color{blue} all coordinate systems have positive median AUC differences}. 
+Figure~\ref{fig:LOF_FAT2} shows the boxplots of performance differences between  {\color{black} DOBIN and the other four } coordinate systems. Positive values in AUC difference {\color{black} indicate an improvement in DOBIN over the other coordinates. }  We see that $1/2$ DOBIN $-$ {\color{black} all coordinate systems have positive median AUC differences}. 
 
-Figure~\ref{fig:KNN_FAT} shows the results of the {\color{blue} five } coordinate systems on the outlier detection method KNN. We obtained the $p$-value $1.47\times 10^{-113}$ from the Friedman test. Again, from Figure~\ref{fig:KNN_FAT1} we see that $1/2$ DOBIN outperforms {\color{blue} First $1/2$ PCA,  All Vars, $1/2$ COV4 and Last $1/2$ PCA. First $1/2$ PCA and All Vars are not significantly different, similar to $1/2$ COV4 and Last $1/2$ PCA. }
-This is corroborated by the boxplots in Figure~\ref{fig:KNN_FAT2}. % Even though All Vars is ranked second, it is not significantly different from $1/2$ PCA for KNN.
+Figure~\ref{fig:KNN_FAT} shows the results of the {\color{black} five } coordinate systems on the outlier detection method KNN. We obtained the $p$-value $1.47\times 10^{-113}$ from the Friedman test. Again, from Figure~\ref{fig:KNN_FAT1} we see that $1/2$ DOBIN outperforms {\color{black} First $1/2$ PCA,  All Vars, $1/2$ COV4 and Last $1/2$ PCA. First $1/2$ PCA and All Vars are not significantly different, similar to $1/2$ COV4 and Last $1/2$ PCA. }
+This is corroborated by the boxplots in Figure~\ref{fig:KNN_FAT2}. 
 
-Similar performances are obtained for iForest, which is illustrated in Figure~\ref{fig:IFOREST_FAT}. A Friedman test conducted on the data gave the $p$-value  $1.79 \times 10^{-108}$. The Nemenyi plot shows that while $1/2$ DOBIN performs the best, {\color{blue} the top} three methods are significantly different from each other, with All Vars outperforming First $1/2$ PCA.  This is supported from the boxplots in Figure~\ref{fig:IFOREST_FAT2}. %, with $1/2$ DOBIN $-$ $1/2$ PCA and $1/2$ DOBIN $-$ All Vars having positive median AUC differences and  $1/2$ PCA $-$ All Vars having a negative one.
+Similar performances are obtained for iForest, which is illustrated in Figure~\ref{fig:IFOREST_FAT}. A Friedman test conducted on the data gave the $p$-value  $1.79 \times 10^{-108}$. The Nemenyi plot shows that while $1/2$ DOBIN performs the best, {\color{black} the top} three methods are significantly different from each other, with All Vars outperforming First $1/2$ PCA.  This is supported from the boxplots in Figure~\ref{fig:IFOREST_FAT2}. 
 
-We see that $1/2$ DOBIN performs best for all three outlier detection methods and is significantly better than {\color{blue} First $1/2$ PCA, Last $1/2$, $1/2$ COV4} and All Vars. This is evidence that DOBIN is better as a dimension reduction tool for outlier detection compared to PCA, {\color{blue} COV4} and the original variables. %We attribute this success to DOBIN's  mathematical foundations.
+We see that $1/2$ DOBIN performs best for all three outlier detection methods and is significantly better than {\color{black} First $1/2$ PCA, Last $1/2$, $1/2$ COV4} and All Vars. This is evidence that DOBIN is better as a dimension reduction tool for outlier detection compared to PCA, {\color{black} COV4} and the original variables. 
 
 
 
 % =======================================================================
 \section{Conclusion}
 % =======================================================================
-Dimension reduction for outlier detection is a topic that has not received much attention in the literature. One way to achieve this is to construct a basis that empowers outlier detection. In this paper, we present DOBIN: a Distance based Outlier BasIs using Neighbors, which strives to accomplish this goal. We used DOBIN on an extensive data repository of real world datasets and showed that DOBIN basis improves performance of the outlier detection methods LOF, KNN and iForest. Using half of the DOBIN components we outperformed PCA, {\color{blue} COV4}  and the standard basis as coordinate systems for these three outlier detection methods.
+Dimension reduction for outlier detection is a topic that has not received much attention in the literature. One way to achieve this is to construct a basis that empowers outlier detection. In this paper, we present DOBIN: a Distance based Outlier BasIs using Neighbors, which strives to accomplish this goal. We used DOBIN on an extensive data repository of real world datasets and showed that DOBIN basis improves performance of the outlier detection methods LOF, KNN and iForest. Using half of the DOBIN components we outperformed PCA, {\color{black} COV4}  and the standard basis as coordinate systems for these three outlier detection methods.
 
 In addition, we conducted a visual analysis of outliers using DOBIN on five datasets from diverse sources, which included a character graph from the novel \textit{Les Mis\'erables} and $22$ classics from Gutenberg website. We projected the data onto a 2D space spanned by the first two DOBIN vectors, and saw that outliers identified by many methods in O3 plots were indeed far away from the rest of the data. We gained insights about the outliers in these datasets, and identified the variables that contributed to make them outliers.
-
-%\todo[inline]{A rotation invariant form would be PCA first followed by DOBIN. You lose the interpretability but gain on rotation-invariance. I think we should say this here \\
-%Response :  added these comments. }
 
 Currently DOBIN is sensitive to rotations in the input space. As future work we plan to investigate avenues that can contribute to a rotation invariant version of DOBIN. One possibility, for example, would be to first perform a PCA decomposition followed by DOBIN. We would gain rotation-invariance from such a version, but we would potentially lose some interpretability of the results. The R package \textit{dobin} contains the implementation and is available at \url{https://CRAN.R-project.org/package=dobin} for download.
 
@@ -884,7 +783,7 @@ Currently DOBIN is sensitive to rotations in the input space. As future work we 
 
 \textbf{Scripts}: The script \texttt{Figures\_For\_Paper\_1.R} contains the R code used to conduct experiments and produce graphs in Section~\ref{sec:synthetic}. The script \texttt{Figures\_For\_Paper\_2.R} contains the R code used in Section~\ref{sec:ResWithVis}. And finally, the script \texttt{Figures\_For\_Paper\_3.R} contains the R code used to produce the graphs in Section~\ref{sec:DatRepo}. The original computation on the data repository detailed in Section~\ref{sec:DatRepo} was conducted using the MonARCH HPC Cluster. The results of this computation are available at the github repository \url{https://github.com/sevvandi/Outlier-Basis}.
 
-\textbf{Other R-packages}: In addition to the R package \textit{dobin} we have also used the R packages \textit{OutliersO3} \citep{O3Rpack}, {\color{blue} \textit{HDoutliers} \citep{hdoutliers}}, \textit{isolationForest} \citep{isolationForest}, \textit{DMwR} \citep{DMwR}, \textit{pROC} \citep{pROC}, \textit{ggplot2} \citep{ggplot2}, \textit{mbgraphic} \citep{mbgraphic}, \textit{gridExtra} \citep{gridextra}, \textit{tsutils} \citep{tsutils}, \textit{dplyr} \citep{dplyr} and \textit{tidyr} \citep{tidyr}.%\todo{Suggest you replace reshape2 with tidyr. This is not recommended these days.}
+\textbf{Other R-packages}: In addition to the R package \textit{dobin} we have also used the R packages \textit{OutliersO3} \citep{O3Rpack}, {\color{black} \textit{HDoutliers} \citep{hdoutliers}}, \textit{isolationForest} \citep{isolationForest}, \textit{DMwR} \citep{DMwR}, \textit{pROC} \citep{pROC}, \textit{ggplot2} \citep{ggplot2}, \textit{mbgraphic} \citep{mbgraphic}, \textit{gridExtra} \citep{gridextra}, \textit{tsutils} \citep{tsutils}, \textit{dplyr} \citep{dplyr} and \textit{tidyr} \citep{tidyr}.
 
 
 % =======================================================================
@@ -894,7 +793,7 @@ Currently DOBIN is sensitive to rotations in the input space. As future work we 
 Funding was provided by the Australian Research Council through the Linkage Project LP160101885. This research was also supported by the Monash eResearch Centre and eSolutions-Research Support Services through the MonARCH HPC Cluster.
 
 % =======================================================================
-\bibliographystyle{agsm} %Choose a bibliograhpic style
+\bibliographystyle{agsm} 
 \bibliography{Master}
 % =======================================================================
 \end{document}
